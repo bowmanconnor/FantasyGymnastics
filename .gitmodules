@@ -1,0 +1,3 @@
+[submodule "FantasyGymnastics/RTNScraper"]
+	path = FantasyGymnastics/RTNScraper
+	url = https://github.com/chriscosma/RTNScraper
