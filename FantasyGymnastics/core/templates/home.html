@@ -1,0 +1,7 @@
+{% for associated in backends.associated %}
+    <b>Authenticated with {{associated.provider}}</b>
+    <p>Username: {{user.username}}</p>
+    <p>Name: {{user.first_name}} {{user.last_name}}</p>
+    <p>Profile picture: <img src="{{user.profile.picture_url}}" /></p>
+{% endfor %}
+<a href="/logout">Logout</a>
