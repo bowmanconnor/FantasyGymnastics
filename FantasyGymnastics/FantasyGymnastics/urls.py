@@ -14,15 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-
-# import FantasyGymnastics.RTNScraper.rtn_scraper.Scraper as RTN
-# scraper = RTN.Scraper()
-# results = scraper.get_home_away_diff(RTN.ScraperConstants.MENS, 2020)
-
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('core.urls')),
+
 ]
-
-
