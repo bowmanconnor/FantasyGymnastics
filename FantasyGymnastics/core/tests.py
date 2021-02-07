@@ -5,10 +5,12 @@ from .views import home, create_league
 
 # Tests that the urls are returning a status code of 200 and the urls are showing their appropriate views
 class HomeTests(TestCase):
-    def test_home_view_status_code(self):
+    def setUp(self):
         url = reverse('home')
-        response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.response = self.client.get(url)
+    
+    def test_home_view_status_code(self):
+        self.assertEquals(self.response.status_code, 200)
 
     def test_home_url_resolves_home_view(self):
         view = resolve('/')
@@ -16,10 +18,12 @@ class HomeTests(TestCase):
 
 
 class CreateLeagueTests(TestCase):
-    def test_create_league_view_status_code(self):
+    def setUp(self):
         url = reverse('create_league')
-        response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.response = self.client.get(url)
+
+    def test_create_league_view_status_code(self):
+        self.assertEquals(self.response.status_code, 200)
 
     def test_create_league_url_resolves_create_league_view(self):
         view = resolve('/create_league/')
