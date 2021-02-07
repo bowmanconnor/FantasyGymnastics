@@ -26,8 +26,8 @@ class FantasyTeam(models.Model):
     class Meta:
         unique_together = ('user', 'league')
 
-class Score(models.Model):
-    gymnast = models.ForeignKey(Gymnast, related_name='Score', on_delete=models.CASCADE, null=False, blank=False)
+class Scores(models.Model):
+    gymnast = models.ForeignKey(Gymnast, related_name='Scores', on_delete=models.CASCADE, null=False, blank=False)
     date = models.DateField()
     meet = models.CharField(max_length=100)
 
