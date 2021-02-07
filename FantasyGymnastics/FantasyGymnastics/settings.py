@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,8 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
     'social_django',
-    'socialauth',
+    'authentication',
     'core'
 ]
 
@@ -58,7 +60,7 @@ ROOT_URLCONF = 'FantasyGymnastics.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -147,7 +149,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.user_details',
 
     # Save profile picture in User's Profile
-    'socialauth.pipeline.save_profile_picture',
+    'authentication.pipeline.save_profile_picture',
 )
 
 WSGI_APPLICATION = 'FantasyGymnastics.wsgi.application'
