@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}New League{% endblock title %}
+
+{% block content %}
+<div class='container'>
+   <form method="post" novalidate>
+    {% csrf_token %}
+    {% include 'includes/forms.html' %}
+    <button type="submit" class="btn btn-success mb-4">Submit</button>
+  </form>
+  {% comment %} <a href="{% url 'data' %}" class="btn btn-success" role="button">data</a> {% endcomment %}
+</div>
+{% endblock %}

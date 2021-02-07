@@ -1,0 +1,33 @@
+<link href="{% static 'css/login.css' %}" rel="stylesheet">
+
+<h3 class="card-title">{% block form_title %}{% endblock form_title %}</h3>
+<form class="form-signin" method="post" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger" role="alert">
+        {% for error in form.non_field_errors %}
+        <p{% if forloop.last %} class="mb-0" {% endif %}>{{ error }}</p>
+            {% endfor %}
+    </div>
+    {% endif %}
+
+    {% for field in form %}
+    <div class="form-group">
+        <div class="form-label-group">
+            {% render_field field class=field|input_class placeholder=field.label%}
+        </div>
+        {% for error in field.errors %}
+        <div class="invalid-feedback">
+            {{ error }}
+        </div>
+        {% endfor %}
+        {% if field.help_text %}
+        <small class="form-text text-muted">
+            {{ field.help_text|safe }}
+        </small>
+        {% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary btn-block text-uppercase">{% block submit_text %}{% endblock submit_text %}</button>
+</form>

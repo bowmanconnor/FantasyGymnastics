@@ -1,4 +1,32 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% block title %}Leagues{% endblock title %}Leagues
+{% block content %}
+
 <p>Username: {{user.username}}</p>
 <p>Name: {{user.first_name}} {{user.last_name}}</p>
 <p>Profile picture: <img src="{{user.profile.picture_url}}" /></p>
 <a href="/authentication/logout">Logout</a>
+
+
+<h1>Leagues</h1>
+<table class="table mb-4">
+    <thead class="thead-inverse">
+      {% for key, val in leagues.first|get_fields %}
+      <td>{{ key }}</td>
+      {% endfor %}
+
+    </thead>
+    <tbody>
+      {% for league in leagues %}
+      <tr>
+        {% for key, val in league|get_fields %}
+        <td>{{ val }}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+        <td><a href="{% url 'create_league' %}" class="btn btn-outline-primary">Create League</a></td>
+
+  {% endblock %}
