@@ -3,6 +3,12 @@
 {% block title %}Leagues{% endblock title %}Leagues
 {% block content %}
 
+<p>Username: {{user.username}}</p>
+<p>Name: {{user.first_name}} {{user.last_name}}</p>
+<p>Profile picture: <img src="{{user.profile.picture_url}}" /></p>
+<a href="/authentication/logout">Logout</a>
+
+
 <h1>Leagues</h1>
 <table class="table mb-4">
     <thead class="thead-inverse">

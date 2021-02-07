@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import League
 from .forms import NewLeagueForm
@@ -14,7 +15,8 @@ def create_league(request):
     else:
         form = NewLeagueForm()
     return render(request, 'core/create_league.html', {'form': form})
-
+  
+@login_required
 def home(request):
     context = {}
     context['leagues'] = League.objects.all()
