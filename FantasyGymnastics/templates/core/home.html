@@ -6,17 +6,13 @@
 <h1>Leagues</h1>
 <table class="table mb-4">
     <thead class="thead-inverse">
-      {% for key, val in leagues.first|get_fields %}
-      <td>{{ key }}</td>
-      {% endfor %}
+      <td>League Name</td>
 
     </thead>
     <tbody>
       {% for league in leagues %}
       <tr>
-        {% for key, val in league|get_fields %}
-        <td>{{ val }}</td>
-        {% endfor %}
+        <td><a href="{% url 'view_league' league.pk %}" class="btn btn-outline-primary">{{ league.name }}</a></td>
       </tr>
       {% endfor %}
     </tbody>

@@ -1,0 +1,47 @@
+﻿{% extends 'base.html' %}
+{% load custom_tags %}
+{% block title %}Leagues{% endblock title %}Leagues
+{% block content %}
+
+<h1>{{ league.name }}</h1>
+
+<table>
+    <thead>
+        <td>League Details</td>
+    </thead>
+        <tbody>
+            <tr>
+                <td>League Manager:</td>
+                <td>{{league.manager}}</td>
+            </tr>
+
+            <tr>
+                <td>League Size:</td>
+                <td>{{league.manager}}</td>
+            </tr>
+
+            <tr>
+                <td>Roster Size:</td>
+                <td>{{league.roster_size}}</td>
+            </tr>
+
+            <tr>
+                <td>Lineup Size:</td>
+                <td>{{league.lineup_size}}</td>
+            </tr>
+
+            <tr>
+                <td>Event Lineup Size:</td>
+                <td>{{league.event_lineup_size}}</td>
+            </tr>
+
+            <tr>
+                <td>Event Count Size:</td>
+                <td>{{league.event_count_size}}</td>
+            </tr>
+        </tbody>
+</table>
+
+<a href="{% url 'home' %}" class="btn btn-outline-primary">Home</a>
+
+  {% endblock %}
