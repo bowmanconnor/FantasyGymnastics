@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import League, FantasyTeam
-from .forms import NewLeagueForm
+from .forms import NewLeagueForm , NewFantasyTeamForm
 from django.views.generic import UpdateView, DetailView
 # Create your views here.
 
@@ -15,6 +15,19 @@ def create_league(request):
     else:
         form = NewLeagueForm()
     return render(request, 'core/create_league.html', {'form': form})
+
+def create_team(request, id):
+    print(id)
+    if request.method == 'POST':
+        form = NewFantasyTeamForm(request.POST)
+        if form.is_valid():
+            team = form.save(commit=False)
+            team.league = League.objects.get(id=id)
+            team.save()
+            return redirect('home')
+    else:
+        form = NewFantasyTeamForm()
+    return render(request, 'core/create_team.html', {'form': form})
 
 class view_league_detail(DetailView):
     model = League
