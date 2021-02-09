@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% block title %}Leagues{% endblock title %}
+{% block content %}
+<h1>Join League</h1>
+<table>
+    <tbody>
+      {% for league in leagues %}
+      <tr>
+        <td><a href="{% url 'view_league' league.pk %}" >{{ league.name }}</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

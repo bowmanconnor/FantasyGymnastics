@@ -19,6 +19,18 @@ def create_league(request):
         form = NewLeagueForm()
     return render(request, 'core/create_league.html', {'form': form})
 
+def view_leagues(request):
+    context = {}
+    context['leagues'] = League.objects.all()
+    return render(request, 'core/view_leagues.html', context)
+
+@login_required
+def request_to_join_league(request, pk):
+    league = League.objects.get(pk=pk)
+    league.requested_to_join.add(request.user)
+
+    return redirect('view_league', pk=league.pk)
+
 class LeagueDetailView(DetailView):
     model = League
     template_name = 'core/view_league.html'
@@ -28,6 +40,7 @@ class LeagueDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['teams'] = FantasyTeam.objects.filter(league_id=context['object'].id)
+        context['requested_to_join'] = context['object'].requested_to_join
         return context
 
 # @method_decorator(staff_member_required(login_url='home') , name='dispatch')
@@ -82,8 +95,7 @@ class FantasyTeamUpdateView(UpdateView):
         team.save()
         return redirect('view_team', pk=team.pk)
 
+
 def home(request):
-    context = {}
-    context['leagues'] = League.objects.all()
-    return render(request, 'core/home.html', context)
+    return render(request, 'core/home.html')
 
