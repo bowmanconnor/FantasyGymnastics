@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load custom_tags %}
-{% block title %}Leagues{% endblock title %}Leagues
+{% block title %}Leagues{% endblock title %}
 {% block content %}
 
 
@@ -42,27 +42,18 @@
                 <td>Event Count Size:</td>
                 <td>{{league.event_count_size}}</td>
             </tr>
-            <tr>
-                <td>Requested to join:</td>
-                <td>{{league.requested_to_join}}</td>
-            </tr>
+            {% if league.manager == user %}
+                <tr>
+                    <td>Requested to join (click to approve):</td>
+                </tr>
+                {% for requested_user in league.requested_to_join.all %}
+                    <tr>
+                        <td><a href="{% url 'approve_player_into_league' league.pk requested_user.pk %}" >{{requested_user}}</a></td>
+                    </tr>
+                {% endfor %}                
+            {% endif %}
         </tbody>
 </table>
-{% comment %} 
-<table>
-    <thead>
-        <td><h2>Requested Users</h2></td>
-    </thead>
-        <tbody>
-        {% for user in requested_to_join %}
-            <tr>
-                <td>{{ user.username }}</td>
-            </tr>
-        {% endfor %}
-         
-        </tbody>
-</table> {% endcomment %}
-
 <table>
     <thead>
         <td><h2>Teams in {{ league.name }}</h2></td>
@@ -74,13 +65,17 @@
                 <td><a href="{% url 'view_team' team.id %}">{{team.name}}</a></td>
             </tr>
         {% endfor %}
-         
         </tbody>
 </table>
 
-<a href="{% url 'home' %}" >Home</a>
-<a href="{% url 'create_team' league.id %}" >Add a team</a>
-<a href="{% url 'edit_league' league.pk %}" >Edit league</a>
-<a href="{% url 'request_to_join_league' league.pk %}" >Request to join league</a>
+<table>
+    <tbody>
+        <tr><td><a href="{% url 'home' %}" >Home</a></td></tr>
+        <tr><td><a href="{% url 'create_team' league.id %}" >Add a team</a></td></tr>
+        <tr><td><a href="{% url 'edit_league' league.pk %}" >Edit league</a></td></tr>
+        <tr><td><a href="{% url 'request_to_join_league' league.pk %}" >Request to join league</td></a></tr>
+
+    </tbody>
+</table
 
   {% endblock %}

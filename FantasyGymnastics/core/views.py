@@ -2,6 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import League, FantasyTeam
 from django.views.generic import UpdateView, DetailView
+from django.contrib.auth.models import User
+
 
 from .forms import NewLeagueForm, NewFantasyTeamForm
 # Create your views here.
@@ -14,6 +16,11 @@ def create_league(request):
             league = form.save(commit=False)
             league.manager = request.user
             league.save()
+            team = FantasyTeam.objects.create(
+                user=request.user,
+                league=league,
+                name=str(request.user)+"'s Team"
+            )
             return redirect('home')
     else:
         form = NewLeagueForm()
@@ -27,8 +34,20 @@ def view_leagues(request):
 @login_required
 def request_to_join_league(request, pk):
     league = League.objects.get(pk=pk)
-    league.requested_to_join.add(request.user)
 
+    if request.user not in league.requested_to_join.all():
+        league.requested_to_join.add(request.user)
+    return redirect('view_league', pk=league.pk)
+
+def approve_player_into_league(request, league_pk, user_pk):
+    league = League.objects.get(pk=league_pk)
+    user = User.objects.get(pk=user_pk)
+    team = FantasyTeam.objects.create(
+        user=user,
+        league=league,
+        name=str(user.first_name)+"'s Team")
+    team.save()
+    league.requested_to_join.remove(request.user)
     return redirect('view_league', pk=league.pk)
 
 class LeagueDetailView(DetailView):
