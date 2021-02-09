@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% block title %}Leagues{% endblock title %}Leagues
+{% block content %}
+
+
+<table>
+    <thead>
+        <td><h2>League Details</h2></td>
+    </thead>
+        <tbody>
+            <tr>
+                <td>League name:</td>
+                <td>{{league.name}}</td>
+            </tr>
+            <tr>
+                <td>League Manager:</td>
+                <td>{{league.manager.first_name}}</td>
+            </tr>
+
+            <tr>
+                <td>League Size:</td>
+                <td>{{league.manager}}</td>
+            </tr>
+
+            <tr>
+                <td>Roster Size:</td>
+                <td>{{league.roster_size}}</td>
+            </tr>
+
+            <tr>
+                <td>Lineup Size:</td>
+                <td>{{league.lineup_size}}</td>
+            </tr>
+
+            <tr>
+                <td>Event Lineup Size:</td>
+                <td>{{league.event_lineup_size}}</td>
+            </tr>
+
+            <tr>
+                <td>Event Count Size:</td>
+                <td>{{league.event_count_size}}</td>
+            </tr>
+        </tbody>
+</table>
+
+
+<table>
+    <thead>
+        <td><h2>Teams in {{ league.name }}</h2></td>
+    </thead>
+        <tbody>
+        {% for team in teams %}
+            <tr>
+                <td>Team name:</td>
+                <td><a href="{% url 'view_team' team.id %}">{{team.name}}</a></td>
+            </tr>
+        {% endfor %}
+         
+        </tbody>
+</table>
+
+<a href="{% url 'home' %}" >Home</a>
+<a href="{% url 'create_team' league.id %}" >Add a team</a>
+<a href="{% url 'edit_league' league.pk %}" >Edit league</a>
+
+  {% endblock %}
