@@ -1,35 +1,25 @@
-<a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
-<a href="{% url 'social:begin' 'google-oauth2' %}">Login with Google</a>
+{% extends 'base_accounts.html' %}
+{% load static %}
+{% load  widget_tweaks %}
 
-{% block content %}
 
-    {% if form.errors %}
-        <p>Username and password didn't match, try again.</p>
-    {% endif %}
 
-    {% if next %}
-        {% if user.is_authenticated %}
-            <p>Your account doesn't have access to this page. To proceed,
-            please login with an account that has access.</p>
-        {% else %}
-            <p>Please login to see this page.</p>
-        {% endif %}
-    {% endif %}
 
-    <form method="post" action="{% url 'login' %}">
-        {% csrf_token %}
-        <table>
-            <tr>
-                <td>{{ form.username.label_tag }}</td>
-                <td>{{ form.username }}</td>
-            </tr>
-            <tr>
-                <td>{{ form.password.label_tag }}</td>
-                <td>{{ form.password }}</td>
-            </tr>
-        </table>
-        <input type="submit" value="login" />
-        <input type="hidden" name="next" value="{{ next }}" />
+{% block form_title %}Login{% endblock form_title %}
+{% block submit_text %}Sign in{% endblock submit_text %}
+{% block bottom_card %}
+    <div class="text-center mt-2">
+        <small>
+            <a href="{% url 'password_reset' %}" class="text-muted">Forgot your password?</a>
+        </small>
+    </div>
+    <hr class="mt-3 mb-4">
+    <form class="form-signin" novalidate>
+        <a href="{% url 'register' %}" class="btn btn-lg btn-success btn-block text-uppercase" role="button">Register</a>
     </form>
 
-{% endblock %}
+<a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
+<a href="{% url 'social:begin' 'google-oauth2' %}">Login with Google</a>
+<a href="{% url 'home' %}" class="btn btn-lg btn-success btn-block text-uppercase" role="button">Home</a>
+
+{% endblock bottom_card %}

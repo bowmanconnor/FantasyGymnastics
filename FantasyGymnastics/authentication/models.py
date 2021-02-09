@@ -9,6 +9,9 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     picture_url = models.TextField(blank=True)
 
+    def __str__(self):
+        return str(self.user.username)
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     print(sender, instance, created)

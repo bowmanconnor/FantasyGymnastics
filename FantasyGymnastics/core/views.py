@@ -4,19 +4,19 @@ from .models import League
 from .forms import NewLeagueForm
 # Create your views here.
 
+@login_required
 def create_league(request):
     if request.method == 'POST':
         form = NewLeagueForm(request.POST)
         if form.is_valid():
             league = form.save(commit=False)
-            # league.manager = 1
+            league.manager = request.user
             league.save()
             return redirect('home')
     else:
         form = NewLeagueForm()
     return render(request, 'core/create_league.html', {'form': form})
   
-@login_required
 def home(request):
     context = {}
     context['leagues'] = League.objects.all()
