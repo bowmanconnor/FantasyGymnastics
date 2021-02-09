@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import League, FantasyTeam
-from django.views.generic import UpdateView, DetailView
+from django.views.generic import UpdateView, DetailView, ListView
 
 from .forms import NewLeagueForm, NewFantasyTeamForm
 # Create your views here.
@@ -43,6 +43,14 @@ class LeagueUpdateView(UpdateView):
         league = form.save(commit=False)
         league.save()
         return redirect('view_league', pk=league.pk)
+
+class LeagueSearchResultsView(ListView):
+    model = League
+    template_name = 'core/league_search_results.html'
+
+    def get_queryset(self):
+        query = self.request.GET.get('query')
+        return League.objects.filter(name__icontains=query)
 
 @login_required
 def create_team(request, pk):
