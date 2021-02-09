@@ -5,9 +5,9 @@
 
 {% block content %}
     <a href="{% url 'home' %}">Home</a>
-    {% if object_list %}
+    {% if leagues %}
         <ul>
-            {% for league in object_list %}
+            {% for league in leagues %}
             <li><a href="{% url 'view_league' league.pk %}" class="btn btn-outline-primary">{{ league.name }}, managed by {{ league.manager }}</a></li>
             {% endfor %}
         </ul>
