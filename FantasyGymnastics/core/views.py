@@ -19,20 +19,6 @@ def create_league(request):
         form = NewLeagueForm()
     return render(request, 'core/create_league.html', {'form': form})
 
-@login_required
-def create_team(request, id):
-    if request.method == 'POST':
-        form = NewFantasyTeamForm(request.POST)
-        if form.is_valid():
-            team = form.save(commit=False)
-            team.user = request.user
-            team.league = League.objects.get(id=id)
-            team.save()
-            return redirect('home')
-    else:
-        form = NewFantasyTeamForm()
-    return render(request, 'core/create_team.html', {'form': form})
-
 class LeagueDetailView(DetailView):
     model = League
     template_name = 'core/view_league.html'
@@ -58,6 +44,21 @@ class LeagueUpdateView(UpdateView):
         league.save()
         return redirect('view_league', pk=league.pk)
 
+@login_required
+def create_team(request, pk):
+    if request.method == 'POST':
+        form = NewFantasyTeamForm(request.POST)
+        if form.is_valid():
+            team = form.save(commit=False)
+            team.user = request.user
+            team.league = League.objects.get(pk=pk)
+            team.save()
+            return redirect('home')
+    else:
+        form = NewFantasyTeamForm()
+    return render(request, 'core/create_team.html', {'form': form})
+
+
 class FantasyTeamDetailView(DetailView):
     model = FantasyTeam
     template_name = 'core/view_team.html'
@@ -80,7 +81,6 @@ class FantasyTeamUpdateView(UpdateView):
         team = form.save(commit=False)
         team.save()
         return redirect('view_team', pk=team.pk)
-
 
 def home(request):
     context = {}
