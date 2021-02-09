@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'social_django',
     
     'authentication',
-    'core'
+    'core',
+    
 
 ]
 
