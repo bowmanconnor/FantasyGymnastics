@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import League, FantasyTeam
-from django.views.generic import UpdateView, DetailView
+from django.views.generic import UpdateView, DetailView, DeleteView
 from django.contrib.auth.models import User
+from django.urls import reverse_lazy
 
 
 from .forms import NewLeagueForm, NewFantasyTeamForm
@@ -34,9 +35,13 @@ def view_leagues(request):
 @login_required
 def request_to_join_league(request, pk):
     league = League.objects.get(pk=pk)
-
-    if request.user not in league.requested_to_join.all():
-        league.requested_to_join.add(request.user)
+    team = FantasyTeam.objects.filter(
+        user=request.user,
+        league=league
+    )
+    if len(team) == 0:
+        if request.user not in league.requested_to_join.all():
+            league.requested_to_join.add(request.user)
     return redirect('view_league', pk=league.pk)
 
 def approve_player_into_league(request, league_pk, user_pk):
@@ -47,8 +52,19 @@ def approve_player_into_league(request, league_pk, user_pk):
         league=league,
         name=str(user.first_name)+"'s Team")
     team.save()
-    league.requested_to_join.remove(request.user)
+    league.requested_to_join.remove(user)
     return redirect('view_league', pk=league.pk)
+
+def reject_player_from_league(request, league_pk, user_pk):
+    pass
+
+def remove_team_from_league(request, league_pk, team_pk):
+    FantasyTeam.objects.filter(pk=team_pk).delete()
+    return redirect('view_league', pk=league_pk)
+
+
+
+    
 
 class LeagueDetailView(DetailView):
     model = League

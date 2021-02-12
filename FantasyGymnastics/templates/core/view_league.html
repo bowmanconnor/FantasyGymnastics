@@ -62,7 +62,7 @@
         {% for team in teams %}
             <tr>
                 <td>Team name:</td>
-                <td><a href="{% url 'view_team' team.id %}">{{team.name}}</a></td>
+                <td><a href="{% url 'view_team' team.id %}">{{team.name}}</a> <a href="{% url 'remove_team_from_league' league.pk team.pk %}">X</a></td>
             </tr>
         {% endfor %}
         </tbody>
