@@ -15,14 +15,12 @@
 <h1>Leagues</h1>
 
 
-<a href="{% url 'create_league' %}">Create League</a></td>
-<a href="{% url 'view_leagues' %}">Join League</a></td>
-
-
+Search for a league to join
 <form action="{% url 'league_search_results' %}" method="get">
-  <input name="query" type="text" placeholder="League search">
+  <input name="query" type="text" placeholder="League name">
   <button type="submit">Search</button>
 </form>
 
+<a href="{% url 'create_league' %}">Create League</a></td>
 
 {% endblock %}

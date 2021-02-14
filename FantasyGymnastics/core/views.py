@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import League, FantasyTeam
-from django.views.generic import UpdateView, DetailView, DeleteView
+from django.views.generic import UpdateView, DetailView, DeleteView, ListView
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin
