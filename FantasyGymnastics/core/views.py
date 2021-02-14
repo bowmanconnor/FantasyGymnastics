@@ -4,6 +4,7 @@ from .models import League, FantasyTeam
 from django.views.generic import UpdateView, DetailView, DeleteView
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 
 from .forms import NewLeagueForm, NewFantasyTeamForm
@@ -20,8 +21,7 @@ def create_league(request):
             team = FantasyTeam.objects.create(
                 user=request.user,
                 league=league,
-                name=str(request.user)+"'s Team"
-            )
+                name=str(request.user)+"'s Team")
             return redirect('home')
     else:
         form = NewLeagueForm()
@@ -34,7 +34,7 @@ def view_leagues(request):
 
 @login_required
 def request_to_join_league(request, pk):
-    league = League.objects.get(pk=pk)
+    league = get_object_or_404(League, pk=pk)
     team = FantasyTeam.objects.filter(
         user=request.user,
         league=league
@@ -44,27 +44,31 @@ def request_to_join_league(request, pk):
             league.requested_to_join.add(request.user)
     return redirect('view_league', pk=league.pk)
 
+
 def approve_player_into_league(request, league_pk, user_pk):
-    league = League.objects.get(pk=league_pk)
-    user = User.objects.get(pk=user_pk)
-    team = FantasyTeam.objects.create(
-        user=user,
-        league=league,
-        name=str(user.first_name)+"'s Team")
-    team.save()
-    league.requested_to_join.remove(user)
+    league = get_object_or_404(League, pk=league_pk)
+    if request.user is league.manager:
+        user = get_object_or_404(User, pk=user_pk)
+        team = FantasyTeam.objects.create(
+            user=user,
+            league=league,
+            name=str(user.first_name)+"'s Team")
+        team.save()
+        league.requested_to_join.remove(user)
     return redirect('view_league', pk=league.pk)
 
 def reject_player_from_league(request, league_pk, user_pk):
-    pass
+    league = get_object_or_404(League, pk=league_pk)
+    if request.user is league.manager:
+        user = get_object_or_404(User, pk=user_pk)
+        league.requested_to_join.remove(user)
+    return redirect('view_league', pk=league.pk)
 
 def remove_team_from_league(request, league_pk, team_pk):
-    FantasyTeam.objects.filter(pk=team_pk).delete()
+    league = get_object_or_404(League, pk=league_pk)
+    if request.user is league.manager:
+        get_object_or_404(FantasyTeam, pk=team_pk).delete()
     return redirect('view_league', pk=league_pk)
-
-
-
-    
 
 class LeagueDetailView(DetailView):
     model = League
@@ -76,16 +80,20 @@ class LeagueDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['teams'] = FantasyTeam.objects.filter(league_id=context['object'].id)
         context['requested_to_join'] = context['object'].requested_to_join
+        print(context['teams'])
         return context
 
-# @method_decorator(staff_member_required(login_url='home') , name='dispatch')
-class LeagueUpdateView(UpdateView):
+class LeagueUpdateView(UserPassesTestMixin, UpdateView):
     model = League
     form_class = NewLeagueForm
 
     template_name = 'core/edit_league.html'
     pk_url_kwarg = 'pk'
     context_object_name = 'league'
+
+    def test_func(self):
+        self.object = self.get_object()
+        return self.request.user == self.object.manager
 
     def form_valid(self, form):
         league = form.save(commit=False)
@@ -105,8 +113,7 @@ def create_team(request, pk):
     else:
         form = NewFantasyTeamForm()
     return render(request, 'core/create_team.html', {'form': form})
-
-
+ 
 class FantasyTeamDetailView(DetailView):
     model = FantasyTeam
     template_name = 'core/view_team.html'
@@ -117,13 +124,16 @@ class FantasyTeamDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         return context      
 
-class FantasyTeamUpdateView(UpdateView):
+class FantasyTeamUpdateView(UserPassesTestMixin, UpdateView):
     model = FantasyTeam
     form_class = NewFantasyTeamForm
-
     template_name = 'core/edit_team.html'
     pk_url_kwarg = 'pk'
     context_object_name = 'team'
+
+    def test_func(self):
+        self.object = self.get_object()
+        return self.request.user == self.object.user
 
     def form_valid(self, form):
         team = form.save(commit=False)
