@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 {% load custom_tags %}
-{% block title %}Leagues{% endblock title %}Leagues
+{% block title %}Home{% endblock title %}
 {% block content %}
-
 
 {% if user.is_authenticated %}
 <p>Username: {{user.username}}</p>
@@ -13,21 +12,17 @@
 <td><a href="{% url 'login' %}" class="btn btn-outline-primary">Login</a></td>
 {% endif %}
 
-<h1>Leagues</h1><table class="table mb-4">
+<h1>Leagues</h1>
 
-    <tbody>
-      {% for league in leagues %}
-      <tr>
-        <td><a href="{% url 'view_league' league.pk %}" class="btn btn-outline-primary">{{ league.name }}</a></td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+
 <a href="{% url 'create_league' %}">Create League</a></td>
+<a href="{% url 'view_leagues' %}">Join League</a></td>
+
 
 <form action="{% url 'league_search_results' %}" method="get">
   <input name="query" type="text" placeholder="League search">
   <button type="submit">Search</button>
 </form>
+
 
 {% endblock %}

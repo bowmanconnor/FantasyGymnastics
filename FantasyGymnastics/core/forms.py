@@ -5,7 +5,7 @@ from .models import League, FantasyTeam
 class NewLeagueForm(forms.ModelForm):
     class Meta:
         model = League
-        exclude = ['manager']
+        exclude = ['manager', 'requested_to_join']
 
 class NewFantasyTeamForm(forms.ModelForm):
     class Meta:
