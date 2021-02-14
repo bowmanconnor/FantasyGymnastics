@@ -47,7 +47,7 @@ def request_to_join_league(request, pk):
 
 def approve_player_into_league(request, league_pk, user_pk):
     league = get_object_or_404(League, pk=league_pk)
-    if request.user is league.manager:
+    if request.user == league.manager:
         user = get_object_or_404(User, pk=user_pk)
         team = FantasyTeam.objects.create(
             user=user,
@@ -59,14 +59,14 @@ def approve_player_into_league(request, league_pk, user_pk):
 
 def reject_player_from_league(request, league_pk, user_pk):
     league = get_object_or_404(League, pk=league_pk)
-    if request.user is league.manager:
+    if request.user == league.manager:
         user = get_object_or_404(User, pk=user_pk)
         league.requested_to_join.remove(user)
     return redirect('view_league', pk=league.pk)
 
 def remove_team_from_league(request, league_pk, team_pk):
     league = get_object_or_404(League, pk=league_pk)
-    if request.user is league.manager:
+    if request.user == league.manager:
         get_object_or_404(FantasyTeam, pk=team_pk).delete()
     return redirect('view_league', pk=league_pk)
 
