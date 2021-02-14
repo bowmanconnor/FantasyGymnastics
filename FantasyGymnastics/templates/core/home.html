@@ -18,4 +18,11 @@
 <a href="{% url 'create_league' %}">Create League</a></td>
 <a href="{% url 'view_leagues' %}">Join League</a></td>
 
+
+<form action="{% url 'league_search_results' %}" method="get">
+  <input name="query" type="text" placeholder="League search">
+  <button type="submit">Search</button>
+</form>
+
+
 {% endblock %}

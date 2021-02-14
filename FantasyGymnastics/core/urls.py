@@ -15,5 +15,5 @@ urlpatterns = [
     path('league/<int:pk>/team/create/', views.create_team, name="create_team"),
     path('team/view/<int:pk>/', views.FantasyTeamDetailView.as_view(), name="view_team"),
     path('team/edit/<int:pk>/', views.FantasyTeamUpdateView.as_view(), name="edit_team"),
-
+    path('league/search/', views.LeagueSearchResultsView.as_view(), name='league_search_results'),
 ]

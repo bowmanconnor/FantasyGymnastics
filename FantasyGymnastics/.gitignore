@@ -1,16 +1,14 @@
 db.sqlite3
-core/__pycache__
-authentication/__pycache__
-core/migrations*
-authentication/migrations*
-core/migrations*
-FantasyGymnastics/__pycache__
+
+# Migrations
+*/migrations/*
+!*/migrations/__init__.py
 
 # Django #
 *.log
 *.pot
-*.pyc
-__pycache__
+__pycache__/
+*.py[cod]
 db.sqlite3
 media
 

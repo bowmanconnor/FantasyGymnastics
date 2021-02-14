@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+
+{% block title %}Search result{% endblock title %}
+
+{% block content %}
+    <a href="{% url 'home' %}">Home</a>
+    {% if leagues %}
+        <ul>
+            {% for league in leagues %}
+            <li><a href="{% url 'view_league' league.pk %}" class="btn btn-outline-primary">{{ league.name }}, managed by {{ league.manager }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No leagues found</p>
+    {% endif %}
+{% endblock content %}
