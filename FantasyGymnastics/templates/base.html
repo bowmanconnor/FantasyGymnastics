@@ -1,17 +1,25 @@
-{% load custom_tags %}
+﻿{% load custom_tags %}
+{% load static %}
+
 <!doctype html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <title>{% block title%}Base{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>{% block title%}Base{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 </head>
 
 <body>
-  {% block content %}{% endblock content %}
+    {% block content %}{% endblock content %}
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/font-awesome.js'%}"></script>
+    <!-- <script src="{% static 'js/bootstrap-table.min.js'%}"></script> -->
+    <!-- TODO: figure out the editable table plugin for bootstrap 5 so that we can set a lineup-->
 </body>
 </html>
 

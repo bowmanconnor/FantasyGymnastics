@@ -1,33 +1,53 @@
 {% extends 'base.html' %}
 {% load custom_tags %}
+{% load static %}
 {% block title %}Leagues{% endblock title %}Leagues
 {% block content %}
 
+<div class="Container">
+    <div class="row">
+        {% if user.is_authenticated %}
 
-{% if user.is_authenticated %}
-<p>Username: {{user.username}}</p>
-<p>Name: {{user.first_name}} {{user.last_name}}</p>
-<p>Profile picture: <img src="{{user.profile.picture_url}}" /></p>
-<td><a href="{% url 'logout' %}" class="btn btn-outline-primary">Logout</a></td>
-{% else %}
-<td><a href="{% url 'login' %}" class="btn btn-outline-primary">Login</a></td>
-{% endif %}
+        <div class="col-md-1">
+            <p>{{user.username}}</p>
+        </div>
 
-<h1>Leagues</h1><table class="table mb-4">
+        <div class="col-md-1">
+            <p>Name: {{user.first_name}} {{user.last_name}}</p>
+        </div>
+
+        <div class="col-md-1">
+            <p>Profile picture: <img src="{{user.profile.picture_url}}" /></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-">
+            <td><a href="{% url 'logout' %}" class="btn btn-outline-primary">Logout</a></td>
+            {% else %}
+            <td><a href="{% url 'login' %}" class="btn btn-outline-primary">Login</a></td>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<h1>Leagues</h1>
+<table class="table mb-4">
 
     <tbody>
-      {% for league in leagues %}
-      <tr>
-        <td><a href="{% url 'view_league' league.pk %}" class="btn btn-outline-primary">{{ league.name }}</a></td>
-      </tr>
-      {% endfor %}
+        {% for league in leagues %}
+        <tr>
+            <td><a href="{% url 'view_league' league.pk %}" class="btn btn-outline-primary">{{ league.name }}</a></td>
+        </tr>
+        {% endfor %}
     </tbody>
-  </table>
+</table>
 <a href="{% url 'create_league' %}">Create League</a></td>
 
 <form action="{% url 'league_search_results' %}" method="get">
-  <input name="query" type="text" placeholder="League search">
-  <button type="submit">Search</button>
+    <input name="query" type="text" placeholder="League search">
+    <button type="submit">Search</button>
 </form>
+
 
 {% endblock %}
