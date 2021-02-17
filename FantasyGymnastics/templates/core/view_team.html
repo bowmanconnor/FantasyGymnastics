@@ -44,7 +44,26 @@
                         <td style="width:30%">Gymnast1 Headshot</td>
                         <td style="width:70%">Gymnast1 Name (link to profile)</td>
                     </tr>
-
+                    <tr>
+                        <td style="width:30%">Gymnast2 Headshot</td>
+                        <td style="width:70%">Gymnast2 Name (link to profile)</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">Gymnast3 Headshot</td>
+                        <td style="width:70%">Gymnast3 Name (link to profile)</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">Gymnast4 Headshot</td>
+                        <td style="width:70%">Gymnast4 Name (link to profile)</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">Gymnast5 Headshot</td>
+                        <td style="width:70%">Gymnast5 Name (link to profile)</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">Gymnast6 Headshot</td>
+                        <td style="width:70%">Gymnast6 Name (link to profile)</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -99,13 +118,6 @@
                         <tr>
                             <td>Gymnast6 Headshot </td>
                             <td>Gymnast6 Name (link to profile)</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <button type="button" class="btn btn-default btn-lg">
-                                    <i class="fas fa-user-plus"></i>
-                                </button>
-                            </td>
                         </tr>
                     </table>
                 </div>
@@ -204,5 +216,22 @@
     </div>
 </div>
 
+<!--TODO: Generate roster and lineup tables using league roster size and lineup size-->
 
-  {% endblock %}
+<div id="container"></div>
+{% endblock %}
+
+<!--
+<script>
+    var lineup_size = "{{ league.lineup_size }}";
+    var table = document.createElement('table class="table table-striped"'), tr, td, row;
+    for (row = 0; row < lineup_size; row++) {
+        tr = document.createElement('tr');
+        td = document.createElement('td colspan = "2"');
+        tr.appendChild(td);
+        td.innerHTML = '<button type="button" class="btn btn-default btn-lg">< i class="fas fa-user-plus" ></i</button >';
+        table.appendChild(tr)
+    }
+    document.getElementById('container').appendChild(table)
+</script>
+-->
