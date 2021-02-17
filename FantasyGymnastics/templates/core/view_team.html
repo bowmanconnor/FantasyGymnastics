@@ -205,4 +205,10 @@
 </div>
 
 
+<a href="{% url 'home' %}">Home</a>
+{% if user == team.user %}
+    <a href="{% url 'edit_team' team.pk %}">Edit Team</a>
+{% endif %}
+<a href="{% url 'view_league' team.league.id %}">Back to league</a>
+
   {% endblock %}
