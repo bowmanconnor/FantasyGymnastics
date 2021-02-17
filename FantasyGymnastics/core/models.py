@@ -38,6 +38,7 @@ class LineUp(models.Model):
 
 
 class Score(models.Model):
+    score = models.DecimalField(max_digits=6, decimal_places=4)
     EVENT_CHOICES = [('FX' , 'Floor Exercise'), ('PH' , 'Pommel Horse'), ('SR' , 'Still Rings'), ('VT' , 'Vault'), ('PB' , 'Parallel Bars'), ('HB' , 'Horizontal Bar')]
     gymnast = models.ForeignKey(Gymnast, related_name='Scores', on_delete=models.CASCADE, null=False, blank=False)
     date = models.DateField()
