@@ -219,19 +219,26 @@
 <!--TODO: Generate roster and lineup tables using league roster size and lineup size-->
 
 <div id="container"></div>
-{% endblock %}
+
+<a href="{% url 'home' %}">Home</a>
+{% if user == team.user %}
+<a href="{% url 'edit_team' team.pk %}">Edit Team</a>
+{% endif %}
+<a href="{% url 'view_league' team.league.id %}">Back to league</a>
 
 <!--
-<script>
-    var lineup_size = "{{ league.lineup_size }}";
-    var table = document.createElement('table class="table table-striped"'), tr, td, row;
-    for (row = 0; row < lineup_size; row++) {
-        tr = document.createElement('tr');
-        td = document.createElement('td colspan = "2"');
-        tr.appendChild(td);
-        td.innerHTML = '<button type="button" class="btn btn-default btn-lg">< i class="fas fa-user-plus" ></i</button >';
-        table.appendChild(tr)
-    }
-    document.getElementById('container').appendChild(table)
-</script>
+<table>
+    {% for i in league.lineup_size %}
+    <tr>
+        <td colspan="2">
+            <button type="button" class="btn btn-default btn-lg">
+                <i class="fas fa-user-plus"></i>
+            </button>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 -->
+  {% endblock %}
+
+

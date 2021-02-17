@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load custom_tags %}
-{% block title %}Leagues{% endblock title %}Leagues
+{% block title %}Leagues{% endblock title %}
 {% block content %}
 
 
@@ -20,7 +20,7 @@
 
             <tr>
                 <td>League Size:</td>
-                <td>{{league.manager}}</td>
+                <td>{{ teams.count }}</td>
             </tr>
 
             <tr>
@@ -42,10 +42,19 @@
                 <td>Event Count Size:</td>
                 <td>{{league.event_count_size}}</td>
             </tr>
+            {% if league.manager == user %}
+                <tr>
+                    <td>Requested to join (click to approve):</td>
+                </tr>
+                {% for requested_user in league.requested_to_join.all %}
+                    <tr>
+                        <td><a href="{% url 'approve_player_into_league' league.pk requested_user.pk %}" >{{requested_user}}</a> 
+                        <a href="{% url 'reject_player_from_league' league.pk requested_user.pk %}">X</a> </td>
+                    </tr>
+                {% endfor %}                
+            {% endif %}
         </tbody>
-</table>
-
-
+</table> 
 <table>
     <thead>
         <td><h2>Teams in {{ league.name }}</h2></td>
@@ -54,15 +63,24 @@
         {% for team in teams %}
             <tr>
                 <td>Team name:</td>
-                <td><a href="{% url 'view_team' team.id %}">{{team.name}}</a></td>
+                <td><a href="{% url 'view_team' team.id %}">{{team.name}}</a> 
+                {% if league.manager == user %}
+                    <a href="{% url 'remove_team_from_league' league.pk team.pk %}">X</a></td>
+                {% endif %}
             </tr>
         {% endfor %}
-         
         </tbody>
 </table>
 
-<a href="{% url 'home' %}" >Home</a>
-<a href="{% url 'create_team' league.id %}" >Add a team</a>
-<a href="{% url 'edit_league' league.pk %}" >Edit league</a>
+<table>
+    <tbody>
+        <tr><td><a href="{% url 'home' %}" >Home</a></td></tr>
+        <tr><td><a href="{% url 'create_team' league.id %}" >Add a team</a></td></tr>
+        {% if user is league.manager %}
+            <tr><td><a href="{% url 'edit_league' league.pk %}" >Edit league</a></td></tr>{% endif %}
+        <tr><td><a href="{% url 'request_to_join_league' league.pk %}" >Request to join league</td></a></tr>
+
+    </tbody>
+</table
 
   {% endblock %}

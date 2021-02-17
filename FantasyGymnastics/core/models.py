@@ -10,6 +10,7 @@ class League(models.Model):
     lineup_size = models.PositiveIntegerField(blank=False)
     event_lineup_size = models.PositiveIntegerField(blank=False)
     event_count_size = models.PositiveIntegerField(blank=False)
+    requested_to_join = models.ManyToManyField(User, related_name="RequestedLeague", blank=True)
     
 class Gymnast(models.Model):
     YEAR_CHOICES = [('FR' , 'Freshman'), ('SO' , 'Sophomore'), ('JR' , 'Junior'), ('SR' , 'Senior')]
