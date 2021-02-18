@@ -1,13 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import League, FantasyTeam
+from .models import League, FantasyTeam, Gymnast
 from django.views.generic import UpdateView, DetailView, DeleteView, ListView
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin
 
 
-from .forms import NewLeagueForm, NewFantasyTeamForm
+from .forms import NewLeagueForm, NewFantasyTeamForm, NewGymnastForm
 # Create your views here.
 
 @login_required
@@ -132,6 +132,9 @@ class FantasyTeamDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["roster"] = context["object"].roster.all()
+        drafted = context['object'].league.drafted.all()
+        context["draftable_gymnasts"] = Gymnast.objects.exclude(id__in=drafted)
         return context      
 
 class FantasyTeamUpdateView(UserPassesTestMixin, UpdateView):
@@ -152,5 +155,19 @@ class FantasyTeamUpdateView(UserPassesTestMixin, UpdateView):
 
 
 def home(request):
-    return render(request, 'core/home.html')
+    gymnasts = Gymnast.objects.all()
+    if request.method == 'POST':
+            form = NewGymnastForm(request.POST)
+            if form.is_valid():
+                gymnast = form.save(commit=False)
+                gymnast.save()
+                return redirect('home')
+    else:
+        form = NewGymnastForm()
+    return render(request, 'core/home.html', {'form': form, 'gymnasts' : gymnasts})
+
+def delete_gymnast(request, pk):
+    g = get_object_or_404(Gymnast, pk=pk)
+    g.delete()
+    return redirect('home')
 

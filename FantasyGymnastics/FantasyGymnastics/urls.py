@@ -21,6 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('authentication/', include('authentication.urls')),
     path('', include('core.urls')),
+    path('', include('weekly_gameplay.urls')),
     path('social-auth/', include('social_django.urls', namespace='social')),
 
 ]

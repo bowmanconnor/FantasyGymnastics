@@ -16,4 +16,6 @@ urlpatterns = [
     path('team/view/<int:pk>/', views.FantasyTeamDetailView.as_view(), name="view_team"),
     path('team/edit/<int:pk>/', views.FantasyTeamUpdateView.as_view(), name="edit_team"),
     path('league/search/', views.LeagueSearchResultsView.as_view(), name='league_search_results'),
+
+    path('delete_gymnast/<int:pk>', views.delete_gymnast, name='delete_gymnast'),
 ]

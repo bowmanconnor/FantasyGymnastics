@@ -44,4 +44,27 @@ Search for a league to join
 
 <a href="{% url 'create_league' %}">Create League</a></td>
 
+<h1>New Gymnast</h1>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% include 'includes/forms.html' %}
+        <button type="submit" class="btn btn-success mb-4">Submit</button>
+    </form>
+<h2>Gymansts</h2>
+
+<table class="mb-4">
+    <tbody>
+      {% for gymnast in gymnasts %}
+      <tr>
+        <td>{{ gymnast.name }}</td>
+        <td>{{ gymnast.team }}</td>
+        <td>{{ gymnast.year }}</td>
+        <td>{{ gymnast.id }}</td>
+        
+        <td><a href="{% url 'delete_gymnast' gymnast.pk %}">X</a></td></td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}

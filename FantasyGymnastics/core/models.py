@@ -3,6 +3,12 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+class Gymnast(models.Model):
+    YEAR_CHOICES = [('FR' , 'Freshman'), ('SO' , 'Sophomore'), ('JR' , 'Junior'), ('SR' , 'Senior')]
+    name = models.CharField(max_length=50, blank=False)
+    team = models.CharField(max_length=100, blank=False)
+    year = models.CharField(max_length=2, choices=YEAR_CHOICES, blank=False)
+    
 class League(models.Model):
     manager = models.ForeignKey(User, related_name='League', on_delete=models.CASCADE, null=True, blank=True) #how do these look, cutie?
     name = models.CharField(max_length=50, blank=False)
@@ -11,12 +17,9 @@ class League(models.Model):
     event_lineup_size = models.PositiveIntegerField(blank=False)
     event_count_size = models.PositiveIntegerField(blank=False)
     requested_to_join = models.ManyToManyField(User, related_name="RequestedLeague", blank=True)
+    drafted = models.ManyToManyField(Gymnast, related_name="DraftedGymnasts", blank=True)
     
-class Gymnast(models.Model):
-    YEAR_CHOICES = [('FR' , 'Freshman'), ('SO' , 'Sophomore'), ('JR' , 'Junior'), ('SR' , 'Senior')]
-    name = models.CharField(max_length=50, blank=False)
-    team = models.CharField(max_length=100, blank=False)
-    year = models.CharField(max_length=2, choices=YEAR_CHOICES, blank=False)
+
 
 class FantasyTeam(models.Model):
     user = models.ForeignKey(User, related_name='FantasyTeam', on_delete=models.CASCADE)
@@ -38,12 +41,12 @@ class LineUp(models.Model):
 
 
 class Score(models.Model):
-    score = models.DecimalField(max_digits=6, decimal_places=4)
     EVENT_CHOICES = [('FX' , 'Floor Exercise'), ('PH' , 'Pommel Horse'), ('SR' , 'Still Rings'), ('VT' , 'Vault'), ('PB' , 'Parallel Bars'), ('HB' , 'Horizontal Bar')]
     gymnast = models.ForeignKey(Gymnast, related_name='Scores', on_delete=models.CASCADE, null=False, blank=False)
     date = models.DateField()
     meet = models.CharField(max_length=100)
     event = models.CharField(max_length=2, choices = EVENT_CHOICES, blank=False)
+    score = models.DecimalField(max_digits=6, decimal_places=4)
 
     class Meta:
         unique_together = ('gymnast', 'date', 'event')
