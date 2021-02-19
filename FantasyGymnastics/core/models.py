@@ -14,9 +14,16 @@ class League(models.Model):
     
 class Gymnast(models.Model):
     YEAR_CHOICES = [('FR' , 'Freshman'), ('SO' , 'Sophomore'), ('JR' , 'Junior'), ('SR' , 'Senior')]
+    rtn_id = models.CharField(max_length=10, blank=False)
     name = models.CharField(max_length=50, blank=False)
     team = models.CharField(max_length=100, blank=False)
     year = models.CharField(max_length=2, choices=YEAR_CHOICES, blank=False)
+
+    class Meta:
+        unique_together = ('name', 'team')
+    
+    def __str__(self):
+        return self.name
 
 class FantasyTeam(models.Model):
     user = models.ForeignKey(User, related_name='FantasyTeam', on_delete=models.CASCADE)

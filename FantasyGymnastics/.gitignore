@@ -12,6 +12,8 @@ __pycache__/
 db.sqlite3
 media
 
+*.DS_STORE
+
 # Environments 
 .env 
 .venv 
