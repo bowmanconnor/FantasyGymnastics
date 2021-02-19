@@ -8,7 +8,7 @@ class GymnastAdmin(admin.ModelAdmin):
     list_filter = ('team', 'year')
 
 class ScoreAdmin(admin.ModelAdmin):
-    list_display = ('gymnast', 'meet', 'event', 'date')
+    list_display = ('gymnast', 'meet', 'event', 'score', 'date')
     list_filter = ('meet', 'event')
 
 admin.site.register(Gymnast, GymnastAdmin)
