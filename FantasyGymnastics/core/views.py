@@ -67,7 +67,11 @@ def reject_player_from_league(request, league_pk, user_pk):
 def remove_team_from_league(request, league_pk, team_pk):
     league = get_object_or_404(League, pk=league_pk)
     if request.user == league.manager:
-        get_object_or_404(FantasyTeam, pk=team_pk).delete()
+        team = get_object_or_404(FantasyTeam, pk=team_pk)
+        gymnasts = team.roster.all()
+        for gymnast in gymnasts:
+            league.drafted.remove(gymnast)
+        team.delete()
     return redirect('view_league', pk=league_pk)
 
 class LeagueDetailView(DetailView):

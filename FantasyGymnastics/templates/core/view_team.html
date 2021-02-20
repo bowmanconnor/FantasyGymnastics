@@ -50,7 +50,6 @@
                         <td><a href="{% url 'remove_gymnast_to_roster' team.pk gymnast.pk %}">X</a></td>
                     </tr>
                     {% endfor %}
-
                     <tr>
                         <td>
                             <p>
@@ -81,33 +80,7 @@
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                 <li class="nav-item active" role="presentation">
                     <button class="nav-link" id="full-lineup-tab" data-bs-toggle="pill" data-bs-target="#full-lineup"
-                        type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Full
-                        Lineup</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="floor-lineup-tab" data-bs-toggle="pill" data-bs-target="#floor-lineup"
-                        type="button" role="tab" aria-controls="pills-home" aria-selected="true">FX</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pommels-lineup-tab" data-bs-toggle="pill"
-                        data-bs-target="#pommels-lineup" type="button" role="tab" aria-controls="pills-profile"
-                        aria-selected="false">PH</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="rings-lineup-tab" data-bs-toggle="pill" data-bs-target="#rings-lineup"
-                        type="button" role="tab" aria-controls="pills-contact" aria-selected="false">SR</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="vault-lineup-tab" data-bs-toggle="pill" data-bs-target="#vault-lineup"
-                        type="button" role="tab" aria-controls="pills-home" aria-selected="true">VT</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pbars-lineup-tab" data-bs-toggle="pill" data-bs-target="#pbars-lineup"
-                        type="button" role="tab" aria-controls="pills-profile" aria-selected="false">PB</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="hbar-lineup-tab" data-bs-toggle="pill" data-bs-target="#hbar-lineup"
-                        type="button" role="tab" aria-controls="pills-contact" aria-selected="false">HB</button>
+                        type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Full Lineup</button>
                 </li>
             </ul>
             <div class="tab-content" id="pills-tabContent">
@@ -116,97 +89,6 @@
                         <tr>
                             <td>Gymnast1 Headshot </td>
                             <td>Gymnast1 Name (link to profile)</td>
-                        </tr>
-
-                    </table>
-                </div>
-                <div class="tab-pane fade" id="floor-lineup" role="tabpanel" aria-labelledby="floor-lineup-tab">
-                    <table class="table table-striped">
-                        <tr>
-                            <td>Gymnast1 Headshot </td>
-                            <td>Gymnast1 Name (link to profile)</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <button type="button" class="btn btn-default btn-lg">
-                                    <i class="fas fa-user-plus"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="tab-pane fade" id="pommels-lineup" role="tabpanel" aria-labelledby="pommels-lineup-tab">
-                    <table class="table table-striped">
-                        <tr>
-                            <td>Gymnast2 Headshot </td>
-                            <td>Gymnast2 Name (link to profile)</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <button type="button" class="btn btn-default btn-lg">
-                                    <i class="fas fa-user-plus"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="tab-pane fade" id="rings-lineup" role="tabpanel" aria-labelledby="rings-lineup-tab">
-                    <table class="table table-striped">
-                        <tr>
-                            <td>Gymnast3 Headshot </td>
-                            <td>Gymnast3 Name (link to profile)</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <button type="button" class="btn btn-default btn-lg">
-                                    <i class="fas fa-user-plus"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="tab-pane fade" id="vault-lineup" role="tabpanel" aria-labelledby="vault-lineup-tab">
-                    <table class="table table-striped">
-                        <tr>
-                            <td>Gymnast4 Headshot </td>
-                            <td>Gymnast4 Name (link to profile)</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <button type="button" class="btn btn-default btn-lg">
-                                    <i class="fas fa-user-plus"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="tab-pane fade" id="pbars-lineup" role="tabpanel" aria-labelledby="pbars-lineup-tab">
-                    <table class="table table-striped">
-                        <tr>
-                            <td>Gymnast5 Headshot </td>
-                            <td>Gymnast5 Name (link to profile)</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <button type="button" class="btn btn-default btn-lg">
-                                    <i class="fas fa-user-plus"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="tab-pane fade" id="hbar-lineup" role="tabpanel" aria-labelledby="hbar-lineup-tab">
-                    <table class="table table-striped">
-                        <tr>
-                            <td>Gymnast6 Headshot </td>
-                            <td>Gymnast6 Name (link to profile)</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <button type="button" class="btn btn-default btn-lg">
-                                    <i class="fas fa-user-plus"></i>
-                                </button>
-                            </td>
                         </tr>
                     </table>
                 </div>
