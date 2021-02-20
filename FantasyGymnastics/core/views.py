@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import League, FantasyTeam, Gymnast
+from .models import League, FantasyTeam, Gymnast, LineUp
 from django.views.generic import UpdateView, DetailView, DeleteView, ListView
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
@@ -27,10 +27,6 @@ def create_league(request):
         form = NewLeagueForm()
     return render(request, 'core/create_league.html', {'form': form})
 
-def view_leagues(request):
-    context = {}
-    context['leagues'] = League.objects.all()
-    return render(request, 'core/view_leagues.html', context)
 
 @login_required
 def request_to_join_league(request, pk):
@@ -54,6 +50,13 @@ def approve_player_into_league(request, league_pk, user_pk):
             league=league,
             name=str(user.first_name)+"'s Team")
         team.save()
+        events = ['FX', 'PH', 'SR', 'VT', 'PB', 'HB']
+        for i in range(6):
+            lineup = LineUp.objects.create(
+                team=team,
+                event=events[i]
+            )
+            lineup.save()
         league.requested_to_join.remove(user)
     return redirect('view_league', pk=league.pk)
 
@@ -71,6 +74,7 @@ def remove_team_from_league(request, league_pk, team_pk):
         gymnasts = team.roster.all()
         for gymnast in gymnasts:
             league.drafted.remove(gymnast)
+        LineUp.objects.filter(team=team).delete()
         team.delete()
     return redirect('view_league', pk=league_pk)
 
@@ -106,27 +110,16 @@ class LeagueUpdateView(UserPassesTestMixin, UpdateView):
 
 class LeagueSearchResultsView(ListView):
     model = League
-    template_name = 'core/league_search_results.html'
+    template_name = 'core/league_search.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         query = self.request.GET.get('query')
-        context['leagues'] = League.objects.filter(name__icontains=query)
+        if query:
+            context['leagues'] = League.objects.filter(name__icontains=query)
+        else:
+            context['leagues'] = League.objects.all()
         return context
-
-@login_required
-def create_team(request, pk):
-    if request.method == 'POST':
-        form = NewFantasyTeamForm(request.POST)
-        if form.is_valid():
-            team = form.save(commit=False)
-            team.user = request.user
-            team.league = League.objects.get(pk=pk)
-            team.save()
-            return redirect('home')
-    else:
-        form = NewFantasyTeamForm()
-    return render(request, 'core/create_team.html', {'form': form})
  
 class FantasyTeamDetailView(DetailView):
     model = FantasyTeam
@@ -139,6 +132,7 @@ class FantasyTeamDetailView(DetailView):
         context["roster"] = context["object"].roster.all()
         drafted = context['object'].league.drafted.all()
         context["draftable_gymnasts"] = Gymnast.objects.exclude(id__in=drafted)
+        context["lineups"] = LineUp.objects.filter(team=context['object']).order_by('pk')
         return context      
 
 class FantasyTeamUpdateView(UserPassesTestMixin, UpdateView):
@@ -157,6 +151,13 @@ class FantasyTeamUpdateView(UserPassesTestMixin, UpdateView):
         team.save()
         return redirect('view_team', pk=team.pk)
 
+@login_required
+def myleagues(request):
+    user = request.user
+    context = {}
+    context['leagues'] = League.objects.filter(FantasyTeam__in=FantasyTeam.objects.filter(user=user).all())
+    
+    return render(request, 'core/myleagues.html', context)
 
 def home(request):
     gymnasts = Gymnast.objects.all()

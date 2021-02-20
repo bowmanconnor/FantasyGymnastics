@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from core.models import League, FantasyTeam, Gymnast
+from core.models import League, FantasyTeam, Gymnast, LineUp
 from django.views.generic import UpdateView, DetailView, DeleteView, ListView
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
@@ -22,3 +22,15 @@ def remove_gymnast_from_roster(request, team_pk, gymnast_pk):
     league = team.league
     league.drafted.remove(gymnast)
     return redirect('view_team', pk=team_pk)
+
+def add_gymnast_to_lineup(request, lineup_pk, gymnast_pk):
+    lineup = get_object_or_404(LineUp, pk=lineup_pk)
+    gymnast = get_object_or_404(Gymnast, pk=gymnast_pk)
+    lineup.gymnasts.add(gymnast)
+    return(redirect('view_team', pk=lineup.team.pk))
+
+def remove_gymnast_from_lineup(request, lineup_pk, gymnast_pk):
+    lineup = get_object_or_404(LineUp, pk=lineup_pk)
+    gymnast = get_object_or_404(Gymnast, pk=gymnast_pk)
+    lineup.gymnasts.remove(gymnast)
+    return(redirect('view_team', pk=lineup.team.pk))

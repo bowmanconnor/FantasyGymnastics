@@ -19,6 +19,8 @@ class League(models.Model):
     requested_to_join = models.ManyToManyField(User, related_name="RequestedLeague", blank=True)
     drafted = models.ManyToManyField(Gymnast, related_name="DraftedGymnasts", blank=True)
     
+    def __str__(self):
+        return self.name
 
 
 class FantasyTeam(models.Model):
@@ -30,14 +32,20 @@ class FantasyTeam(models.Model):
     class Meta:
         unique_together = ('user', 'league')
 
+    def __str__(self):
+        return str(self.name)
+
 class LineUp(models.Model):
     EVENT_CHOICES = [('FX' , 'Floor Exercise'), ('PH' , 'Pommel Horse'), ('SR' , 'Still Rings'), ('VT' , 'Vault'), ('PB' , 'Parallel Bars'), ('HB' , 'Horizontal Bar')]
-    team = models.ForeignKey(FantasyTeam, choices = EVENT_CHOICES, related_name='LineUp', on_delete = models.CASCADE)
-    event = models.CharField(max_length=20, choices = EVENT_CHOICES, blank=False)
-    gymnasts = models.ManyToManyField(Gymnast, related_name = 'LineUp')
+    team = models.ForeignKey(FantasyTeam, related_name='LineUp', on_delete = models.CASCADE, blank=False)
+    event = models.CharField(max_length=2, choices = EVENT_CHOICES, blank=False)
+    gymnasts = models.ManyToManyField(Gymnast, related_name = 'LineUp', blank=True)
 
     class Meta:
         unique_together = ('team', 'event')
+
+    def __str__(self):
+        return str(self.team) + "'s " + str(self.event)
 
 
 class Score(models.Model):
