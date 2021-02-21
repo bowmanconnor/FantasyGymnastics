@@ -5,4 +5,4 @@ import core.models as core_models
 class Matchup(models.Model):
     team1 = models.ForeignKey(core_models.FantasyTeam, related_name='Matchup', on_delete=models.CASCADE)
     team2 = models.ForeignKey(core_models.FantasyTeam, related_name='Matchup', on_delete=models.CASCADE)
-    
+    week = models.PositiveIntegerField(blank=False)

@@ -28,38 +28,15 @@
                         {% endif %}
                     </tr>
                     {% endfor %}
-                    {% comment %} Add to roster button {% endcomment %}
-                    {% if user == team.user %}
-                        {% if team.roster.all.count < team.league.roster_size %}
-                            <tr>
-                                <td>
-                                    <p>
-                                        <a data-bs-toggle="collapse" href="#multiCollapseExample1" aria-expanded="false"
-                                            aria-controls="multiCollapseExample1"><i class="fas fa-user-plus"></i></a>
-                                    </p>
-                                </td>
-                            </tr>
-                        {% endif %}
-                    {% endif %}
                 </tbody>
             </table>
-            <p>{{ team.roster.all.count }}/{{ team.league.roster_size}}</p>
-            <div class="row">
-                <div class="col">
-                    <div class="collapse multi-collapse" id="multiCollapseExample1">
-                        {% for gymnast in draftable_gymnasts %}
-                        <table>
-                            {% if user == team.user %}
-                            <tr>
-                                <td><a href="{% url 'add_gymnast_to_roster' team.pk gymnast.pk %}">{{gymnast.name}}</a>
-                                </td>
-                            </tr>
-                            {% endif %}
-                        </table>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+            {% comment %} Add to roster button {% endcomment %}
+            {% if user == team.user %}
+                {% if team.roster.all.count < team.league.roster_size %}
+                    <a class="mb-4" href="{% url 'gymnast_search' team.pk %}"><i class="fas fa-user-plus"></i></a>
+                {% endif %} 
+            {% endif %}
+            <p class='mt-4'>{{ team.roster.all.count }}/{{ team.league.roster_size}}</p>
         </div>
         <div class="col-md-2"></div>
         {% comment %} Lineups {% endcomment %}
@@ -92,7 +69,6 @@
                             {% comment %} Add to lineup button {% endcomment %}
                             {% if user == team.user %}
                                 {% if lineup.gymnasts.all.count < lineup.team.league.event_lineup_size %}
-                                
                                     <tr>
                                         <td>
                                             <p>
