@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load custom_tags static %}
+{% block title %}League Standings{% endblock title %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'css/clickable_row.css' %}">{% endblock stylesheet %}
+{% block content %}
+
+<div class='d-flex align-items-center justify-content-center mb-4'>
+    <h1>{{league.name}}</h1>
+</div>
+
+<h2>Rank</h2>
+<table class="table table-hover">
+    {% for team in teams %}
+    <tr >
+        <td><a style="color:inherit; text-decoration: none;"
+                href="{% url 'view_team' team.pk %}">{{team.name}}</a></td>
+        <td>({{team.wins}}-{{team.losses}})</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<table>
+    <tbody>
+        <tr><td><a href="{% url 'home' %}" >Home</a></td></tr>
+        {% if user == league.manager %}
+            <tr><td><a href="{% url 'edit_league' league.pk %}" >Edit league</a></td></tr>{% endif %}
+        <tr><td><a href="{% url 'request_to_join_league' league.pk %}" >Request to join league</td></a></tr>
+
+    </tbody>
+</table
+
+{% if league.manager == user %}
+                <tr>
+                    <td>Requested to join (click to approve):</td>
+                </tr>
+                {% for requested_user in league.requested_to_join.all %}
+                    <tr>
+                        <td><a href="{% url 'approve_player_into_league' league.pk requested_user.pk %}" >{{requested_user}}</a> 
+                        <a href="{% url 'reject_player_from_league' league.pk requested_user.pk %}">X</a> </td>
+                    </tr>
+                {% endfor %}                
+            {% endif %}
+  {% endblock %}

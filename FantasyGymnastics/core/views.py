@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import League, FantasyTeam, Gymnast, LineUp
+from .models import League, FantasyTeam, Gymnast, LineUp, Score
 from django.views.generic import UpdateView, DetailView, DeleteView, ListView
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
@@ -22,7 +22,7 @@ def create_league(request):
                 user=request.user,
                 league=league,
                 name=str(request.user)+"'s Team")
-            return redirect('home')
+            return redirect('view_league', pk=league.pk)
     else:
         form = NewLeagueForm()
     return render(request, 'core/create_league.html', {'form': form})
@@ -78,16 +78,16 @@ def remove_team_from_league(request, league_pk, team_pk):
         team.delete()
     return redirect('view_league', pk=league_pk)
 
+# is now league standings
 class LeagueDetailView(DetailView):
     model = League
-    template_name = 'core/view_league.html'
+    template_name = 'core/league_standings.html'
     pk_url_kwarg = 'pk'
     context_object_name = 'league'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['teams'] = FantasyTeam.objects.filter(league_id=context['object'].id)
-        context['requested_to_join'] = context['object'].requested_to_join
+        context['teams'] = FantasyTeam.objects.filter(league_id=context['object'].id).order_by('-wins', 'name')
         print(context['teams'])
         return context
 
@@ -175,4 +175,3 @@ def delete_gymnast(request, pk):
     g = get_object_or_404(Gymnast, pk=pk)
     g.delete()
     return redirect('home')
-

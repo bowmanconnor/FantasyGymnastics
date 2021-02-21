@@ -13,7 +13,7 @@ urlpatterns = [
     path('league/<int:league_pk>/approve/<int:user_pk>', views.approve_player_into_league, name="approve_player_into_league"),
     path('league/<int:league_pk>/reject/<int:user_pk>', views.reject_player_from_league, name="reject_player_from_league"),
     path('league/<int:league_pk>/remove_team/<int:team_pk>', views.remove_team_from_league, name="remove_team_from_league"),
-    path('league/view/<int:pk>/', views.LeagueDetailView.as_view(), name="view_league"),
+    path('league/<int:pk>/standings', views.LeagueDetailView.as_view(), name="league_standings"),
     path('league/edit/<int:pk>/', views.LeagueUpdateView.as_view(), name="edit_league"),
 
     path('team/view/<int:pk>/', views.FantasyTeamDetailView.as_view(), name="view_team"),

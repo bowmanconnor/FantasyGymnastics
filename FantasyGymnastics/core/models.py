@@ -28,6 +28,8 @@ class FantasyTeam(models.Model):
     league = models.ForeignKey(League, related_name='FantasyTeam', on_delete=models.CASCADE)
     roster = models.ManyToManyField(Gymnast, related_name='FantasyTeam', blank=True)
     name = models.CharField(max_length=50, blank=False)
+    wins = models.PositiveIntegerField(default=0)
+    losses = models.PositiveIntegerField(default=0)
 
     class Meta:
         unique_together = ('user', 'league')
