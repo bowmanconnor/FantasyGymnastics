@@ -4,13 +4,16 @@ db.sqlite3
 */migrations/*
 !*/migrations/__init__.py
 
-# Django #
+# Django
 *.log
 *.pot
 __pycache__/
 *.py[cod]
 db.sqlite3
 media
+
+# Celery
+celerybeat-schedule.db
 
 *.DS_STORE
 
