@@ -63,6 +63,7 @@ class Scraper(object):
 	def create_new_session(self):
 		self.session = requests.Session()
 
+		# Select a random user agent to use
 		random_user_agent_index = random.randint(0, len(USER_AGENTS)-1)
 		self.session.headers = {'User-Agent': USER_AGENTS[random_user_agent_index]}
 
@@ -273,7 +274,7 @@ class Scraper(object):
 		response_json = json.loads(response.text)
 
 		return response_json
-	
+
 	def get_schedule(self, gender, date):
 		'''
 		Gets the schedule for a gender and games that are 7 days prior to and not including the date specified.
