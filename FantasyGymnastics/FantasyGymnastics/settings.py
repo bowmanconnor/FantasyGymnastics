@@ -43,8 +43,7 @@ INSTALLED_APPS = [
     
     'authentication',
     'core',
-    
-
+    'auto_populate_database'
 ]
 
 MIDDLEWARE = [

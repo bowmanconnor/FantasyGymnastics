@@ -2,12 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
-
-class Gymnast(models.Model):
-    YEAR_CHOICES = [('FR' , 'Freshman'), ('SO' , 'Sophomore'), ('JR' , 'Junior'), ('SR' , 'Senior')]
-    name = models.CharField(max_length=50, blank=False)
-    team = models.CharField(max_length=100, blank=False)
-    year = models.CharField(max_length=2, choices=YEAR_CHOICES, blank=False)
     
 class League(models.Model):
     manager = models.ForeignKey(User, related_name='League', on_delete=models.CASCADE, null=True, blank=True) #how do these look, cutie?
@@ -22,6 +16,18 @@ class League(models.Model):
     def __str__(self):
         return self.name
 
+class Gymnast(models.Model):
+    YEAR_CHOICES = [('FR' , 'Freshman'), ('SO' , 'Sophomore'), ('JR' , 'Junior'), ('SR' , 'Senior')]
+    rtn_id = models.CharField(max_length=10, blank=False)
+    name = models.CharField(max_length=50, blank=False)
+    team = models.CharField(max_length=100, blank=False)
+    year = models.CharField(max_length=2, choices=YEAR_CHOICES, blank=False)
+
+    class Meta:
+        unique_together = ('name', 'team')
+    
+    def __str__(self):
+        return self.name
 
 class FantasyTeam(models.Model):
     user = models.ForeignKey(User, related_name='FantasyTeam', on_delete=models.CASCADE)
