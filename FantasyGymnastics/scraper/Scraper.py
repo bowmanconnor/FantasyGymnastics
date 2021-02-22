@@ -12,6 +12,10 @@ CURRENT_WEEK_URL = 'api/%s/currentweek/%s'
 HA_DIFF_URL = 'api/%s/homeaway/%s'
 ROSTER_URL = 'api/%s/rostermain/%s/%s/1'
 GYMNAST_RESULTS_URL = 'api/%s/gymnast/%s/%s'
+MEET_RESULTS_URL = 'api/%s/meetresults/%s'
+YEAR_WEEKS_URL = 'api/%s/yearweeks/%s'
+SCHEDULE_URL = 'api/%s/schedule2/%s/0'
+TEAM_LIST_URL = 'api/%s/gymnasts2/%s/0'
 
 # List of common user agents for randomization
 USER_AGENTS = ['Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
@@ -59,8 +63,28 @@ class Scraper(object):
 	def create_new_session(self):
 		self.session = requests.Session()
 
+		# Select a random user agent to use
 		random_user_agent_index = random.randint(0, len(USER_AGENTS)-1)
 		self.session.headers = {'User-Agent': USER_AGENTS[random_user_agent_index]}
+
+	def get_teams(self, gender, year):
+		'''
+		Gets list of all teams given gender and year
+		@params
+			gender: "men" or "women"
+			year: season year
+		@requires
+			gender is either 'men' or 'women' and
+			year is a valid season year for the gender
+		@returns
+			A JSON array where each element is an object representing a team with keys
+				"id", "team_name"
+		'''
+		self.__check_gender(gender)
+		self.__check_year(gender, year)
+
+		response = self.session.get(BASE_URL + (TEAM_LIST_URL % (gender.value, year)))
+		return json.loads(response.text)['teams']
 
 	def get_current_and_max_week(self, gender, year):
 		'''
@@ -150,25 +174,26 @@ class Scraper(object):
 		response = self.session.get(BASE_URL + (FINAL_RESULTS_URL % (gender.value, year)))
 		return json.loads(response.text)
 	
-	def get_home_away_diff(self, gender, year):
-		'''
-		Gets H/A diff for all teams, useful for obtaining list of all teams.
-		@params
-			gender: "men" or "women"
-			year: season year
-		@requires
-			gender is either 'men' or 'women' and
-			year is a valid season year for the gender
-			@returns
-				Returns JSON array where all teams are an object in the array with the following keys:
-					"team_name", "team_id", "avgteam", "maxteam", "homeavg", "awayavg", "counthome", "countaway", and "diff"
-		'''
+	# Unreliable, deprecated
+	# def get_home_away_diff(self, gender, year):
+	# 	'''
+	# 	Gets H/A diff for all teams, useful for obtaining list of all teams.
+	# 	@params
+	# 		gender: "men" or "women"
+	# 		year: season year
+	# 	@requires
+	# 		gender is either 'men' or 'women' and
+	# 		year is a valid season year for the gender
+	# 		@returns
+	# 			Returns JSON array where all teams are an object in the array with the following keys:
+	# 				"team_name", "team_id", "avgteam", "maxteam", "homeavg", "awayavg", "counthome", "countaway", and "diff"
+	# 	'''
 
-		self.__check_gender(gender)
-		self.__check_year(gender, year)
+	# 	self.__check_gender(gender)
+	# 	self.__check_year(gender, year)
 
-		response = self.session.get(BASE_URL + (HA_DIFF_URL % (gender.value, year)))
-		return json.loads(response.text)
+	# 	response = self.session.get(BASE_URL + (HA_DIFF_URL % (gender.value, year)))
+	# 	return json.loads(response.text)
 
 	def get_roster(self, gender, year, team_id):
 		'''
@@ -197,7 +222,7 @@ class Scraper(object):
 
 		return response_json
 
-	def get_gymnast_meet_results(self, gender, year, gymnast_id):
+	def get_gymnast_all_meet_results(self, gender, year, gymnast_id):
 		'''
 		Gets all meet results for a gymnast.
 		@params
@@ -227,7 +252,82 @@ class Scraper(object):
 			raise ScraperException('Either invalid year or gymnast_id specified')
 
 		return response_json
+	
+	def get_year_weeks(self, gender, year):
+		'''
+		Gets the weeks and corresponding dates for a year and gender.
+		@params
+			gender: "men" or "women"
+			year: season year
+		@requires
+			gender is either 'men' or 'women' and
+			year is a valid season year for the gender
+		@returns
+			JSON array where each object has "wk" and "date" keys corresponding to the week number and the date used to get the schedule for that week and
+				the date is one day past the end of that week.
+				Each object also has "nqs", "current", and "fdate".
+		'''
+		self.__check_gender(gender)
+		self.__check_year(gender, year)
 
+		response = self.session.get(BASE_URL + (YEAR_WEEKS_URL % (gender.value, year)))
+		response_json = json.loads(response.text)
+
+		return response_json
+
+	def get_schedule(self, gender, date):
+		'''
+		Gets the schedule for a gender and games that are 7 days prior to and not including the date specified.
+		@params
+			gender: "men" or "women"
+			date: date in format "YYYY-MM-DD"
+		@requires
+			gender is either 'men' or 'women' and
+			date is a valid, correctly formatted day of the season whose week's schedule is known or partially known
+		@returns
+			JSON array where each element is an object with name that equals a date and keys "date" and "meets".
+				"date" is the full name of the date the meet is on,
+				"meets" is an array of objects that contain information for each meet.
+					Each object has keys "date", "meet_id", "time", "home_teams", "away_teams", and more
+		'''
+		self.__check_gender(gender)
+		self.__check_year(gender, date.split("-")[0])
+
+		response = self.session.get(BASE_URL + (SCHEDULE_URL % (gender.value, date)))
+		response_json = json.loads(response.text)
+
+		if len(response_json) == 0:
+			raise ScraperException('Invalid date entered')
+		
+		return response_json
+	
+	def get_meet_results(self, gender, meet_id):
+		'''
+		Get the results of a meet for a gender and meet ID
+		@params
+			gender: "men" or "women"
+			meet_id: the ID corresponding to the meet to get results from
+		@requires
+			gender is either 'men' or 'women' and
+			meet_id is a valid meet ID for the gender
+		@returns
+			JSON object with keys
+				"teams", "scores", "floor", "phorse", "rings", "vault", "pbars", "highbar", "aa", "info", "scoresheets", "links"
+			where
+				"teams" is an array containing objects with information about the teams that competed and their scores,
+				"scores" is an array containing arrays for each team  where each array contains the scores for each gymnast,
+				keys with event names are arrays that each contain arrays for each team where each array contains scores for each gymnast specific to the event
+		'''
+		self.__check_gender(gender)
+
+		response = self.session.get(BASE_URL + (MEET_RESULTS_URL % (gender.value, str(meet_id))))
+		response_json = json.loads(response.text)
+
+		if "Invalid parameter number" in response.text:
+			raise ScraperException('Invalid meet ID entered')
+		
+		return response_json
+		
 	def __check_gender(self, gender):
 		if gender is not ScraperConstants.Men and gender is not ScraperConstants.Women:
 			raise ScraperException('Invalid gender specified.')

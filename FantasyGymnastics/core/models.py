@@ -10,34 +10,48 @@ class League(models.Model):
     lineup_size = models.PositiveIntegerField(blank=False)
     event_lineup_size = models.PositiveIntegerField(blank=False)
     event_count_size = models.PositiveIntegerField(blank=False)
+    requested_to_join = models.ManyToManyField(User, related_name="RequestedLeague", blank=True)
     
 class Gymnast(models.Model):
     YEAR_CHOICES = [('FR' , 'Freshman'), ('SO' , 'Sophomore'), ('JR' , 'Junior'), ('SR' , 'Senior')]
+    rtn_id = models.CharField(max_length=10, blank=False)
     name = models.CharField(max_length=50, blank=False)
     team = models.CharField(max_length=100, blank=False)
     year = models.CharField(max_length=2, choices=YEAR_CHOICES, blank=False)
 
+    class Meta:
+        unique_together = ('name', 'team')
+    
+    def __str__(self):
+        return self.name
+
 class FantasyTeam(models.Model):
     user = models.ForeignKey(User, related_name='FantasyTeam', on_delete=models.CASCADE)
     league = models.ForeignKey(League, related_name='FantasyTeam', on_delete=models.CASCADE)
-    gymnasts = models.ManyToManyField(Gymnast, related_name='FantasyTeam', blank=True)
+    roster = models.ManyToManyField(Gymnast, related_name='FantasyTeam', blank=True)
     name = models.CharField(max_length=50, blank=False)
 
     class Meta:
         unique_together = ('user', 'league')
 
-class Scores(models.Model):
+class LineUp(models.Model):
+    EVENT_CHOICES = [('FX' , 'Floor Exercise'), ('PH' , 'Pommel Horse'), ('SR' , 'Still Rings'), ('VT' , 'Vault'), ('PB' , 'Parallel Bars'), ('HB' , 'Horizontal Bar')]
+    team = models.ForeignKey(FantasyTeam, choices = EVENT_CHOICES, related_name='LineUp', on_delete = models.CASCADE)
+    event = models.CharField(max_length=20, choices = EVENT_CHOICES, blank=False)
+    gymnasts = models.ManyToManyField(Gymnast, related_name = 'LineUp')
+
+    class Meta:
+        unique_together = ('team', 'event')
+
+
+class Score(models.Model):
+    score = models.DecimalField(max_digits=6, decimal_places=4)
+    EVENT_CHOICES = [('FX' , 'Floor Exercise'), ('PH' , 'Pommel Horse'), ('SR' , 'Still Rings'), ('VT' , 'Vault'), ('PB' , 'Parallel Bars'), ('HB' , 'Horizontal Bar')]
     gymnast = models.ForeignKey(Gymnast, related_name='Scores', on_delete=models.CASCADE, null=False, blank=False)
     date = models.DateField()
     meet = models.CharField(max_length=100)
-
-    floor = models.DecimalField(max_digits=4, decimal_places=2)
-    pommel_horse = models.DecimalField(max_digits=4, decimal_places=2)
-    rings = models.DecimalField(max_digits=4, decimal_places=2)
-    vault = models.DecimalField(max_digits=4, decimal_places=2)
-    parallel_bars = models.DecimalField(max_digits=4, decimal_places=2)
-    high_bar = models.DecimalField(max_digits=4, decimal_places=2)
+    event = models.CharField(max_length=2, choices = EVENT_CHOICES, blank=False)
 
     class Meta:
-        unique_together = ('gymnast', 'date', 'meet')
+        unique_together = ('gymnast', 'date', 'event')
  

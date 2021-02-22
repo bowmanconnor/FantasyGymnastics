@@ -1,30 +1,244 @@
 {% extends 'base.html' %}
 {% load custom_tags %}
+{% load static %}
 {% block title %}Team {{ team.name }}{% endblock title %}
 {% block content %}
 
 
-<table>
+<table class="container">
     <thead>
-        <td><h2>Team Details</h2></td>
+    <td class="col"><h2>{{team.name}}</h2></td>
     </thead>
-        <tbody>
-            <tr>
-                <td>Team name:</td>
-                <td>{{team.name}}</td>
-            </tr>
-            <tr>
-                <td>Team owner:</td>
-                <td>{{team.user.first_name}}</td>
-            </tr>
+    <tbody>
+        <tr class="row">
+            <td class="col-md-2">Team name:</td>
+            <td class="col-md-2">{{team.name}}</td>
+        </tr>
+        <tr class="row">
+            <td class="col-md-2">Team owner:</td>
+            <td class="col-md-2">{{team.user.first_name}}</td>
+        </tr>
 
-        
-        </tbody>
+    </tbody>
 </table>
 
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'edit_team' team.pk %}">Edit Team</a>
+            <a href="{% url 'view_league' team.league.id %}">Back to league</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            <table class="table table-hover">
+                <tr>
+                    <th style="font-size:40px" colspan="2">My Roster</th>
+                </tr>
+                <tbody>
+                    <tr>
+                        <td style="width:30%">Gymnast1 Headshot</td>
+                        <td style="width:70%">Gymnast1 Name (link to profile)</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">Gymnast2 Headshot</td>
+                        <td style="width:70%">Gymnast2 Name (link to profile)</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">Gymnast3 Headshot</td>
+                        <td style="width:70%">Gymnast3 Name (link to profile)</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">Gymnast4 Headshot</td>
+                        <td style="width:70%">Gymnast4 Name (link to profile)</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">Gymnast5 Headshot</td>
+                        <td style="width:70%">Gymnast5 Name (link to profile)</td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%">Gymnast6 Headshot</td>
+                        <td style="width:70%">Gymnast6 Name (link to profile)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-5">
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item active" role="presentation">
+                    <button class="nav-link" id="full-lineup-tab" data-bs-toggle="pill" data-bs-target="#full-lineup" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Full Lineup</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="floor-lineup-tab" data-bs-toggle="pill" data-bs-target="#floor-lineup" type="button" role="tab" aria-controls="pills-home" aria-selected="true">FX</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pommels-lineup-tab" data-bs-toggle="pill" data-bs-target="#pommels-lineup" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">PH</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="rings-lineup-tab" data-bs-toggle="pill" data-bs-target="#rings-lineup" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">SR</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="vault-lineup-tab" data-bs-toggle="pill" data-bs-target="#vault-lineup" type="button" role="tab" aria-controls="pills-home" aria-selected="true">VT</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pbars-lineup-tab" data-bs-toggle="pill" data-bs-target="#pbars-lineup" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">PB</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="hbar-lineup-tab" data-bs-toggle="pill" data-bs-target="#hbar-lineup" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">HB</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade" id="full-lineup" role="tabpanel" aria-labelledby="full-lineup-tab">
+                    <table class="table table-striped">
+                        <tr>
+                            <td>Gymnast1 Headshot </td>
+                            <td>Gymnast1 Name (link to profile)</td>
+                        </tr>
+                        <tr>
+                            <td>Gymnast2 Headshot </td>
+                            <td>Gymnast2 Name (link to profile)</td>
+                        </tr>
+                        <tr>
+                            <td>Gymnast3 Headshot </td>
+                            <td>Gymnast3 Name (link to profile)</td>
+                        </tr>
+                        <tr>
+                            <td>Gymnast4 Headshot </td>
+                            <td>Gymnast4 Name (link to profile)</td>
+                        </tr>
+                        <tr>
+                            <td>Gymnast5 Headshot </td>
+                            <td>Gymnast5 Name (link to profile)</td>
+                        </tr>
+                        <tr>
+                            <td>Gymnast6 Headshot </td>
+                            <td>Gymnast6 Name (link to profile)</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="floor-lineup" role="tabpanel" aria-labelledby="floor-lineup-tab">
+                    <table class="table table-striped">
+                        <tr>
+                            <td>Gymnast1 Headshot </td>
+                            <td>Gymnast1 Name (link to profile)</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button type="button" class="btn btn-default btn-lg">
+                                    <i class="fas fa-user-plus"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="pommels-lineup" role="tabpanel" aria-labelledby="pommels-lineup-tab">
+                    <table class="table table-striped">
+                        <tr>
+                            <td>Gymnast2 Headshot </td>
+                            <td>Gymnast2 Name (link to profile)</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button type="button" class="btn btn-default btn-lg">
+                                    <i class="fas fa-user-plus"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="rings-lineup" role="tabpanel" aria-labelledby="rings-lineup-tab">
+                    <table class="table table-striped">
+                        <tr>
+                            <td>Gymnast3 Headshot </td>
+                            <td>Gymnast3 Name (link to profile)</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button type="button" class="btn btn-default btn-lg">
+                                    <i class="fas fa-user-plus"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="vault-lineup" role="tabpanel" aria-labelledby="vault-lineup-tab">
+                    <table class="table table-striped">
+                        <tr>
+                            <td>Gymnast4 Headshot </td>
+                            <td>Gymnast4 Name (link to profile)</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button type="button" class="btn btn-default btn-lg">
+                                    <i class="fas fa-user-plus"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="pbars-lineup" role="tabpanel" aria-labelledby="pbars-lineup-tab">
+                    <table class="table table-striped">
+                        <tr>
+                            <td>Gymnast5 Headshot </td>
+                            <td>Gymnast5 Name (link to profile)</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button type="button" class="btn btn-default btn-lg">
+                                    <i class="fas fa-user-plus"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="hbar-lineup" role="tabpanel" aria-labelledby="hbar-lineup-tab">
+                    <table class="table table-striped">
+                        <tr>
+                            <td>Gymnast6 Headshot </td>
+                            <td>Gymnast6 Name (link to profile)</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button type="button" class="btn btn-default btn-lg">
+                                    <i class="fas fa-user-plus"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--TODO: Generate roster and lineup tables using league roster size and lineup size-->
+
+<div id="container"></div>
 
 <a href="{% url 'home' %}">Home</a>
+{% if user == team.user %}
 <a href="{% url 'edit_team' team.pk %}">Edit Team</a>
+{% endif %}
 <a href="{% url 'view_league' team.league.id %}">Back to league</a>
 
+<!--
+<table>
+    {% for i in league.lineup_size %}
+    <tr>
+        <td colspan="2">
+            <button type="button" class="btn btn-default btn-lg">
+                <i class="fas fa-user-plus"></i>
+            </button>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+-->
   {% endblock %}
+
+
