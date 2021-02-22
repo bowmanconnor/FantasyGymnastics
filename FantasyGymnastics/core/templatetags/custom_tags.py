@@ -1,6 +1,7 @@
 from django import template
+from core.models import Gymnast, Score
+from weekly_gameplay.models import Average
 register = template.Library()
-
 @register.filter
 def field_type(bound_field):
     return bound_field.field.widget.__class__.__name__
@@ -20,7 +21,19 @@ def input_class(bound_field):
 def get_fields(obj):
     if obj:
         return [(field.name, field.value_to_string(obj)) for field in obj._meta.fields]
+
+@register.filter
+def from_gymnast(averages, gymnast):
+    return averages.filter(gymnast=gymnast)
+
+@register.filter
+def average_from_event(averages, event):
+    if averages.filter(event=event).exists():
+        return averages.filter(event=event)[0].score
+    else:
+        return ''
     
+
 # @register.filter
 # def num_gymnasts(obj, event):
 #     num = 0

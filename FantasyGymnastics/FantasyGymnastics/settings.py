@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     
     'authentication',
     'core',
-    'auto_populate_database'
+    'auto_populate_database',
+    'weekly_gameplay'
 ]
 
 MIDDLEWARE = [

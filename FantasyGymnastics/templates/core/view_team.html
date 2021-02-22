@@ -13,7 +13,7 @@
         {% endif %}
     </div>
     <div class="row">
-    {% comment %} ROSTER {% endcomment %}
+        {% comment %} ROSTER {% endcomment %}
         <div class="col-md-5">
             <h2>Roster</h2>
             <table class="table table-hover">
@@ -32,11 +32,11 @@
             </table>
             {% comment %} Add to roster button {% endcomment %}
             {% if user == team.user %}
-                {% if team.roster.all.count < team.league.roster_size %}
-                    <a class="mb-4" href="{% url 'gymnast_search' team.pk %}"><i class="fas fa-user-plus"></i></a>
-                {% endif %} 
-            {% endif %}
-            <p class='mt-4'>{{ team.roster.all.count }}/{{ team.league.roster_size}}</p>
+            {% if team.roster.all.count < team.league.roster_size %} <a class="mb-4"
+                href="{% url 'gymnast_search' team.pk %}"><i class="fas fa-user-plus"></i></a>
+                {% endif %}
+                {% endif %}
+                <p class='mt-4'>{{ team.roster.all.count }}/{{ team.league.roster_size}}</p>
         </div>
         <div class="col-md-2"></div>
         {% comment %} Lineups {% endcomment %}
@@ -45,69 +45,62 @@
             {% comment %} Tab Headers {% endcomment %}
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                 {% for lineup in lineups %}
-                    <li class="nav-item active" role="presentation">
-                        <button class="nav-link" id="{{ lineup.event }}-tab" data-bs-toggle="pill"
-                            data-bs-target="#{{ lineup.event }}" type="button" role="tab" aria-controls="pills-contact"
-                            aria-selected="false">{{ lineup.event }}</button>
-                    </li>
+                <li class="nav-item active" role="presentation">
+                    <button class="nav-link" id="{{ lineup.event }}-tab" data-bs-toggle="pill"
+                        data-bs-target="#{{ lineup.event }}" type="button" role="tab" aria-controls="pills-contact"
+                        aria-selected="false">{{ lineup.event }}</button>
+                </li>
                 {% endfor %}
             </ul>
             {% comment %} Tab content {% endcomment %}
             <div class="tab-content" id="pills-tabContent">
                 {% for lineup in lineups %}
-                    <div class="tab-pane fade" id="{{ lineup.event }}" role="tabpanel"
-                        aria-labelledby="{{ lineup.event }}-tab">
-                        <table class="table table-hover">
-                            {% for gymnast in lineup.gymnasts.all %}
-                                <tr>
-                                    <td>{{gymnast.name}}</td>
-                                    {% if user == team.user %}
-                                        <td><a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}">X</a></td>
-                                    {% endif %}
-                                </tr>
-                            {% endfor %}
-                            {% comment %} Add to lineup button {% endcomment %}
+                <div class="tab-pane fade" id="{{ lineup.event }}" role="tabpanel"
+                    aria-labelledby="{{ lineup.event }}-tab">
+                    <table class="table table-hover">
+                        {% for gymnast in lineup.gymnasts.all %}
+                        <tr>
+                            <td>{{gymnast.name}}</td>
                             {% if user == team.user %}
-                                {% if lineup.gymnasts.all.count < lineup.team.league.event_lineup_size %}
-                                    <tr>
-                                        <td>
-                                            <p>
-                                                <a data-bs-toggle="collapse" href="#multiCollapse{{lineup.event}}"
-                                                    aria-expanded="false" aria-controls="multiCollapse{{lineup.event}}"><i
-                                                        class="fas fa-user-plus"></i></a>
-                                            </p>
-                                        </td>
-                                    </tr>
-                                {% endif %}
+                            <td><a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}">X</a></td>
                             {% endif %}
-                        </table>
+                        </tr>
+                        {% endfor %}
+                        {% comment %} Add to lineup button {% endcomment %}
+                    </table>
+                    {% if user == team.user %}
+                    {% if lineup.gymnasts.all.count < lineup.team.league.event_lineup_size %} <p>
+                        <a data-bs-toggle="collapse" href="#multiCollapse{{lineup.event}}" aria-expanded="false"
+                            aria-controls="multiCollapse{{lineup.event}}"><i class="fas fa-user-plus"></i></a>
+                        </p>
+                        {% endif %}
+                        {% endif %}
                         <p>{{ lineup.gymnasts.all.count }}/{{ team.league.event_lineup_size }}</p>
                         {% comment %} Add to lineup dropdown {% endcomment %}
                         <div class="row">
                             <div class="col">
                                 <div class="collapse multi-collapse" id="multiCollapse{{lineup.event}}">
                                     {% for gymnast in roster %}
-                                        {% if gymnast not in lineup.gymnasts.all %}
-                                            <table>
-                                                {% if user == team.user %}
-                                                    <tr>
-                                                        <td><a
-                                                                href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}}</a>
-                                                        </td>
-                                                    </tr>
-                                                {% endif %}
-                                            </table>
+                                    {% if gymnast not in lineup.gymnasts.all %}
+                                    <table>
+                                        {% if user == team.user %}
+                                        <tr>
+                                            <td><a
+                                                    href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}}</a>
+                                            </td>
+                                        </tr>
                                         {% endif %}
+                                    </table>
+                                    {% endif %}
                                     {% endfor %}
                                 </div>
                             </div>
                         </div>
-                    </div>
+                </div>
                 {% endfor %}
             </div>
         </div>
     </div>
-    <a href="{% url 'home' %}">Home</a>
     <a href="{% url 'league_standings' team.league.id %}">Back to league</a>
 </div>
 

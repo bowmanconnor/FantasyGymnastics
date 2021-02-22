@@ -4,21 +4,6 @@
 {% block title %}Home{% endblock title %}
 {% block content %}
 
-<h2>Gymansts</h2>
+<h2>Home page</h2>
 
-<table class="mb-4">
-    <tbody>
-      {% for gymnast in gymnasts %}
-      <tr>
-        <td>{{ gymnast.name }}</td>
-        <td>{{ gymnast.team }}</td>
-        <td>{{ gymnast.year }}</td>
-        <td>{{ gymnast.id }}</td>
-        
-        <td><a href="{% url 'delete_gymnast' gymnast.pk %}">X</a></td></td>
-
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
 {% endblock %}

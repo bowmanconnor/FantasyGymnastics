@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from auto_populate_database.Scraper import ScraperConstants
 from auto_populate_database.Scraper import Scraper
 from datetime import datetime
-
+from weekly_gameplay.models import Average
 
 from .forms import NewLeagueForm, NewFantasyTeamForm, NewGymnastForm
 # Create your views here.
@@ -167,17 +167,17 @@ class SearchGymnasts(DetailView):
         if query:
             context['gymnasts'] = Gymnast.objects.filter(name__icontains=query).exclude(id__in=drafted)
         else:
-            context['gymnasts'] = Gymnast.objects.all().exclude(id__in=drafted)
+            context['gymnasts'] = Gymnast.objects.all().exclude(id__in=drafted).order_by('name')[:50]
+        print(context['gymnasts'])
+        context['averages'] = Average.objects.filter(gymnast__in=context['gymnasts'])
+        print(context['averages'])
         return context
-
-
 
 @login_required
 def myleagues(request):
     user = request.user
     context = {}
     context['leagues'] = League.objects.filter(FantasyTeam__in=FantasyTeam.objects.filter(user=user).all())
-    
     return render(request, 'core/myleagues.html', context)
 
 def home(request):

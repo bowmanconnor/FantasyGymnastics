@@ -1,7 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError
 from auto_populate_database.Scraper import Scraper, ScraperConstants
 from core.models import Gymnast, Score
+from weekly_gameplay.models import Average
 import json, traceback, time
+from django.shortcuts import get_object_or_404
+import decimal
 
 EVENT_NAMES_DICT = {
     "floor": "FX",
@@ -88,6 +91,16 @@ class Command(BaseCommand):
 
         # Save new scores to the database
         for score in scores:
+            average_set = Average.objects.filter(gymnast=score.gymnast, event=score.event)
+            print(average_set)
+            print(average_set.count())
+            if average_set.count() == 1:
+                average = average_set[0]
+                average.number_of_scores += 1
+                average.score = ((average.score*(average.number_of_scores-1))+decimal.Decimal(score.score))/average.number_of_scores
+            else:
+                average = Average.objects.create(gymnast=score.gymnast, score=score.score, event=score.event, number_of_scores=1)
+            average.save()
             score.save()
 
         print("")

@@ -15,7 +15,7 @@ class Gymnast(models.Model):
     
     def __str__(self):
         return self.name
-        
+
 class League(models.Model):
     manager = models.ForeignKey(User, related_name='League', on_delete=models.CASCADE, null=True, blank=True) #how do these look, cutie?
     name = models.CharField(max_length=50, blank=False)
@@ -67,4 +67,7 @@ class Score(models.Model):
 
     class Meta:
         unique_together = ('gymnast', 'date', 'event')
+
+    def __str__(self):
+        return str(self.score)
  
