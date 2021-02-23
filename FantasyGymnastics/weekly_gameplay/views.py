@@ -44,7 +44,10 @@ def create_matchup(request, league_pk):
         form = NewMatchupForm(request.POST)
         if form.is_valid():
             matchup = form.save(commit=False)
-            matchup.save()
+            if Matchup.objects.filter(team1=matchup.team1, week=matchup.week).exists() or Matchup.objects.filter(team2=matchup.team2, week=matchup.week).exists() or Matchup.objects.filter(team1=matchup.team2, week=matchup.week).exists() or Matchup.objects.filter(team2=matchup.team1, week=matchup.week).exists() or matchup.team1 == matchup.team2:
+                print("DUPLICATE")
+            else:
+                matchup.save()
             return redirect('league_standings', pk=league_pk)
     else:
         form = NewMatchupForm()
