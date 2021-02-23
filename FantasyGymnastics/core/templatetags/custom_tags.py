@@ -32,7 +32,13 @@ def is_from_event(average, event):
         return True
     else:
         return False
-    
+
+@register.filter
+def in_week(matchup_week, week):
+    if matchup_week == week:
+        return True
+    else:
+        return False
 
     
 

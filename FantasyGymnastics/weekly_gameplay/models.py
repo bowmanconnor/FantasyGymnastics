@@ -7,6 +7,11 @@ class Matchup(models.Model):
     team2 = models.ForeignKey(core_models.FantasyTeam, related_name='Matchup2', on_delete=models.CASCADE)
     week = models.PositiveIntegerField(blank=False)
 
+    def __str__(self):
+        return str(self.team1) + " " + str(self.team2) + " " + str(self.week)
+    class Meta:
+        unique_together = ('team1', 'team2', 'week')
+
 class Average(models.Model):
     EVENT_CHOICES = [('FX' , 'Floor Exercise'), ('PH' , 'Pommel Horse'), ('SR' , 'Still Rings'), ('VT' , 'Vault'), ('PB' , 'Parallel Bars'), ('HB' , 'Horizontal Bar')]
     gymnast = models.ForeignKey(core_models.Gymnast, related_name="Average", on_delete=models.CASCADE)

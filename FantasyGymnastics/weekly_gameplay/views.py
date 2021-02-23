@@ -5,6 +5,8 @@ from django.views.generic import UpdateView, DetailView, DeleteView, ListView
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin
+from .forms import NewMatchupForm
+from .models import Matchup
 # Create your views here.
 
 def add_gymnast_to_roster(request, team_pk, gymnast_pk):
@@ -34,3 +36,22 @@ def remove_gymnast_from_lineup(request, lineup_pk, gymnast_pk):
     gymnast = get_object_or_404(Gymnast, pk=gymnast_pk)
     lineup.gymnasts.remove(gymnast)
     return(redirect('view_team', pk=lineup.team.pk))
+
+
+@login_required
+def create_matchup(request, league_pk):
+    if request.method == 'POST':
+        form = NewMatchupForm(request.POST)
+        if form.is_valid():
+            matchup = form.save(commit=False)
+            matchup.save()
+            return redirect('league_standings', pk=league_pk)
+    else:
+        form = NewMatchupForm()
+    return render(request, 'weekly_gameplay/create_matchup.html', {'form': form})
+
+def delete_matchup(request, matchup_pk):
+    m = get_object_or_404(Matchup, pk=matchup_pk)
+    league_pk = m.team1.league.pk
+    m.delete()
+    return redirect('league_standings', pk=league_pk)

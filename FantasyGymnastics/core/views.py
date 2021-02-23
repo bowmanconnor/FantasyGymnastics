@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from auto_populate_database.Scraper import ScraperConstants
 from auto_populate_database.Scraper import Scraper
 from datetime import datetime
-from weekly_gameplay.models import Average
+from weekly_gameplay.models import Average, Matchup
 
 from .forms import NewLeagueForm, NewFantasyTeamForm, NewGymnastForm
 # Create your views here.
@@ -54,6 +54,7 @@ class LeagueStandings(DetailView):
         scraper = Scraper()
         context['current_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
         context['max_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['max'])
+        context['matchups'] = Matchup.objects.filter(team1__in=context['teams'])
         return context
 
 class UpdateLeague(UserPassesTestMixin, UpdateView):

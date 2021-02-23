@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}New Matchup{% endblock title %}
+
+{% block content %}
+<div>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% include 'includes/forms.html' %}
+        <button type="submit" class="btn btn-success mb-4">Submit</button>
+    </form>
+</div>
+{% endblock %}
