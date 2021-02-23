@@ -35,14 +35,13 @@
                     <td><a style="color:inherit; text-decoration: none;"  href="{% url 'add_gymnast_to_roster' team.pk gymnast.pk %}">{{gymnast.name}}</a></td>
                     <td>{{gymnast.team}}</td>
                     <td>{{gymnast.year}}</td>
-                    <td>{{ averages|from_gymnast:gymnast|average_from_event:'FX' }}</td>
-                    <td>{{ averages|from_gymnast:gymnast|average_from_event:'PH' }}</td>
-                    <td>{{ averages|from_gymnast:gymnast|average_from_event:'SR' }}</td>
-                    <td>{{ averages|from_gymnast:gymnast|average_from_event:'VT' }}</td>
-                    <td>{{ averages|from_gymnast:gymnast|average_from_event:'PB' }}</td>
-                    <td>{{ averages|from_gymnast:gymnast|average_from_event:'HB' }}</td>
-
-
+                    {% for average_from_gymnast in averages|from_gymnast:gymnast %}
+                        {% for event in events %}
+                            {% if average_from_gymnast|is_from_event:event %}
+                                <td>{{ average_from_gymnast }}</td>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
                 </tr>
             {% endfor %}
         </table>

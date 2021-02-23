@@ -27,11 +27,13 @@ def from_gymnast(averages, gymnast):
     return averages.filter(gymnast=gymnast)
 
 @register.filter
-def average_from_event(averages, event):
-    if averages.filter(event=event).exists():
-        return averages.filter(event=event)[0].score
+def is_from_event(average, event):
+    if average.event == event:
+        return True
     else:
-        return ''
+        return False
+    
+
     
 
 # @register.filter

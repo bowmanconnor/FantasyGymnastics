@@ -167,10 +167,12 @@ class SearchGymnasts(DetailView):
         if query:
             context['gymnasts'] = Gymnast.objects.filter(name__icontains=query).exclude(id__in=drafted)
         else:
-            context['gymnasts'] = Gymnast.objects.all().exclude(id__in=drafted).order_by('name')[:50]
+            context['gymnasts'] = Gymnast.objects.all().exclude(id__in=drafted)
         print(context['gymnasts'])
         context['averages'] = Average.objects.filter(gymnast__in=context['gymnasts'])
         print(context['averages'])
+        context['events'] = ('FX', 'PH', 'SR', 'VT', 'PB', 'HB')
+        context['check'] = True
         return context
 
 @login_required
