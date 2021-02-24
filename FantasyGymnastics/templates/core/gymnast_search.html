@@ -36,7 +36,12 @@
                     <td>{{gymnast.team}}</td>
                     <td>{{gymnast.year}}</td>
                     {% for average_from_gymnast in averages|from_gymnast:gymnast %}
-                            <td>{{ average_from_gymnast.floor }}</td>
+                        {% if average_from_gymnast.score == 0 %}
+                            <td></td>
+                        {% else %}
+                            <td>{{ average_from_gymnast.score }}</td>
+                        {% endif %}
+                        
                     {% endfor %}
                 </tr>
             {% endfor %}

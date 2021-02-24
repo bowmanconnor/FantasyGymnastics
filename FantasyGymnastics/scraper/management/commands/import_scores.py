@@ -91,13 +91,9 @@ class Command(BaseCommand):
 
         # Save new scores to the database
         for score in scores:
-            average_set = Average.objects.filter(gymnast=score.gymnast, event=score.event)
-            if average_set.count() == 1:
-                average = average_set[0]
-                average.number_of_scores += 1
-                average.score = ((average.score*(average.number_of_scores-1))+decimal.Decimal(score.score))/average.number_of_scores
-            else:
-                average = Average.objects.create(gymnast=score.gymnast, score=score.score, event=score.event, number_of_scores=1)
+            average = Average.objects.get(gymnast=score.gymnast, event=score.event)
+            average.number_of_scores += 1
+            average.score = ((average.score*(average.number_of_scores-1))+decimal.Decimal(score.score))/average.number_of_scores
             average.save()
             score.save()
 

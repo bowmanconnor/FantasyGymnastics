@@ -4,7 +4,7 @@ from scraper.Scraper import Scraper, ScraperConstants
 from core.models import Gymnast
 import json, traceback, time
 from weekly_gameplay.models import Average
-
+import decimal
 GYMNAST_YEARS = {
     "1": "FR",
     "2": "SO",
@@ -57,6 +57,10 @@ class Command(BaseCommand):
         # Save new gymnasts to database
         for gymnast in new_gymnasts:
             gymnast.save()
+            events = ['FX', 'PH', 'SR', 'VT', 'PB', 'HB']
+            for event in events:
+                Average.objects.create(gymnast=gymnast, score=decimal.Decimal(0.00), event=event, number_of_scores=0 )
+
         
         print("")
         print("------ RESULTS ------")
