@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.db.utils import IntegrityError
-from auto_populate_database.Scraper import Scraper, ScraperConstants
+from scraper.Scraper import Scraper, ScraperConstants
 from core.models import Gymnast
 import json, traceback, time
 

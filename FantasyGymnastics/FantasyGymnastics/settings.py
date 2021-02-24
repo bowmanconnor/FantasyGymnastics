@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from celery.schedules import crontab
 import os
+import scraper.tasks
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,8 +45,8 @@ INSTALLED_APPS = [
     
     'authentication',
     'core',
-    'auto_populate_database',
-    'weekly_gameplay'
+    'weekly_gameplay',
+    'scraper',
 ]
 
 MIDDLEWARE = [
@@ -215,3 +217,17 @@ STATICFILES_DIRS = [
 ]
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Celery
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_BEAT_SCHEDULE = {
+    # "import_gymnasts": {
+    #     "task": "scraper.tasks.import_gymnasts",
+    #     "schedule": crontab(minute="*/1"),
+    # },
+    "import_scores": {
+        "task": "scraper.tasks.import_scores",
+        "schedule": crontab(minute=0, hour=0), # Import scores daily at midnight
+    }
+}

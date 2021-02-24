@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from auto_populate_database.Scraper import Scraper, ScraperConstants
+from scraper.Scraper import Scraper, ScraperConstants
 from core.models import Gymnast, Score
 from weekly_gameplay.models import Average
 import json, traceback, time

@@ -5,8 +5,8 @@ from django.views.generic import UpdateView, DetailView, DeleteView, ListView
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin
-from auto_populate_database.Scraper import ScraperConstants
-from auto_populate_database.Scraper import Scraper
+from scraper.Scraper import ScraperConstants
+from scraper.Scraper import Scraper
 from datetime import datetime
 from weekly_gameplay.models import Average, Matchup
 
