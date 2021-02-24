@@ -11,6 +11,7 @@ class Matchup(models.Model):
         return str(self.team1) + " " + str(self.team2) + " " + str(self.week)
     class Meta:
         unique_together = ('team1', 'team2', 'week')
+        
 
 class Average(models.Model):
     EVENT_CHOICES = [('FX' , 'Floor Exercise'), ('PH' , 'Pommel Horse'), ('SR' , 'Still Rings'), ('VT' , 'Vault'), ('PB' , 'Parallel Bars'), ('HB' , 'Horizontal Bar')]
@@ -19,5 +20,8 @@ class Average(models.Model):
     event = models.CharField(max_length=2, choices = EVENT_CHOICES, blank=False)
     number_of_scores = models.PositiveIntegerField(default=0)
 
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
-        return str(self.gymnast) + " " + str(self.event)
+        return str(round(self.score,2))
