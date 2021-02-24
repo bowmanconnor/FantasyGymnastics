@@ -81,10 +81,10 @@ class Command(BaseCommand):
                     # Lookup the gymnast who had the score
                     gymnast = Gymnast.objects.filter(rtn_id=score['gid']).first()
                     # Create a new score object
-                    score = Score(event=EVENT_NAMES_DICT[event_index_name], score=float(score['score']), gymnast=gymnast, date=day, meet=meet_name)
+                    score = Score(event=EVENT_NAMES_DICT[event_index_name], score=float(score['score']), gymnast=gymnast, date=day, meet=meet_name, week=options['week'])
                     
                     # Check if the score already exists in the database
-                    if Score.objects.filter(gymnast=gymnast, date=day, event=EVENT_NAMES_DICT[event_index_name]).exists():
+                    if Score.objects.filter(gymnast=gymnast, date=day, event=EVENT_NAMES_DICT[event_index_name], week=options['week']).exists():
                         num_skipped = num_skipped + 1
                     else:
                         scores.append(score)
@@ -92,8 +92,6 @@ class Command(BaseCommand):
         # Save new scores to the database
         for score in scores:
             average_set = Average.objects.filter(gymnast=score.gymnast, event=score.event)
-            print(average_set)
-            print(average_set.count())
             if average_set.count() == 1:
                 average = average_set[0]
                 average.number_of_scores += 1
