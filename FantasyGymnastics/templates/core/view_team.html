@@ -69,12 +69,12 @@
                         {% comment %} Add to lineup button {% endcomment %}
                     </table>
                     {% if user == team.user %}
-                    {% if lineup.gymnasts.all.count < lineup.team.league.event_lineup_size %} <p>
-                        <a data-bs-toggle="collapse" href="#multiCollapse{{lineup.event}}" aria-expanded="false"
-                            aria-controls="multiCollapse{{lineup.event}}"><i class="fas fa-user-plus"></i></a>
-                        </p>
+                        {% if lineup.gymnasts.all.count < lineup.team.league.event_lineup_size %} <p>
+                            <a data-bs-toggle="collapse" href="#multiCollapse{{lineup.event}}" aria-expanded="false"
+                                aria-controls="multiCollapse{{lineup.event}}"><i class="fas fa-user-plus"></i></a>
+                            </p>
                         {% endif %}
-                        {% endif %}
+                    {% endif %}
                         <p>{{ lineup.gymnasts.all.count }}/{{ team.league.event_lineup_size }}</p>
                         {% comment %} Add to lineup dropdown {% endcomment %}
                         <div class="row">

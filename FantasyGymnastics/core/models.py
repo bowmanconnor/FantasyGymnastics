@@ -52,6 +52,7 @@ class LineUp(models.Model):
 
     class Meta:
         unique_together = ('team', 'event')
+        ordering = ['id']
 
     def __str__(self):
         return str(self.team) + "'s " + str(self.event)
@@ -61,6 +62,7 @@ class Score(models.Model):
     EVENT_CHOICES = [('FX' , 'Floor Exercise'), ('PH' , 'Pommel Horse'), ('SR' , 'Still Rings'), ('VT' , 'Vault'), ('PB' , 'Parallel Bars'), ('HB' , 'Horizontal Bar')]
     gymnast = models.ForeignKey(Gymnast, related_name='Scores', on_delete=models.CASCADE, null=False, blank=False)
     date = models.DateField()
+    week = models.PositiveIntegerField(blank=False)
     meet = models.CharField(max_length=100)
     event = models.CharField(max_length=2, choices = EVENT_CHOICES, blank=False)
     score = models.DecimalField(max_digits=6, decimal_places=4)
