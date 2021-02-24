@@ -1,14 +1,31 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import League, FantasyTeam
+from .models import League, FantasyTeam, Gymnast, LineUp, Score
 from django.views.generic import UpdateView, DetailView, DeleteView, ListView
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin
+from scraper.Scraper import ScraperConstants
+from scraper.Scraper import Scraper
+from datetime import datetime
+from weekly_gameplay.models import Average, Matchup
 
-
-from .forms import NewLeagueForm, NewFantasyTeamForm
+from .forms import NewLeagueForm, NewFantasyTeamForm, NewGymnastForm
 # Create your views here.
+
+#Helper Function
+def create_team_with_lineups(user, league):
+    team = FantasyTeam.objects.create(
+        user=user,
+        league=league,
+        name=str(user)+"'s Team")
+    events = ['FX', 'PH', 'SR', 'VT', 'PB', 'HB']
+    for i in range(6):
+        lineup = LineUp.objects.create(
+            team=team,
+            event=events[i]
+        )
+        lineup.save()
 
 @login_required
 def create_league(request):
@@ -18,72 +35,29 @@ def create_league(request):
             league = form.save(commit=False)
             league.manager = request.user
             league.save()
-            team = FantasyTeam.objects.create(
-                user=request.user,
-                league=league,
-                name=str(request.user)+"'s Team")
-            return redirect('home')
+            create_team_with_lineups(request.user, league)
+            return redirect('league_standings', pk=league.pk)
     else:
         form = NewLeagueForm()
     return render(request, 'core/create_league.html', {'form': form})
 
-def view_leagues(request):
-    context = {}
-    context['leagues'] = League.objects.all()
-    return render(request, 'core/view_leagues.html', context)
-
-@login_required
-def request_to_join_league(request, pk):
-    league = get_object_or_404(League, pk=pk)
-    team = FantasyTeam.objects.filter(
-        user=request.user,
-        league=league
-    )
-    if len(team) == 0:
-        if request.user not in league.requested_to_join.all():
-            league.requested_to_join.add(request.user)
-    return redirect('view_league', pk=league.pk)
-
-
-def approve_player_into_league(request, league_pk, user_pk):
-    league = get_object_or_404(League, pk=league_pk)
-    if request.user == league.manager:
-        user = get_object_or_404(User, pk=user_pk)
-        team = FantasyTeam.objects.create(
-            user=user,
-            league=league,
-            name=str(user.first_name)+"'s Team")
-        team.save()
-        league.requested_to_join.remove(user)
-    return redirect('view_league', pk=league.pk)
-
-def reject_player_from_league(request, league_pk, user_pk):
-    league = get_object_or_404(League, pk=league_pk)
-    if request.user == league.manager:
-        user = get_object_or_404(User, pk=user_pk)
-        league.requested_to_join.remove(user)
-    return redirect('view_league', pk=league.pk)
-
-def remove_team_from_league(request, league_pk, team_pk):
-    league = get_object_or_404(League, pk=league_pk)
-    if request.user == league.manager:
-        get_object_or_404(FantasyTeam, pk=team_pk).delete()
-    return redirect('view_league', pk=league_pk)
-
-class LeagueDetailView(DetailView):
+# is now league standings
+class LeagueStandings(DetailView):
     model = League
-    template_name = 'core/view_league.html'
+    template_name = 'core/league_standings.html'
     pk_url_kwarg = 'pk'
     context_object_name = 'league'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['teams'] = FantasyTeam.objects.filter(league_id=context['object'].id)
-        context['requested_to_join'] = context['object'].requested_to_join
-        print(context['teams'])
+        context['teams'] = FantasyTeam.objects.filter(league_id=context['object'].id).order_by('-wins', 'name')
+        scraper = Scraper()
+        context['current_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
+        context['max_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['max'])
+        context['matchups'] = Matchup.objects.filter(team1__in=context['teams'])
         return context
 
-class LeagueUpdateView(UserPassesTestMixin, UpdateView):
+class UpdateLeague(UserPassesTestMixin, UpdateView):
     model = League
     form_class = NewLeagueForm
 
@@ -98,33 +72,60 @@ class LeagueUpdateView(UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         league = form.save(commit=False)
         league.save()
-        return redirect('view_league', pk=league.pk)
+        return redirect('league_standings', pk=league.pk)
 
-class LeagueSearchResultsView(ListView):
+class SearchLeagues(ListView):
     model = League
-    template_name = 'core/league_search_results.html'
+    template_name = 'core/league_search.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         query = self.request.GET.get('query')
-        context['leagues'] = League.objects.filter(name__icontains=query)
+        if query:
+            context['leagues'] = League.objects.filter(name__icontains=query)
+        else:
+            context['leagues'] = League.objects.all()
         return context
-
-@login_required
-def create_team(request, pk):
-    if request.method == 'POST':
-        form = NewFantasyTeamForm(request.POST)
-        if form.is_valid():
-            team = form.save(commit=False)
-            team.user = request.user
-            team.league = League.objects.get(pk=pk)
-            team.save()
-            return redirect('home')
-    else:
-        form = NewFantasyTeamForm()
-    return render(request, 'core/create_team.html', {'form': form})
  
-class FantasyTeamDetailView(DetailView):
+@login_required
+def request_to_join_league(request, pk):
+    league = get_object_or_404(League, pk=pk)
+    team = FantasyTeam.objects.filter(
+        user=request.user,
+        league=league
+    )
+    if len(team) == 0:
+        if request.user not in league.requested_to_join.all():
+            league.requested_to_join.add(request.user)
+    return redirect('league_standings', pk=league.pk)
+
+def approve_player_into_league(request, league_pk, user_pk):
+    league = get_object_or_404(League, pk=league_pk)
+    if request.user == league.manager:
+        user = get_object_or_404(User, pk=user_pk)
+        create_team_with_lineups(user, league)
+        league.requested_to_join.remove(user)
+    return redirect('league_standings', pk=league.pk)
+
+def reject_player_from_league(request, league_pk, user_pk):
+    league = get_object_or_404(League, pk=league_pk)
+    if request.user == league.manager:
+        user = get_object_or_404(User, pk=user_pk)
+        league.requested_to_join.remove(user)
+    return redirect('league_standings', pk=league.pk)
+
+def remove_team_from_league(request, league_pk, team_pk):
+    league = get_object_or_404(League, pk=league_pk)
+    if request.user == league.manager:
+        team = get_object_or_404(FantasyTeam, pk=team_pk)
+        gymnasts = team.roster.all()
+        for gymnast in gymnasts:
+            league.drafted.remove(gymnast)
+        LineUp.objects.filter(team=team).delete()
+        team.delete()
+    return redirect('league_standings', pk=league_pk)
+
+class ViewFantasyTeam(DetailView):
     model = FantasyTeam
     template_name = 'core/view_team.html'
     pk_url_kwarg = 'pk'
@@ -132,9 +133,13 @@ class FantasyTeamDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["roster"] = context["object"].roster.all()
+        drafted = context['object'].league.drafted.all()
+        context["draftable_gymnasts"] = Gymnast.objects.exclude(id__in=drafted)
+        context["lineups"] = LineUp.objects.filter(team=context['object']).order_by('pk')
         return context      
 
-class FantasyTeamUpdateView(UserPassesTestMixin, UpdateView):
+class UpdateFantasyTeam(UserPassesTestMixin, UpdateView):
     model = FantasyTeam
     form_class = NewFantasyTeamForm
     template_name = 'core/edit_team.html'
@@ -150,7 +155,46 @@ class FantasyTeamUpdateView(UserPassesTestMixin, UpdateView):
         team.save()
         return redirect('view_team', pk=team.pk)
 
+class SearchGymnasts(DetailView):
+    model = FantasyTeam
+    template_name = 'core/gymnast_search.html'
+    pk_url_kwarg = 'pk'
+    context_object_name = 'team'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        query = self.request.GET.get('query')
+        drafted = context['object'].league.drafted.all()
+        if query:
+            context['gymnasts'] = Gymnast.objects.filter(name__icontains=query).exclude(id__in=drafted)
+        else:
+            context['gymnasts'] = Gymnast.objects.all().exclude(id__in=drafted)
+        context['averages'] = Average.objects.filter(gymnast__in=context['gymnasts'])
+        context['events'] = ('FX', 'PH', 'SR', 'VT', 'PB', 'HB')
+        return context
+
+@login_required
+def myleagues(request):
+    user = request.user
+    context = {}
+    context['leagues'] = League.objects.filter(FantasyTeam__in=FantasyTeam.objects.filter(user=user).all())
+    return render(request, 'core/myleagues.html', context)
 
 def home(request):
-    return render(request, 'core/home.html')
+    gymnasts = Gymnast.objects.all()
+    if request.method == 'POST':
+            form = NewGymnastForm(request.POST)
+            if form.is_valid():
+                gymnast = form.save(commit=False)
+                gymnast.save()
+                return redirect('home')
+    else:
+        form = NewGymnastForm()
+    return render(request, 'core/home.html', {'form': form, 'gymnasts' : gymnasts})
+
+def delete_gymnast(request, pk):
+    g = get_object_or_404(Gymnast, pk=pk)
+    g.delete()
+    return redirect('home')
+
 

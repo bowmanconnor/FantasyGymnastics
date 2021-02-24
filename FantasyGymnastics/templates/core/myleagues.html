@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load custom_tags static %}
+{% block title %}MyLeagues{% endblock title %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'css/clickable_row.css' %}">{% endblock stylesheet %}
+{% block content %}
+
+<div class='d-flex align-items-center justify-content-center mb-4'>
+    <h1>MyLeagues</h1>
+</div>
+
+<table class="table table-hover">
+    {% for league in leagues %}
+    <tr >
+        <td><a style="color:inherit; text-decoration: none;"
+                href="{% url 'league_standings' league.pk %}">{{league.name}}</a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+<div class="d-flex align-items-center justify-content-center">
+        <a href="{% url 'league_search' %}">
+            <button class="btn btn-outline-primary me-4" type="button">Join New League</button>
+        </a>
+        <a href="{% url 'create_league' %}">
+            <button class="btn btn-outline-primary" type="button">Create New League</button>
+        </a>
+</div>
+
+{% endblock %}

@@ -9,8 +9,8 @@
 {% endif %}
 
 {% for field in form %}
-  <div class="form-group">
-    {{ field.label_tag }}
+  <div class="form-group mb-4">
+    {% comment %} {{ field.label_tag }} {% endcomment %}
     {% render_field field class=field|input_class placeholder=field.label%}
     {% for error in field.errors %}
       <div class="invalid-feedback">

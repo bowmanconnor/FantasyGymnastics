@@ -1,7 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError
 from scraper.Scraper import Scraper, ScraperConstants
 from core.models import Gymnast, Score
+from weekly_gameplay.models import Average
 import json, traceback, time
+from django.shortcuts import get_object_or_404
+import decimal
 
 EVENT_NAMES_DICT = {
     "floor": "FX",
@@ -78,16 +81,24 @@ class Command(BaseCommand):
                     # Lookup the gymnast who had the score
                     gymnast = Gymnast.objects.filter(rtn_id=score['gid']).first()
                     # Create a new score object
-                    score = Score(event=EVENT_NAMES_DICT[event_index_name], score=float(score['score']), gymnast=gymnast, date=day, meet=meet_name)
+                    score = Score(event=EVENT_NAMES_DICT[event_index_name], score=float(score['score']), gymnast=gymnast, date=day, meet=meet_name, week=options['week'])
                     
                     # Check if the score already exists in the database
-                    if Score.objects.filter(gymnast=gymnast, date=day, event=EVENT_NAMES_DICT[event_index_name]).exists():
+                    if Score.objects.filter(gymnast=gymnast, date=day, event=EVENT_NAMES_DICT[event_index_name], week=options['week']).exists():
                         num_skipped = num_skipped + 1
                     else:
                         scores.append(score)
 
         # Save new scores to the database
         for score in scores:
+            average_set = Average.objects.filter(gymnast=score.gymnast, event=score.event)
+            if average_set.count() == 1:
+                average = average_set[0]
+                average.number_of_scores += 1
+                average.score = ((average.score*(average.number_of_scores-1))+decimal.Decimal(score.score))/average.number_of_scores
+            else:
+                average = Average.objects.create(gymnast=score.gymnast, score=score.score, event=score.event, number_of_scores=1)
+            average.save()
             score.save()
 
         print("")

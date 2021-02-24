@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load custom_tags static %}
+{% block title %}Gymnast Search{% endblock title %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'css/clickable_row.css' %}">
+<link href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css" rel="stylesheet">
+{% endblock stylesheet %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-center mb-4">
+        <h1>Gymnast Search</h1>
+    </div>
+    <div class="d-flex align-items-center justify-content-center mb-4">
+        <form action="{% url 'gymnast_search' team.pk %}" method="get">
+            <input class="form-control" name="query" type="text" placeholder="Gymnast Name">
+        </form>
+    </div>
+    <a href="{% url 'view_team' team.pk %}">
+        <button class="btn btn-outline-primary algin-right" type="button">Back to team</button>
+    </a>
+    {% if gymnasts %}
+        <table class="table table-hover">
+            <thead>
+                <td>Name</td>
+                <td>Team</td>
+                <td>Year</td>
+                <td>FX</td>
+                <td>PH</td>
+                <td>SR</td>
+                <td>VT</td>
+                <td>PB</td>
+                <td>HB</td>   
+            </thead>
+            {% for gymnast in gymnasts %}
+                <tr>
+                    <td><a style="color:inherit; text-decoration: none;"  href="{% url 'add_gymnast_to_roster' team.pk gymnast.pk %}">{{gymnast.name}}</a></td>
+                    <td>{{gymnast.team}}</td>
+                    <td>{{gymnast.year}}</td>
+                    {% for average_from_gymnast in averages|from_gymnast:gymnast %}
+                            <td>{{ average_from_gymnast.floor }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+<script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
+
+{% endblock content %}
