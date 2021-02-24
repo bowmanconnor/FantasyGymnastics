@@ -3,6 +3,7 @@ from django.db.utils import IntegrityError
 from scraper.Scraper import Scraper, ScraperConstants
 from core.models import Gymnast
 import json, traceback, time
+from weekly_gameplay.models import Average
 
 GYMNAST_YEARS = {
     "1": "FR",
