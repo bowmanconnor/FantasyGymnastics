@@ -44,4 +44,30 @@
     {% endif %}
 <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
 
+<!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>   
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js" integrity="sha512-qzgd5cYSZcosqpzpn7zF2ZId8f/8CHmFKZ8j7mU4OUXTNRd5g+ZHBPsgKEwoqxCtdQvExE5LprwwPAgoicguNg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.widgets.min.js" integrity="sha512-dj/9K5GRIEZu+Igm9tC16XPOTz0RdPk9FGxfZxShWf65JJNU2TjbElGjuOo3EhwAJRPhJxwEJ5b+/Ouo+VqZdQ==" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $("#myTable").tablesorter({
+                headerTemplate: '{content} {icon}',
+                widgets: ['uitheme'],
+                cssIcon: 'fas',
+                cssIconNone: 'fa-sort',
+                cssIconAsc: 'fa-sort-up',
+                cssIconDesc: 'fa-sort-down',
+                sortList: [[0, 0]],
+                headers : {
+                    3 : { sortInitialOrder: 'desc' },
+                    4 : { sortInitialOrder: 'desc' },
+                    5 : { sortInitialOrder: 'desc' },
+                    6 : { sortInitialOrder: 'desc' },
+                    7 : { sortInitialOrder: 'desc' },
+                    8 : { sortInitialOrder: 'desc' },
+                }
+            });
+        });
+    </script>
 {% endblock content %}
