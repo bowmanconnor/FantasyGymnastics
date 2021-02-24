@@ -29,11 +29,16 @@
                                 {% endif %}
                                 <td>{{gymnast.name}} </td>
                                 <td>
-                                    {% if averages|from_gymnast:gymnast|event_average:lineup.event%}
-                                        <em>{{averages|from_gymnast:gymnast|event_average:lineup.event}}</em>
+                                    {% if scores|from_gymnast:gymnast|has_event_score:lineup.event %}
+                                        <b>{{ scores|from_gymnast:gymnast|get_highest_event_score:lineup.event }}</b>
                                     {% else %}
-                                        <em>0.00</em>
+                                        {% comment %} {% if averages|from_gymnast:gymnast|event_average:lineup.event%}
+                                            <em>{{averages|from_gymnast:gymnast|event_average:lineup.event}}</em>
+                                        {% else %}
+                                            <em>0.00</em>
+                                        {% endif %} {% endcomment %}
                                     {% endif %}
+                                    
                                 </td>
                             </tr>
                         {% endfor %}
@@ -87,11 +92,16 @@
                         {% for gymnast in lineup.gymnasts.all %}
                             <tr>
                                 <td>
-                                    {% if averages|from_gymnast:gymnast|event_average:lineup.event%}
-                                        <em>{{averages|from_gymnast:gymnast|event_average:lineup.event}}</em>
+                                    {% if scores|from_gymnast:gymnast|has_event_score:lineup.event %}
+                                        <b>{{ scores|from_gymnast:gymnast|get_highest_event_score:lineup.event }}</b>
                                     {% else %}
-                                        <em>0.00</em>
+                                        {% comment %} {% if averages|from_gymnast:gymnast|event_average:lineup.event%}
+                                            <em>{{averages|from_gymnast:gymnast|event_average:lineup.event}}</em>
+                                        {% else %}
+                                            <em>0.00</em>
+                                        {% endif %} {% endcomment %}
                                     {% endif %}
+                                    
                                 </td>
                                 <td>{{gymnast.name}}</td>
                             </tr>

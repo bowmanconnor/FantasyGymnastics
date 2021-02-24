@@ -49,7 +49,6 @@ class LineUp(models.Model):
     team = models.ForeignKey(FantasyTeam, related_name='LineUp', on_delete = models.CASCADE, blank=False)
     event = models.CharField(max_length=2, choices = EVENT_CHOICES, blank=False)
     gymnasts = models.ManyToManyField(Gymnast, related_name = 'LineUp', blank=True)
-
     class Meta:
         unique_together = ('team', 'event')
         ordering = ['id']
@@ -71,5 +70,5 @@ class Score(models.Model):
         unique_together = ('gymnast', 'date', 'event')
 
     def __str__(self):
-        return str(self.score)
+        return str(round(self.score,2))
  
