@@ -36,7 +36,7 @@
             {% for matchup in matchups %}
                 {% if matchup.week == current_week %}
                     <tr>
-                        <td>{{matchup.team1}} vs {{matchup.team2}}</td>
+                        <td><a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a></td>
                         <td><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
                     </tr>
                 {% endif %}

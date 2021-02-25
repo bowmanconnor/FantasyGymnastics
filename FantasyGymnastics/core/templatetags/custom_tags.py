@@ -1,7 +1,11 @@
 from django import template
 from core.models import Gymnast, Score
 from weekly_gameplay.models import Average
+from scraper.Scraper import Scraper, ScraperConstants
+from datetime import datetime
 register = template.Library()
+
+# Used in bootstrap form stuff
 @register.filter
 def field_type(bound_field):
     return bound_field.field.widget.__class__.__name__
@@ -22,43 +26,16 @@ def get_fields(obj):
     if obj:
         return [(field.name, field.value_to_string(obj)) for field in obj._meta.fields]
 
-
-
-
-
-
-
-
+# Used in view matchup and gymnast search
 @register.filter
 def from_gymnast(obj, gymnast):
     return obj.filter(gymnast=gymnast)
 
 @register.filter
-def is_from_event(average, event):
-    if average.event == event:
-        return True
-    else:
-        return False
-
-@register.filter
-def event_average(averages, event):
-    if averages.filter(event=event).exists():
-        return round(averages.get(event=event).score, 2)
-
-@register.filter
-def in_week(matchup_week, week):
-    if matchup_week == week:
-        return True
-    else:
-        return False
-
-
-
-@register.filter
 def has_event_score(obj, event):
     if obj.filter(event=event).exists():
         return True
-        
+      
 @register.filter
 def get_highest_event_score(score, event):
     scores = score.filter(event=event)
@@ -67,18 +44,51 @@ def get_highest_event_score(score, event):
         if s.score > highest.score:
             highest = s
     return highest
+
+@register.filter
+def current_week(lineup, week):
+    return lineup.filter(week=week)
+
+
+
     
 @register.filter
-def total_score(scores, team):
-    scores = scores.filter(team=team)
-    
-    
+def lineup_score(lineup):
+    print(lineup.event)
+    total = 0
+    scores = []
+    for gymnast in lineup.gymnasts.all():
+        gymnast_scores = Score.objects.filter(gymnast=gymnast, event=lineup.event, week=lineup.week)
+        if gymnast_scores.exists():
+            gymnasts_highest = gymnast_scores.first()
+            for score in gymnast_scores:
+                if score.score > gymnasts_highest.score:
+                    gymnasts_highest = score
+            scores.append(gymnasts_highest.score)
+    if len(scores) > int(lineup.team.league.event_count_size):
+        scores.sort(reverse=True)
+        scores = scores[:int(lineup.team.league.event_count_size)]
+    for score in scores:
+        total += score
+    return round(total,2)
 
-
-# @register.filter
-# def num_gymnasts(obj, event):
-#     num = 0
-#     if obj:
-#         for x in obj.filter(event=event):
-#             num += 1
-#         return num
+  
+@register.filter
+def team_score(lineups):
+    total = 0
+    for lineup in lineups:
+        scores = []
+        for gymnast in lineup.gymnasts.all():
+            gymnast_scores = Score.objects.filter(gymnast=gymnast, event=lineup.event, week=lineup.week)
+            if gymnast_scores.exists():
+                gymnasts_highest = gymnast_scores.first()
+                for score in gymnast_scores:
+                    if score.score > gymnasts_highest.score:
+                        gymnasts_highest = score
+                scores.append(gymnasts_highest.score)
+        if len(scores) > int(lineup.team.league.event_count_size):
+            scores.sort(reverse=True)
+            scores = scores[:int(lineup.team.league.event_count_size)]
+        for score in scores:
+            total += score
+    return round(total,2)

@@ -46,17 +46,17 @@
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                 {% for lineup in lineups %}
                 <li class="nav-item active" role="presentation">
-                    <button class="nav-link" id="{{ lineup.event }}-tab" data-bs-toggle="pill"
-                        data-bs-target="#{{ lineup.event }}" type="button" role="tab" aria-controls="pills-contact"
-                        aria-selected="false">{{ lineup.event }}</button>
+                    <button class="nav-link" id="{{lineup.event}}-tab" data-bs-toggle="pill"
+                        data-bs-target="#{{lineup.event}}" type="button" role="tab" aria-controls="pills-contact"
+                        aria-selected="false">{{lineup.event}}</button>
                 </li>
                 {% endfor %}
             </ul>
             {% comment %} Tab content {% endcomment %}
             <div class="tab-content" id="pills-tabContent">
                 {% for lineup in lineups %}
-                <div class="tab-pane fade" id="{{ lineup.event }}" role="tabpanel"
-                    aria-labelledby="{{ lineup.event }}-tab">
+                <div class="tab-pane fade" id="{{lineup.event}}" role="tabpanel"
+                    aria-labelledby="{{lineup.event}}-tab">
                     <table class="table table-hover">
                         {% for gymnast in lineup.gymnasts.all %}
                         <tr>

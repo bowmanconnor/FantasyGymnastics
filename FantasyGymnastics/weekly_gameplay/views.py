@@ -8,6 +8,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin
 from .forms import NewMatchupForm
 from .models import Matchup, Average
+from scraper.Scraper import Scraper, ScraperConstants
+from datetime import datetime
 # Create your views here.
 
 def add_gymnast_to_roster(request, team_pk, gymnast_pk):
@@ -64,6 +66,7 @@ class ViewMatchup(DetailView):
     context_object_name = 'matchup'
 
     def get_context_data(self, **kwargs):
+        scraper = Scraper()
         context = super().get_context_data(**kwargs)
         if context['object'].team2.user == self.request.user:
             context['team1'] = context['object'].team2
@@ -74,6 +77,7 @@ class ViewMatchup(DetailView):
         gymnasts = Gymnast.objects.filter(id__in=(context['team1'].roster.all() | context['team2'].roster.all()))
         context['scores'] = Score.objects.filter(gymnast__in=gymnasts, week=context['object'].week)
         context['averages'] = Average.objects.filter(gymnast__in=gymnasts)
+        context['current_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
 
         return context      
 
