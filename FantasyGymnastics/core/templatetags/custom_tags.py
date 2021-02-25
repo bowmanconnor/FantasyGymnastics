@@ -3,6 +3,8 @@ from core.models import Gymnast, Score
 from weekly_gameplay.models import Average
 from scraper.Scraper import Scraper, ScraperConstants
 from datetime import datetime
+import decimal
+
 register = template.Library()
 
 # Used in bootstrap form stuff
@@ -53,12 +55,9 @@ def event_average(averages, event):
 def current_week(lineup, week):
     return lineup.filter(week=week)
 
-
-
-    
 @register.filter
 def lineup_score(lineup):
-    total = 0
+    total = decimal.Decimal(0.00)
     scores = []
     for gymnast in lineup.gymnasts.all():
         gymnast_scores = Score.objects.filter(gymnast=gymnast, event=lineup.event, week=lineup.week)
@@ -74,11 +73,10 @@ def lineup_score(lineup):
     for score in scores:
         total += score
     return round(total,2)
-
   
 @register.filter
 def team_score(lineups):
-    total = 0
+    total = decimal.Decimal(0.00)
     for lineup in lineups:
         scores = []
         for gymnast in lineup.gymnasts.all():

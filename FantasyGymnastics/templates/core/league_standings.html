@@ -39,7 +39,8 @@
                         <td><a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a></td>
                         {% if user == league.manager %}
                             <td><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
-                        {% endif %}                    </tr>
+                        {% endif %}
+                    </tr>
                 {% endif %}
             {% endfor %}
             {% if user == league.manager %}
