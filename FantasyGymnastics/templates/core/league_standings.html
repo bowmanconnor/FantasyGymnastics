@@ -32,15 +32,17 @@
     <tr>
         <td>{{current_week}}</td>
         <td>
-            <table>
+            <table class='d-flex align-items-center justify-content-center mb-4'>
             {% for matchup in matchups %}
                 {% if matchup.week == current_week %}
                     <tr>
                         <td><a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a></td>
-                        <td><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
-                    </tr>
+                        {% if user == league.manager %}
+                            <td><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
+                        {% endif %}                    </tr>
                 {% endif %}
             {% endfor %}
+            <tr><td><a class="btn btn-outline-primary" href="{% url 'compute_matchup_winners' league.pk current_week %}">Compute Winners</a></td></tr>
             </table>
         </td>
     </tr>
@@ -50,15 +52,18 @@
             <tr>
                 <td>{{forloop.counter}}</td>
                 <td>
-                    <table>
-                    {% for matchup in matchups %}
-                        {% if matchup.week == forloop.parentloop.counter %}
-                            <tr>
-                                <td><a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a></td>
-                                <td><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
+                    <table class='d-flex align-items-center justify-content-center mb-4'>
+                        {% for matchup in matchups %}
+                            {% if matchup.week == forloop.parentloop.counter %}
+                                <tr >
+                                    <td><a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a></td>
+                                    {% if user == league.manager %}
+                                        <td><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
+                                    {% endif %}
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        {% comment %} <tr><td><a class="btn btn-outline-primary" href="{% url 'compute_matchup_winners' league.pk forloop.counter %}">Compute Winners</a></td></tr> {% endcomment %}
                     </table>
                 </td>
             </tr>

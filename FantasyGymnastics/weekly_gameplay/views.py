@@ -10,6 +10,7 @@ from .forms import NewMatchupForm
 from .models import Matchup, Average
 from scraper.Scraper import Scraper, ScraperConstants
 from datetime import datetime
+import random 
 # Create your views here.
 
 def add_gymnast_to_roster(request, team_pk, gymnast_pk):
@@ -53,6 +54,7 @@ def create_matchup(request, league_pk):
             if Matchup.objects.filter(team1=matchup.team1, week=matchup.week).exists() or Matchup.objects.filter(team2=matchup.team2, week=matchup.week).exists() or Matchup.objects.filter(team1=matchup.team2, week=matchup.week).exists() or Matchup.objects.filter(team2=matchup.team1, week=matchup.week).exists() or matchup.team1 == matchup.team2:
                 print("DUPLICATE")
             else:
+                matchup.league = matchup.team1.league
                 matchup.save()
             return redirect('league_standings', pk=league_pk)
     else:
@@ -82,9 +84,48 @@ class ViewMatchup(DetailView):
         return context      
 
 
-
 def delete_matchup(request, matchup_pk):
     m = get_object_or_404(Matchup, pk=matchup_pk)
     league_pk = m.team1.league.pk
     m.delete()
     return redirect('league_standings', pk=league_pk)
+
+def team_score(lineups):
+    total = 0
+    for lineup in lineups:
+        scores = []
+        for gymnast in lineup.gymnasts.all():
+            gymnast_scores = Score.objects.filter(gymnast=gymnast, event=lineup.event, week=lineup.week)
+            if gymnast_scores.exists():
+                gymnasts_highest = gymnast_scores.first()
+                for score in gymnast_scores:
+                    if score.score > gymnasts_highest.score:
+                        gymnasts_highest = score
+                scores.append(gymnasts_highest.score)
+        if len(scores) > int(lineup.team.league.event_count_size):
+            scores.sort(reverse=True)
+            scores = scores[:int(lineup.team.league.event_count_size)]
+        for score in scores:
+            total += score
+    return total
+
+def compute_matchup_winner(request, league_pk, week):
+    league = get_object_or_404(League, pk=league_pk)
+    matchups = Matchup.objects.filter(week=week, league=league)
+    for matchup in matchups:
+        team1 = matchup.team1
+        team2 = matchup.team2
+        team1_lineups = LineUp.objects.filter(team=matchup.team1, week=week)
+        team2_lineups = LineUp.objects.filter(team=matchup.team2, week=week)
+        team1_score = team_score(team1_lineups)
+        team2_score = team_score(team2_lineups)
+        if team1_score > team2_score:
+            team1.wins += 1
+            team2.losses += 1
+        elif team2_score > team1_score:
+            team2.wins += 1
+            team1.losses += 1
+        team1.save()
+        team2.save()
+
+    return redirect('league_standings', league_pk)
