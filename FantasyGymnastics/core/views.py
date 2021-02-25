@@ -13,8 +13,12 @@ from weekly_gameplay.models import Average, Matchup
 from .forms import NewLeagueForm, NewFantasyTeamForm, NewGymnastForm
 # Create your views here.
 
+
+
 #Helper Function
 def create_team_with_lineups(user, league):
+    scraper = Scraper()
+
     team = FantasyTeam.objects.create(
         user=user,
         league=league,
@@ -23,10 +27,11 @@ def create_team_with_lineups(user, league):
     for i in range(6):
         lineup = LineUp.objects.create(
             team=team,
-            event=events[i]
+            event=events[i],
+            week=int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
         )
         lineup.save()
-
+        
 @login_required
 def create_league(request):
     if request.method == 'POST':
@@ -87,6 +92,7 @@ class SearchLeagues(ListView):
             context['leagues'] = League.objects.all()
         return context
  
+        
 @login_required
 def request_to_join_league(request, pk):
     league = get_object_or_404(League, pk=pk)
@@ -132,11 +138,13 @@ class ViewFantasyTeam(DetailView):
     context_object_name = 'team'
 
     def get_context_data(self, **kwargs):
+        scraper = Scraper()
         context = super().get_context_data(**kwargs)
         context["roster"] = context["object"].roster.all()
         drafted = context['object'].league.drafted.all()
         context["draftable_gymnasts"] = Gymnast.objects.exclude(id__in=drafted)
-        context["lineups"] = LineUp.objects.filter(team=context['object']).order_by('pk')
+        context["lineups"] = LineUp.objects.filter(team=context['object'], week=int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])).order_by('pk')
+        print(context["lineups"])
         return context      
 
 class UpdateFantasyTeam(UserPassesTestMixin, UpdateView):
