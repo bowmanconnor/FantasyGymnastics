@@ -1,0 +1,52 @@
+$base-light: #EEF5FD;
+$base-dark: #03256C;
+$dark-highlight: #DA6907;
+$primary-highlight: #86BD76;
+$light-highlight: #BFD7EA;
+    
+body {
+    background-color: $base-light;
+}
+
+body {
+    background-color: $base-light;
+    color: $dark-highlight;
+}
+
+#navbar {
+    background-color: $base-dark;
+    color: $light-highlight;
+}
+
+a {
+    color: $primary-highlight;
+}
+
+
+h1 {
+    color: $dark-highlight;
+    font-size: 72px;
+}
+
+h2 {
+    color: $dark-highlight;
+}
+
+#outer_tables {
+    background-color: $light-highlight;
+    color: $dark-highlight;
+    padding: 16px 16px 16px 16px;
+    border-radius: 12px;
+    margin: 16px 4px;
+}
+
+#matchup_tables {
+    background-color: $light-highlight;
+    color: $dark-highlight;
+    padding: 16px;
+    margin: auto;
+}
+
+#matchup_tables td {
+    padding: 4px 16px;
+}

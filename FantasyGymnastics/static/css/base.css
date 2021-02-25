@@ -1,0 +1,47 @@
+body {
+  background-color: #EEF5FD;
+}
+
+body {
+  background-color: #EEF5FD;
+  color: #DA6907;
+}
+
+#navbar {
+  background-color: #03256C;
+  color: #BFD7EA;
+}
+
+a {
+  color: #86BD76;
+}
+
+h1 {
+  color: #DA6907;
+  font-size: 72px;
+}
+
+h2 {
+  color: #DA6907;
+}
+
+#outer_tables {
+  background-color: #BFD7EA;
+  color: #DA6907;
+  padding: 16px 16px 16px 16px;
+  border-radius: 12px;
+  margin: 16px 4px;
+}
+
+#matchup_tables {
+  background-color: #BFD7EA;
+  color: #DA6907;
+  padding: 16px;
+  margin: auto;
+}
+
+#matchup_tables td {
+  padding: 4px 16px;
+}
+
+/*# sourceMappingURL=base.css.map */
