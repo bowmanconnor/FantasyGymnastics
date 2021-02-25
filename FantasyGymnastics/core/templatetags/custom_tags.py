@@ -49,7 +49,46 @@ def get_highest_event_score(score, event):
 def current_week(lineup, week):
     return lineup.filter(week=week)
 
+
+
     
 @register.filter
-def total_score(scores, team):
-    scores = scores.filter(team=team)
+def lineup_score(lineup):
+    print(lineup.event)
+    total = 0
+    scores = []
+    for gymnast in lineup.gymnasts.all():
+        gymnast_scores = Score.objects.filter(gymnast=gymnast, event=lineup.event, week=lineup.week)
+        if gymnast_scores.exists():
+            gymnasts_highest = gymnast_scores.first()
+            for score in gymnast_scores:
+                if score.score > gymnasts_highest.score:
+                    gymnasts_highest = score
+            scores.append(gymnasts_highest.score)
+    if len(scores) > int(lineup.team.league.event_count_size):
+        scores.sort(reverse=True)
+        scores = scores[:int(lineup.team.league.event_count_size)]
+    for score in scores:
+        total += score
+    return round(total,2)
+
+  
+@register.filter
+def team_score(lineups):
+    total = 0
+    for lineup in lineups:
+        scores = []
+        for gymnast in lineup.gymnasts.all():
+            gymnast_scores = Score.objects.filter(gymnast=gymnast, event=lineup.event, week=lineup.week)
+            if gymnast_scores.exists():
+                gymnasts_highest = gymnast_scores.first()
+                for score in gymnast_scores:
+                    if score.score > gymnasts_highest.score:
+                        gymnasts_highest = score
+                scores.append(gymnasts_highest.score)
+        if len(scores) > int(lineup.team.league.event_count_size):
+            scores.sort(reverse=True)
+            scores = scores[:int(lineup.team.league.event_count_size)]
+        for score in scores:
+            total += score
+    return round(total,2)

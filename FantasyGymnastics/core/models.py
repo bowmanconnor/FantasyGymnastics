@@ -12,6 +12,7 @@ class Gymnast(models.Model):
 
     class Meta:
         unique_together = ('name', 'team')
+        ordering = ['name']
     
     def __str__(self):
         return self.name
