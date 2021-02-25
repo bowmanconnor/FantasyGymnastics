@@ -59,6 +59,8 @@ def create_matchup(request, league_pk):
             return redirect('league_standings', pk=league_pk)
     else:
         form = NewMatchupForm()
+        form.fields['team1'].queryset = FantasyTeam.objects.filter(league=league_pk)
+        form.fields['team2'].queryset = FantasyTeam.objects.filter(league=league_pk)
     return render(request, 'weekly_gameplay/create_matchup.html', {'form': form})
 
 class ViewMatchup(DetailView):

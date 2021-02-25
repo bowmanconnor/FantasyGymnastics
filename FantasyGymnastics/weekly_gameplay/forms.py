@@ -6,4 +6,3 @@ class NewMatchupForm(forms.ModelForm):
     class Meta:
         model = Matchup
         exclude = ['league']
-
