@@ -46,6 +46,10 @@ def get_highest_event_score(score, event):
     return highest
 
 @register.filter
+def event_average(averages, event):
+    return averages.get(event=event)
+    
+@register.filter
 def current_week(lineup, week):
     return lineup.filter(week=week)
 
@@ -54,7 +58,6 @@ def current_week(lineup, week):
     
 @register.filter
 def lineup_score(lineup):
-    print(lineup.event)
     total = 0
     scores = []
     for gymnast in lineup.gymnasts.all():
@@ -92,3 +95,11 @@ def team_score(lineups):
         for score in scores:
             total += score
     return round(total,2)
+
+@register.filter
+def team_has_competed(gymnast, week):
+    gymnasts = Gymnast.objects.filter(team=gymnast.team)
+    if Score.objects.filter(gymnast__in=gymnasts, week=week).exists():
+        return True
+    return False
+

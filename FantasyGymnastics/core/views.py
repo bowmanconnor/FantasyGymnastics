@@ -144,7 +144,7 @@ class ViewFantasyTeam(DetailView):
         drafted = context['object'].league.drafted.all()
         context["draftable_gymnasts"] = Gymnast.objects.exclude(id__in=drafted)
         context["lineups"] = LineUp.objects.filter(team=context['object'], week=int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])).order_by('pk')
-        print(context["lineups"])
+        context['averages'] = Average.objects.filter(gymnast__in=context['roster'])
         return context      
 
 class UpdateFantasyTeam(UserPassesTestMixin, UpdateView):

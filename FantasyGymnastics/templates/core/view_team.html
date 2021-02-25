@@ -23,8 +23,10 @@
                         <td>{{gymnast.name}}</td>
                         <td>{{gymnast.team}}</td>
                         <td>{{gymnast.year}}</td>
-                        {% if user == team.user %}
+                        {% if user == team.user and not gymnast|team_has_competed:lineups.all.first.week %}
                         <td><a href="{% url 'remove_gymnast_to_roster' team.pk gymnast.pk %}">X</a></td>
+                        {% else %}
+                        <td></td>
                         {% endif %}
                     </tr>
                     {% endfor %}
@@ -32,11 +34,11 @@
             </table>
             {% comment %} Add to roster button {% endcomment %}
             {% if user == team.user %}
-            {% if team.roster.all.count < team.league.roster_size %} <a class="mb-4"
-                href="{% url 'gymnast_search' team.pk %}"><i class="fas fa-user-plus"></i></a>
-                {% endif %}
-                {% endif %}
-                <p class='mt-4'>{{ team.roster.all.count }}/{{ team.league.roster_size}}</p>
+                {% if team.roster.all.count < team.league.roster_size %} <a class="mb-4"
+                        href="{% url 'gymnast_search' team.pk %}"><i class="fas fa-user-plus"></i></a>
+                    {% endif %}
+            {% endif %}
+            <p class='mt-4'>{{ team.roster.all.count }}/{{ team.league.roster_size}}</p>
         </div>
         <div class="col-md-2"></div>
         {% comment %} Lineups {% endcomment %}
@@ -60,9 +62,12 @@
                     <table class="table table-hover">
                         {% for gymnast in lineup.gymnasts.all %}
                         <tr>
+                            {% comment %} Remove gymnast from lineup {% endcomment %}
                             <td>{{gymnast.name}}</td>
-                            {% if user == team.user %}
+                            {% if user == team.user and not gymnast|team_has_competed:lineup.week %}
                             <td><a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}">X</a></td>
+                            {% else %}
+                            <td></td>
                             {% endif %}
                         </tr>
                         {% endfor %}
@@ -85,8 +90,12 @@
                                     <table>
                                         {% if user == team.user %}
                                         <tr>
-                                            <td><a
-                                                href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}}</a>
+                                            <td>
+                                                {% if gymnast|team_has_competed:lineup.week %}
+                                                    {{gymnast.name}} AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}
+                                                {% else %}
+                                                    <a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}} AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}</a> 
+                                                {% endif %}
                                             </td>
                                         </tr>
                                         {% endif %}
