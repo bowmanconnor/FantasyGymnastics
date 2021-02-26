@@ -19,6 +19,9 @@ def add_gymnast_to_roster(request, team_pk, gymnast_pk):
     team.roster.add(gymnast)
     league = team.league
     league.drafted.add(gymnast)
+    print('-------------------------------------------------')
+    print(str(team) + " drafted " + str(gymnast))
+    print('-------------------------------------------------')
     return redirect('view_team', pk=team_pk)
 
 def remove_gymnast_from_roster(request, team_pk, gymnast_pk):
