@@ -39,10 +39,12 @@
                                 {% comment %} Gymnast name and score for event {% endcomment %}
                                 <td>{{gymnast.name}} </td>
                                 <td>
+                                    {% comment %} Gymnast score if their team has competed {% endcomment %}
                                     {% if scores|from_gymnast:gymnast|has_event_score:lineup.event %}
                                         <b>{{ scores|from_gymnast:gymnast|get_highest_event_score:lineup.event }}</b>
                                     {% elif  gymnast|team_has_competed:lineup.week %}
                                         <b>0.00</b>
+                                    {% comment %} Gymnast average if their team hasnt competed {% endcomment %}
                                     {% else %}
                                         {% if averages|from_gymnast:gymnast|event_average:lineup.event%}
                                             <em>{{averages|from_gymnast:gymnast|event_average:lineup.event}}</em>
@@ -53,7 +55,7 @@
                                 </td>
                             </tr>
                         {% endfor %}
-                        {% comment %} Add gymnast to lineup button {% endcomment %}
+                        {% comment %} Add gymnast to lineup button. Only if the current week {% endcomment %}
                         {% if user == team1.user and matchup.week == current_week%}
                             {% if lineup.gymnasts.all.count < team1.league.event_lineup_size %} <p>
                                 <tr><td colspan="3"><a data-bs-toggle="collapse" href="#multiCollapse{{lineup.event}}" aria-expanded="false"
@@ -72,6 +74,7 @@
                                     <table>
                                         <tr>
                                             <td>
+                                                {% comment %} Allow user to add gymnast to lineup if their team hasnt competed {% endcomment %}
                                                 {% if gymnast|team_has_competed:lineup.week %}
                                                     {{gymnast.name}} AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}
                                                 {% else %}
@@ -98,9 +101,6 @@
 
 
 
-
-
-        
         {% comment %} Team 2 {% endcomment %}
         <div class="col alltoright">
              {% comment %} Team name (link to view team) {% endcomment %}
@@ -119,10 +119,12 @@
                             <tr>
                                 {% comment %} Gymnast name and score for event {% endcomment %}
                                 <td>
+                                    {% comment %} Gymnast score if theyve competed {% endcomment %}
                                     {% if scores|from_gymnast:gymnast|has_event_score:lineup.event %}
                                         <b>{{ scores|from_gymnast:gymnast|get_highest_event_score:lineup.event }}</b>
                                     {% elif  gymnast|team_has_competed:lineup.week %}
                                         <b>0.00</b>
+                                    {% comment %} Gymnast event average if they havent competed {% endcomment %}
                                     {% else %}
                                         {% if averages|from_gymnast:gymnast|event_average:lineup.event%}
                                             <em>{{averages|from_gymnast:gymnast|event_average:lineup.event}}</em>
