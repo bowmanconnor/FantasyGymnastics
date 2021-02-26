@@ -4,7 +4,7 @@ body {
 
 body {
   background-color: #EEF5FD;
-  color: #DA6907;
+  color: #374337;
 }
 
 #navbar {
@@ -17,17 +17,17 @@ a {
 }
 
 h1 {
-  color: #DA6907;
+  color: #374337;
   font-size: 72px;
 }
 
 h2 {
-  color: #DA6907;
+  color: #374337;
 }
 
 #outer_tables {
   background-color: #BFD7EA;
-  color: #DA6907;
+  color: #374337;
   padding: 16px 16px 16px 16px;
   border-radius: 12px;
   margin: 16px 4px;
@@ -35,7 +35,7 @@ h2 {
 
 #matchup_tables {
   background-color: #BFD7EA;
-  color: #DA6907;
+  color: #374337;
   padding: 16px;
   margin: auto;
 }

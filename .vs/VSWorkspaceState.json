@@ -2,16 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\FantasyGymnastics",
-    "\\FantasyGymnastics\\authentication\\migrations",
-    "\\FantasyGymnastics\\auto_populate_database",
-    "\\FantasyGymnastics\\auto_populate_database\\migrations",
     "\\FantasyGymnastics\\draft",
     "\\FantasyGymnastics\\draft\\migrations",
-    "\\FantasyGymnastics\\draft\\migrations\\__pycache__",
-    "\\FantasyGymnastics\\draft\\__pycache__",
+    "\\FantasyGymnastics\\static",
+    "\\FantasyGymnastics\\static\\css",
+    "\\FantasyGymnastics\\static\\js",
+    "\\FantasyGymnastics\\static\\scss",
     "\\FantasyGymnastics\\templates",
     "\\FantasyGymnastics\\templates\\weekly_gameplay"
   ],
-  "SelectedNode": "\\FantasyGymnastics\\templates\\registration\\login.html",
+  "SelectedNode": "\\FantasyGymnastics\\static\\scss\\base.scss",
   "PreviewInSolutionExplorer": false
 }
