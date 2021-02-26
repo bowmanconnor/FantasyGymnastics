@@ -1,5 +1,5 @@
 from django import template
-from core.models import Gymnast, Score
+from core.models import Gymnast, Score, League, FantasyTeam
 from weekly_gameplay.models import Average
 from scraper.Scraper import Scraper, ScraperConstants
 from datetime import datetime
@@ -101,3 +101,8 @@ def team_has_competed(gymnast, week):
         return True
     return False
 
+@register.filter
+def has_team_in_league(user, league):
+    if FantasyTeam.objects.filter(league=league, user=user).exists():
+        return True
+    return False
