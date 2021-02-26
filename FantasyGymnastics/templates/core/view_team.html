@@ -35,7 +35,7 @@
             {% comment %} Add to roster button {% endcomment %}
             {% if user == team.user %}
                 {% if team.roster.all.count < team.league.roster_size %} <a class="mb-4"
-                    href="{% url 'gymnast_search' team.pk %}"><i class="fas fa-user-plus"></i></a>
+                    href="{% url 'gymnast_search' team.pk %}"><i class="fas fa-user-plus"></i>ADD</a>
                 {% endif %}
             {% endif %}
             <p class='mt-4'>{{ team.roster.all.count }}/{{ team.league.roster_size}}</p>
