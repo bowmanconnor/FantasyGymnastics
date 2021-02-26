@@ -43,9 +43,6 @@
                     </tr>
                 {% endif %}
             {% endfor %}
-            {% if user == league.manager %}
-                <tr><td><a class="btn btn-outline-primary" href="{% url 'compute_matchup_winners' league.pk current_week %}">Compute Winners</a></td></tr>
-            {% endif %}
             </table>
         </td>
     </tr>
@@ -66,7 +63,6 @@
                                 </tr>
                             {% endif %}
                         {% endfor %}
-                        {% comment %} <tr><td><a class="btn btn-outline-primary" href="{% url 'compute_matchup_winners' league.pk forloop.counter %}">Compute Winners</a></td></tr> {% endcomment %}
                     </table>
                 </td>
             </tr>
