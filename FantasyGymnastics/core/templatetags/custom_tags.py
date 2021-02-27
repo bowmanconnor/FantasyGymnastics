@@ -120,6 +120,7 @@ def meet_scores(scores, meet):
             event_scores.append(0.00)
     return event_scores
 
+@register.filter
 def has_team_in_league(user, league):
     if FantasyTeam.objects.filter(league=league, user=user).exists():
         return True
