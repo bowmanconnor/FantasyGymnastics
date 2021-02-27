@@ -5,5 +5,4 @@ from .models import Matchup
 class NewMatchupForm(forms.ModelForm):
     class Meta:
         model = Matchup
-        exclude = ['__all__']
-
+        exclude = ['league']
