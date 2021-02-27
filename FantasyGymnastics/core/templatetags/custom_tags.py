@@ -102,6 +102,25 @@ def team_has_competed(gymnast, week):
     return False
 
 @register.filter
+def meets(scores):
+    meets = []
+    for meet in scores.values('meet').distinct():
+       meets.append({'name' : meet['meet'], 'date' : scores.filter(meet=meet['meet']).first().date})
+    return meets
+
+@register.filter
+def meet_scores(scores, meet):
+    print(meet['name'])
+    events = ['FX', 'PH', 'SR', 'VT', 'PB', 'HB']
+    event_scores = []
+    for event in events:
+        if scores.filter(meet=meet['name'], event=event).exists():
+            event_scores.append(round(scores.get(meet=meet['name'], event=event).score,2))
+        else:
+            event_scores.append(0.00)
+    return event_scores
+
+@register.filter
 def has_team_in_league(user, league):
     if FantasyTeam.objects.filter(league=league, user=user).exists():
         return True

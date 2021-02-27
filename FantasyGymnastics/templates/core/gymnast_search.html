@@ -20,6 +20,7 @@
     {% if gymnasts %}
         <table id="myTable" class="table tablesorter">
             <thead>
+                <th></th>
                 <th>Name</th>
                 <th>Team</th>
                 <th>Year</th>
@@ -32,7 +33,8 @@
             </thead>
             {% for gymnast in gymnasts %}
                 <tr>
-                    <td><a style="color:inherit; text-decoration: none;"  href="{% url 'add_gymnast_to_roster' team.pk gymnast.pk %}">{{gymnast.name}}</a></td>
+                    <td><a class="btn btn-outline-primary" role="button" href="{% url 'add_gymnast_to_roster' team.pk gymnast.pk %}">Add</a></td>
+                    <td><a href="{% url 'view_gymnast' gymnast.pk %}">{{gymnast.name}}</a></td>
                     <td>{{gymnast.team}}</td>
                     <td>{{gymnast.year}}</td>
                     {% for average_from_gymnast in averages|from_gymnast:gymnast %}
@@ -62,7 +64,7 @@
                 cssIconNone: 'fa-sort',
                 cssIconAsc: 'fa-sort-up',
                 cssIconDesc: 'fa-sort-down',
-                sortList: [[0, 0]],
+                sortList: [[1, 0]],
                 headers : {
                     3 : { sortInitialOrder: 'desc' },
                     4 : { sortInitialOrder: 'desc' },
@@ -70,6 +72,7 @@
                     6 : { sortInitialOrder: 'desc' },
                     7 : { sortInitialOrder: 'desc' },
                     8 : { sortInitialOrder: 'desc' },
+                    9 : { sortInitialOrder: 'desc' },
                 }
             });
         });

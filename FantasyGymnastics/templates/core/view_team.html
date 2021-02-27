@@ -20,7 +20,7 @@
                 <tbody>
                     {% for gymnast in roster %}
                     <tr>
-                        <td>{{gymnast.name}}</td>
+                        <td><a href="{% url 'view_gymnast' gymnast.pk %}">{{gymnast.name}}</a></td>
                         <td>{{gymnast.team}}</td>
                         <td>{{gymnast.year}}</td>
                         {% if user == team.user and not gymnast|team_has_competed:lineups.all.first.week %}

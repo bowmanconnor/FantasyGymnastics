@@ -181,6 +181,16 @@ class SearchGymnasts(DetailView):
         context['events'] = ('FX', 'PH', 'SR', 'VT', 'PB', 'HB')
         return context
 
+def view_gymnast(request, gymnast_pk):
+    YEAR_CHOICES = {'FR' : 'Freshman', 'SO' : 'Sophomore', 'JR' : 'Junior', 'SR' : 'Senior'}    
+    context = {}
+    context['gymnast'] = get_object_or_404(Gymnast, pk=gymnast_pk)
+    context['scores'] = Score.objects.filter(gymnast=context['gymnast'])
+    context['averages'] = Average.objects.filter(gymnast=context['gymnast'])
+    context['gymnast_year'] = YEAR_CHOICES[context['gymnast'].year]
+    return render(request, 'core/view_gymnast.html', context)
+
+
 @login_required
 def myleagues(request):
     user = request.user
