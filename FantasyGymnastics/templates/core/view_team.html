@@ -20,7 +20,7 @@
                 <tbody>
                     {% for gymnast in roster %}
                     <tr>
-                        <td>{{gymnast.name}}</td>
+                        <td><a href="{% url 'view_gymnast' gymnast.pk %}">{{gymnast.name}}</a></td>
                         <td>{{gymnast.team}}</td>
                         <td>{{gymnast.year}}</td>
                         {% if user == team.user and not gymnast|team_has_competed:lineups.all.first.week %}
@@ -86,26 +86,26 @@
                             <div class="col">
                                 <div class="collapse multi-collapse" id="multiCollapse{{lineup.event}}">
                                     {% for gymnast in roster %}
-                                    {% if gymnast not in lineup.gymnasts.all %}
-                                    <table>
-                                        {% if user == team.user %}
-                                        <tr>
-                                            <td>
-                                                {% if gymnast|team_has_competed:lineup.week %}
-                                                    {{gymnast.name}} AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}
-                                                {% else %}
-                                                    <a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}} AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}</a> 
+                                        {% if gymnast not in lineup.gymnasts.all %}
+                                            <table>
+                                                {% if user == team.user %}
+                                                    <tr>
+                                                        <td>
+                                                            {% if gymnast|team_has_competed:lineup.week %}
+                                                                {{gymnast.name}} AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}
+                                                            {% else %}
+                                                                <a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}} AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}</a> 
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
                                                 {% endif %}
-                                            </td>
-                                        </tr>
+                                            </table>
                                         {% endif %}
-                                    </table>
-                                    {% endif %}
                                     {% endfor %}
                                 </div>
                             </div>
                         </div>
-                </div>
+                    </div>
                 {% endfor %}
             </div>
         </div>
