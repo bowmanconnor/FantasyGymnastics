@@ -21,5 +21,6 @@ urlpatterns = [
 
     path('team/<int:pk>/gymnast/search/', views.SearchGymnasts.as_view(), name='gymnast_search'),
     path('delete_gymnast/<int:pk>', views.delete_gymnast, name='delete_gymnast'),
+    path('delete_league/<int:league_pk>', views.delete_league, name='delete_league'),
     path('gymnast/view/<int:gymnast_pk>/', views.view_gymnast, name='view_gymnast'),
 ]

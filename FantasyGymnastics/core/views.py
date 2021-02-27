@@ -216,3 +216,7 @@ def delete_gymnast(request, pk):
     return redirect('home')
 
 
+def delete_league(request, league_pk):
+    l = get_object_or_404(League, pk=league_pk)
+    l.delete()
+    return redirect('home')
