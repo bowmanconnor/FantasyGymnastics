@@ -9,7 +9,7 @@
     <div class='d-flex align-items-center justify-content-center mb-4'>
         <h1>{{team.name}}</h1>
         {% if user == team.user %}
-        <a href="{% url 'edit_team' team.pk %}">Edit Team</a>
+            <a href="{% url 'edit_team' team.pk %}">Edit Team</a>
         {% endif %}
     </div>
     <div class="row">
@@ -24,9 +24,9 @@
                         <td>{{gymnast.team}}</td>
                         <td>{{gymnast.year}}</td>
                         {% if user == team.user and not gymnast|team_has_competed:lineups.all.first.week %}
-                        <td><a href="{% url 'remove_gymnast_to_roster' team.pk gymnast.pk %}">X</a></td>
+                            <td><a href="{% url 'remove_gymnast_to_roster' team.pk gymnast.pk %}">X</a></td>
                         {% else %}
-                        <td></td>
+                            <td></td>
                         {% endif %}
                     </tr>
                     {% endfor %}
@@ -35,8 +35,8 @@
             {% comment %} Add to roster button {% endcomment %}
             {% if user == team.user %}
                 {% if team.roster.all.count < team.league.roster_size %} <a class="mb-4"
-                        href="{% url 'gymnast_search' team.pk %}"><i class="fas fa-user-plus"></i></a>
-                    {% endif %}
+                    href="{% url 'gymnast_search' team.pk %}"><i class="fas fa-user-plus"></i>ADD</a>
+                {% endif %}
             {% endif %}
             <p class='mt-4'>{{ team.roster.all.count }}/{{ team.league.roster_size}}</p>
         </div>
@@ -57,29 +57,26 @@
             {% comment %} Tab content {% endcomment %}
             <div class="tab-content" id="pills-tabContent">
                 {% for lineup in lineups %}
-                <div class="tab-pane fade" id="{{lineup.event}}" role="tabpanel"
-                    aria-labelledby="{{lineup.event}}-tab">
-                    <table class="table table-hover">
-                        {% for gymnast in lineup.gymnasts.all %}
-                        <tr>
-                            {% comment %} Remove gymnast from lineup {% endcomment %}
-                            <td>{{gymnast.name}}</td>
-                            {% if user == team.user and not gymnast|team_has_competed:lineup.week %}
-                            <td><a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}">X</a></td>
-                            {% else %}
-                            <td></td>
-                            {% endif %}
-                        </tr>
-                        {% endfor %}
+                    <div class="tab-pane fade" id="{{lineup.event}}" role="tabpanel" aria-labelledby="{{lineup.event}}-tab">
+                        <table class="table table-hover">
+                            {% for gymnast in lineup.gymnasts.all %}
+                                <tr>
+                                    {% comment %} Remove gymnast from lineup {% endcomment %}
+                                    <td>{{gymnast.name}}</td>
+                                    {% if user == team.user and not gymnast|team_has_competed:lineup.week %}
+                                        <td><a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}">X</a></td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
                         {% comment %} Add to lineup button {% endcomment %}
-                    </table>
-                    {% if user == team.user %}
-                        {% if lineup.gymnasts.all.count < lineup.team.league.event_lineup_size %} <p>
-                            <a data-bs-toggle="collapse" href="#multiCollapse{{lineup.event}}" aria-expanded="false"
-                                aria-controls="multiCollapse{{lineup.event}}"><i class="fas fa-user-plus"></i></a>
-                            </p>
+                        </table>
+                        {% if user == team.user %}
+                            {% if lineup.gymnasts.all.count < lineup.team.league.event_lineup_size %} 
+                                <p><a data-bs-toggle="collapse" href="#multiCollapse{{lineup.event}}" aria-expanded="false" aria-controls="multiCollapse{{lineup.event}}"><i class="fas fa-user-plus"></i></a></p>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
                         <p>{{ lineup.gymnasts.all.count }}/{{ team.league.event_lineup_size }}</p>
                         {% comment %} Add to lineup dropdown {% endcomment %}
                         <div class="row">

@@ -5,10 +5,12 @@ import core.models as core_models
 class Matchup(models.Model):
     team1 = models.ForeignKey(core_models.FantasyTeam, related_name='Matchup1', on_delete=models.CASCADE)
     team2 = models.ForeignKey(core_models.FantasyTeam, related_name='Matchup2', on_delete=models.CASCADE)
+    league = models.ForeignKey(core_models.League, related_name='Matchup', on_delete=models.CASCADE)
     week = models.PositiveIntegerField(blank=False)
 
     def __str__(self):
         return str(self.team1) + " " + str(self.team2) + " " + str(self.week)
+
     class Meta:
         unique_together = ('team1', 'team2', 'week')
         
