@@ -9,6 +9,7 @@ from scraper.Scraper import ScraperConstants
 from scraper.Scraper import Scraper
 from datetime import datetime
 from weekly_gameplay.models import Average, Matchup
+from django.db.models import Q
 
 from .forms import NewLeagueForm, NewFantasyTeamForm, NewGymnastForm
 # Create your views here.
@@ -174,7 +175,7 @@ class SearchGymnasts(DetailView):
         query = self.request.GET.get('query')
         drafted = context['object'].league.drafted.all()
         if query:
-            context['gymnasts'] = Gymnast.objects.filter(name__icontains=query).exclude(id__in=drafted)
+            context['gymnasts'] = Gymnast.objects.filter(Q(name__icontains=query) | Q(team__icontains=query)).exclude(id__in=drafted)
         else:
             context['gymnasts'] = Gymnast.objects.all().exclude(id__in=drafted)
         context['averages'] = Average.objects.filter(gymnast__in=context['gymnasts'])
@@ -216,7 +217,3 @@ def delete_gymnast(request, pk):
     return redirect('home')
 
 
-def delete_league(request, league_pk):
-    l = get_object_or_404(League, pk=league_pk)
-    l.delete()
-    return redirect('home')
