@@ -11,7 +11,7 @@
     </div>
     <div class="d-flex align-items-center justify-content-center mb-4">
         <form action="{% url 'gymnast_search' team.pk %}" method="get">
-            <input class="form-control" name="query" type="text" placeholder="Gymnast Name">
+            <input class="form-control" name="query" type="text" placeholder="Gymnast or Team Name">
         </form>
     </div>
     <a href="{% url 'view_team' team.pk %}">

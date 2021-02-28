@@ -37,7 +37,7 @@
                                     <td></td>
                                 {% endif %}
                                 {% comment %} Gymnast name and score for event {% endcomment %}
-                                <td>{{gymnast.name}} </td>
+                                <td>{{gymnast.name}} - {{gymnast.team}} </td>
                                 <td>
                                     {% comment %} Gymnast score if their team has competed {% endcomment %}
                                     {% if scores|from_gymnast:gymnast|has_event_score:lineup.event %}
@@ -76,9 +76,9 @@
                                             <td>
                                                 {% comment %} Allow user to add gymnast to lineup if their team hasnt competed {% endcomment %}
                                                 {% if gymnast|team_has_competed:lineup.week %}
-                                                    {{gymnast.name}} AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}
+                                                    {{gymnast.name}} - {{gymnast.team}} - AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}
                                                 {% else %}
-                                                    <a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}} AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}</a> 
+                                                    <a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}} - {{gymnast.team}} - AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}</a> 
                                                 {% endif %}
                                             </td>
                                         </tr>
@@ -133,7 +133,7 @@
                                         {% endif %} 
                                     {% endif %}
                                 </td>
-                                <td>{{gymnast.name}} </td>
+                                <td>{{gymnast.name}} - {{gymnast.team}}</td>
                             </tr>
                         {% endfor %}                        
                     </tbody>

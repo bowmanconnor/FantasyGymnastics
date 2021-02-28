@@ -29,12 +29,11 @@
         <li class="nav-item">
             <a class="nav-link" href="{% url 'myleagues' %}">MyLeagues</a>
         </li>
+	{%  if user.is_staff %}
         <li class="nav-item">
-            <a class="nav-link" href="#">Text</a>
+            <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Text</a>
-        </li>
+	{% endif %}
         </ul>
         <span class="navbar-text">
             {% if user.is_authenticated %}
