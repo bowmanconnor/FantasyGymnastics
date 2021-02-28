@@ -1,7 +1,7 @@
 import os
 from celery import Celery
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FantasyGymnastics.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FantasyGymnastics.settings.production')
 
 app = Celery('FantasyGymnastics')
 app.config_from_object('django.conf:settings', namespace='CELERY')
