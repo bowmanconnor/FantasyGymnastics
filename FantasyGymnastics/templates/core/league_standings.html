@@ -2,7 +2,9 @@
 {% load custom_tags static %}
 {% block title %}League Standings{% endblock title %}
 {% block stylesheet %}
-<link rel="stylesheet" href="{% static 'css/clickable_row.css' %}">{% endblock stylesheet %}
+<link rel="stylesheet" href="{% static 'css/clickable_row.css' %}">
+<link rel="stylesheet" href="{% static 'css/leagueHome.css' %}">
+{% endblock stylesheet %}
 {% block content %}
 
 <div class='d-flex align-items-center justify-content-center mb-4'>
@@ -11,7 +13,7 @@
 
 <div class='d-flex align-items-center justify-content-center mb-4'>
     {% if user == league.manager %}
-    <a class="btn btn-outline-dark col-sm-2 btn1" href="{% url 'edit_league' league.pk %}" role="button">Edit League</a>
+    <a class="btn btn-outline-success col-sm-2 btn1" href="{% url 'edit_league' league.pk %}" role="button">Edit League</a>
     {% endif %}
 </div>
 
@@ -36,44 +38,93 @@
 
 <div id="outer_tables">
     <div class="row">
-        <h2 class="col-sm-4">
-            Schedule
-        </h2>
+        <h2 class="col-auto">Schedule</h2>
         {% if league.manager == user %}
-        <a class ="col-sm-4" href="{% url 'create_matchup' league.pk %}"> <button class="btn btn-dark" type="button">Create Matchup</button></a>
+        <a class="col-auto" href="{% url 'create_matchup' league.pk %}"> <button class="btn btn-success" type="button">Create Matchup</button></a>
         {% endif %}
     </div>
-    <table class="table table-hover"> 
+    <table class="table">
         <tr>
             <td>{{current_week}}</td>
             <td>
-                <table id="matchup_tables">
-                    {% for matchup in matchups %}
-                    {% if matchup.week == current_week %}
-                    <tr>
-                        <td>{{matchup.team1}} vs {{matchup.team2}}</td>
-                        <td><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
-                    </tr>
-                    {% endif %}
-                    {% endfor %}
-                </table>
+                {% if matchups and matchup.week == current_week %}
+                    <div id="matchupCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#matchupCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="First Matchup"></button>
+                            {% for matchup in matchups %}
+                            {% if matchup.week == current_week %}
+                            <button type="button" data-bs-target="#matchupCarousel" data-bs-slide-to="{{forloop.counter}}" aria-label="Matchup {{forloop.counter}}"></button>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <table class="table table-hover" id="matchup_tables">
+                                    <tr>
+                                        <td class="col-sm-auto">
+                                            <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'delete_matchup' matchup.pk %}">X</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            {% for matchup in matchups %}
+                                {% if forloop.counter == 1 %}
+                                <div class="carousel-item active">
+                                    <table class="table table-hover" id="matchup_tables">
+                                        <tr>
+                                            <td class="col-sm-auto">
+                                                <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a>
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'delete_matchup' matchup.pk %}">X</a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                {% else %}
+                                <div class="carousel-item">
+                                    <table class="table table-hover" id="matchup_tables">
+                                        <tr>
+                                            <td class="col-sm-auto">
+                                                <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a>
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'delete_matchup' matchup.pk %}">X</a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
             </td>
         </tr>
+
         {% comment %} Creates rows for each week in the season {% endcomment %}
         {% with ''|center:max_week as range %}
         {% for _ in range %}
         <tr>
             <td>{{forloop.counter}}</td>
             <td>
-                <table>
-                    {% for matchup in matchups %}
-                    {% if matchup.week == forloop.parentloop.counter %}
+                <table id="matchup_tables">
                     <tr>
-                        <td><a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a></td>
-                        <td><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
+                        {% for matchup in matchups %}
+                        {% if matchup.week == forloop.parentloop.counter %}
+                        <td>
+                            <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'delete_matchup' matchup.pk %}">X</a>
+                        </td>
+                        {% endif %}
+                        {% endfor %}
                     </tr>
-                    {% endif %}
-                    {% endfor %}
                 </table>
             </td>
         </tr>

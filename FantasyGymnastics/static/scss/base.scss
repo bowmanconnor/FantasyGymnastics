@@ -1,11 +1,12 @@
-$base-light: #EEF5FD;
-$base-dark: #03256C;
-$dark-highlight: #374337;
-$primary-highlight: #86BD76;
-$light-highlight: #BFD7EA;
+$base-light: #F8F8F8;
+$base-dark: #004A10;
+$dark-highlight: #0D1D59;
+$primary-highlight: #F5C800;
+$light-highlight: #B2BCBD;
     
 body {
     background-color: $base-light;
+    color: $dark-highlight;
 }
 
 body {
@@ -18,8 +19,12 @@ body {
     color: $light-highlight;
 }
 
-a {
+#navbar a{
     color: $primary-highlight;
+}
+
+a {
+    color: $base-dark;
 }
 
 
@@ -32,21 +37,36 @@ h2 {
     color: $dark-highlight;
 }
 
-#outer_tables {
+table {
     background-color: $light-highlight;
     color: $dark-highlight;
-    padding: 16px 16px 16px 16px;
     border-radius: 12px;
-    margin: 16px 4px;
 }
 
-#matchup_tables {
-    background-color: $light-highlight;
-    color: $dark-highlight;
-    padding: 16px;
-    margin: auto;
+.btn-outline-primary {
+    border-color: $primary-highlight;
+    color: $primary-highlight;
 }
 
-#matchup_tables td {
-    padding: 4px 16px;
+.btn-outline-primary:hover {
+    border-color: $primary-highlight;
+    background-color: $primary-highlight;
+    color: $base-dark;
+}
+
+.btn-outline-success {
+    border-color: $base-dark;
+    color: $base-dark;
+}
+
+.btn-outline-success:hover {
+    border-color: $base-dark;
+    background-color: $base-dark;
+    color: $base-light;
+}
+
+.btn-success {
+    background-color: $base-dark;
+    border-color: $base-dark;
+    color: $base-light;
 }

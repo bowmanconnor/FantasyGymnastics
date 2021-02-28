@@ -1,47 +1,67 @@
 body {
-  background-color: #EEF5FD;
+  background-color: #F8F8F8;
+  color: #0D1D59;
 }
 
 body {
-  background-color: #EEF5FD;
-  color: #374337;
+  background-color: #F8F8F8;
+  color: #0D1D59;
 }
 
 #navbar {
-  background-color: #03256C;
-  color: #BFD7EA;
+  background-color: #004A10;
+  color: #B2BCBD;
+}
+
+#navbar a {
+  color: #F5C800;
 }
 
 a {
-  color: #86BD76;
+  color: #004A10;
 }
 
 h1 {
-  color: #374337;
+  color: #0D1D59;
   font-size: 72px;
 }
 
 h2 {
-  color: #374337;
+  color: #0D1D59;
 }
 
-#outer_tables {
-  background-color: #BFD7EA;
-  color: #374337;
-  padding: 16px 16px 16px 16px;
+table {
+  background-color: #B2BCBD;
+  color: #0D1D59;
   border-radius: 12px;
-  margin: 16px 4px;
 }
 
-#matchup_tables {
-  background-color: #BFD7EA;
-  color: #374337;
-  padding: 16px;
-  margin: auto;
+.btn-outline-primary {
+  border-color: #F5C800;
+  color: #F5C800;
 }
 
-#matchup_tables td {
-  padding: 4px 16px;
+.btn-outline-primary:hover {
+  border-color: #F5C800;
+  background-color: #F5C800;
+  color: #004A10;
+}
+
+.btn-outline-success {
+  border-color: #004A10;
+  color: #004A10;
+}
+
+.btn-outline-success:hover {
+  border-color: #004A10;
+  background-color: #004A10;
+  color: #F8F8F8;
+}
+
+.btn-success {
+  background-color: #004A10;
+  border-color: #004A10;
+  color: #F8F8F8;
 }
 
 /*# sourceMappingURL=base.css.map */
