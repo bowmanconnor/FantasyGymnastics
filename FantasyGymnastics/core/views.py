@@ -23,7 +23,7 @@ def create_team_with_lineups(user, league):
     team = FantasyTeam.objects.create(
         user=user,
         league=league,
-        name=str(user)+"'s Team")
+        name=str(user.first_name)+"'s Team")
     events = ['FX', 'PH', 'SR', 'VT', 'PB', 'HB']
     for i in range(6):
         lineup = LineUp.objects.create(
