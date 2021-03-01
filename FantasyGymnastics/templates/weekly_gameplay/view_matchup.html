@@ -107,7 +107,7 @@
             <h2><a style="color:inherit; text-decoration: none;" href="{% url 'view_team' team2.pk %}">{{team2}}</a></td></h2>
             {% comment %} loops through all lineups for this matchup week {% endcomment %}
             {% for lineup in team2.LineUp.all|current_week:matchup.week %}
-                <table class="table tablesorter table-hover">
+                <table class="table tablesorter2 table-hover">
                     <thead>
                         {% comment %} Lineup event name and capcity {% endcomment %}
                         <th class='alltoleft'>{{lineup|lineup_score}}</th>
@@ -177,6 +177,23 @@
                     0 : {  sorter: false },
                     1 : {  sorter: false },
                     2 : {  sorter: false },
+                }
+            });
+        });
+    </script>
+<script>
+        $(document).ready(function () {
+            $("table.tablesorter2").tablesorter({
+                headerTemplate: '{content} {icon}',
+                widgets: ['uitheme'],
+                cssIcon: 'fas',
+                cssIconNone: 'fa-sort',
+                cssIconAsc: 'fa-sort-up',
+                cssIconDesc: 'fa-sort-down',
+                sortList: [[0, 1]],
+                headers : {
+                    0 : {  sorter: false },
+                    1 : {  sorter: false },
                 }
             });
         });
