@@ -9,24 +9,30 @@ from scraper.Scraper import ScraperConstants
 from scraper.Scraper import Scraper
 from datetime import datetime
 from weekly_gameplay.models import Average, Matchup
+from django.db.models import Q
 
 from .forms import NewLeagueForm, NewFantasyTeamForm, NewGymnastForm
 # Create your views here.
 
+
+
 #Helper Function
 def create_team_with_lineups(user, league):
+    scraper = Scraper()
+
     team = FantasyTeam.objects.create(
         user=user,
         league=league,
-        name=str(user)+"'s Team")
+        name=str(user.first_name)+"'s Team")
     events = ['FX', 'PH', 'SR', 'VT', 'PB', 'HB']
     for i in range(6):
         lineup = LineUp.objects.create(
             team=team,
-            event=events[i]
+            event=events[i],
+            week=int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
         )
         lineup.save()
-
+        
 @login_required
 def create_league(request):
     if request.method == 'POST':
@@ -87,6 +93,7 @@ class SearchLeagues(ListView):
             context['leagues'] = League.objects.all()
         return context
  
+        
 @login_required
 def request_to_join_league(request, pk):
     league = get_object_or_404(League, pk=pk)
@@ -132,11 +139,13 @@ class ViewFantasyTeam(DetailView):
     context_object_name = 'team'
 
     def get_context_data(self, **kwargs):
+        scraper = Scraper()
         context = super().get_context_data(**kwargs)
         context["roster"] = context["object"].roster.all()
         drafted = context['object'].league.drafted.all()
         context["draftable_gymnasts"] = Gymnast.objects.exclude(id__in=drafted)
-        context["lineups"] = LineUp.objects.filter(team=context['object']).order_by('pk')
+        context["lineups"] = LineUp.objects.filter(team=context['object'], week=int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])).order_by('pk')
+        context['averages'] = Average.objects.filter(gymnast__in=context['roster'])
         return context      
 
 class UpdateFantasyTeam(UserPassesTestMixin, UpdateView):
@@ -166,12 +175,22 @@ class SearchGymnasts(DetailView):
         query = self.request.GET.get('query')
         drafted = context['object'].league.drafted.all()
         if query:
-            context['gymnasts'] = Gymnast.objects.filter(name__icontains=query).exclude(id__in=drafted)
+            context['gymnasts'] = Gymnast.objects.filter(Q(name__icontains=query) | Q(team__icontains=query)).exclude(id__in=drafted)
         else:
             context['gymnasts'] = Gymnast.objects.all().exclude(id__in=drafted)
         context['averages'] = Average.objects.filter(gymnast__in=context['gymnasts'])
         context['events'] = ('FX', 'PH', 'SR', 'VT', 'PB', 'HB')
         return context
+
+def view_gymnast(request, gymnast_pk):
+    YEAR_CHOICES = {'FR' : 'Freshman', 'SO' : 'Sophomore', 'JR' : 'Junior', 'SR' : 'Senior'}    
+    context = {}
+    context['gymnast'] = get_object_or_404(Gymnast, pk=gymnast_pk)
+    context['scores'] = Score.objects.filter(gymnast=context['gymnast'])
+    context['averages'] = Average.objects.filter(gymnast=context['gymnast'])
+    context['gymnast_year'] = YEAR_CHOICES[context['gymnast'].year]
+    return render(request, 'core/view_gymnast.html', context)
+
 
 @login_required
 def myleagues(request):

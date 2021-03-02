@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Gymnast, Score
+from .models import Gymnast, Score, League
 
 # Register your models here.
 
@@ -11,5 +11,10 @@ class ScoreAdmin(admin.ModelAdmin):
     list_display = ('gymnast', 'meet', 'event', 'score', 'date', 'week')
     list_filter = ('meet', 'event')
 
+class LeagueAdmin(admin.ModelAdmin):
+    list_display = ('name', 'manager')
+
 admin.site.register(Gymnast, GymnastAdmin)
 admin.site.register(Score, ScoreAdmin)
+admin.site.register(League, LeagueAdmin)
+

@@ -13,36 +13,56 @@
     <div class='d-flex align-items-center justify-content-center mb-4'>
         <h3>Week {{matchup.week}} Matchup</h3>
     </div>
+   <a href="{% url 'league_standings' matchup.team1.league.pk %}">
+        <button class="btn btn-outline-primary algin-right mb-2" type="button">Back to league</button>
+    </a>
     <div class="row">
+        {% comment %} Team 1 {% endcomment %}
         <div class="col">
+            {% comment %} Team name (link to view team) {% endcomment %}
             <h2><a style="color:inherit; text-decoration: none;" href="{% url 'view_team' team1.pk %}">{{team1}}</a></td></h2>
-            {% for lineup in team1.LineUp.all %}
-                <table class="table table-hover">
+            {% comment %} loops through all lineups for this matchup week {% endcomment %}
+            {% for lineup in team1.LineUp.all|current_week:matchup.week %}
+                <table class="table tablesorter table-hover" data-sortlist="[[2, 1]]">
                     <thead>
-                        <tr>{{lineup.event}} {{ lineup.gymnasts.all.count }}/{{ team1.league.event_lineup_size }}</tr>
+                        {% comment %} Lineup event name and capcity {% endcomment %}
+                        <th colspan="2">{{lineup.event}} {{ lineup.gymnasts.all.count }}/{{ team1.league.event_lineup_size }}</th>
+                        <td class='alltoright'>
+                            <em>Predicted {{lineup|predicted_lineup_score}}</em>
+                            <b>Actual {{lineup|actual_lineup_score}}</b>
+                        </td>
                     </thead>
                     <tbody>
+                        {% comment %} Loops through gymnasts in lineup {% endcomment %}
                         {% for gymnast in lineup.gymnasts.all %}
                             <tr>
-                                {% if user == team1.user %}
+                                {% comment %} Remove from lineup button {% endcomment %}
+                                {% if user == team1.user and matchup.week == current_week and not gymnast|team_has_competed:lineup.week%}
                                     <td><a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}">X</a></td>
+                                {% else %}
+                                    <td></td>
                                 {% endif %}
-                                <td>{{gymnast.name}} </td>
-                                <td>
+                                {% comment %} Gymnast name and score for event {% endcomment %}
+                                <td>{{gymnast.name}} - {{gymnast.team}} </td>
+                                <td class='alltoright'>
+                                    {% comment %} Gymnast score if their team has competed {% endcomment %}
                                     {% if scores|from_gymnast:gymnast|has_event_score:lineup.event %}
                                         <b>{{ scores|from_gymnast:gymnast|get_highest_event_score:lineup.event }}</b>
+                                    {% elif  gymnast|team_has_competed:lineup.week %}
+                                        <b>0.00</b>
+                                    {% comment %} Gymnast average if their team hasnt competed {% endcomment %}
                                     {% else %}
-                                        {% comment %} {% if averages|from_gymnast:gymnast|event_average:lineup.event%}
+                                        {% if averages|from_gymnast:gymnast|event_average:lineup.event%}
                                             <em>{{averages|from_gymnast:gymnast|event_average:lineup.event}}</em>
                                         {% else %}
                                             <em>0.00</em>
-                                        {% endif %} {% endcomment %}
+                                        {% endif %} 
                                     {% endif %}
-                                    
                                 </td>
                             </tr>
                         {% endfor %}
-                        {% if user == team1.user %}
+                        {% comment %} Add gymnast to lineup button. Only if the current week {% endcomment %}
+                        {% if user == team1.user and matchup.week == current_week%}
                             {% if lineup.gymnasts.all.count < team1.league.event_lineup_size %} <p>
                                 <tr><td colspan="3"><a data-bs-toggle="collapse" href="#multiCollapse{{lineup.event}}" aria-expanded="false"
                                     aria-controls="multiCollapse{{lineup.event}}"><i class="fas fa-user-plus"></i></a>
@@ -51,69 +71,88 @@
                         {% endif %}
                     </tbody>
                 </table>
+                {% comment %} Teams roster for adding to lineup {% endcomment %}
                 <div class="row">
                     <div class="col">
                         <div class="collapse multi-collapse" id="multiCollapse{{lineup.event}}">
                             {% for gymnast in team1.roster.all %}
-                            {% if gymnast not in lineup.gymnasts.all %}
-                            <table>
-                                {% if user == team1.user %}
-                                <tr>
-                                    <td><a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}}</a>
-                                    </td>
-                                </tr>
+                                {% if gymnast not in lineup.gymnasts.all %}
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                {% comment %} Allow user to add gymnast to lineup if their team hasnt competed {% endcomment %}
+                                                {% if gymnast|team_has_competed:lineup.week %}
+                                                    {{gymnast.name}} - {{gymnast.team}} - AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}
+                                                {% else %}
+                                                    <a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}} - {{gymnast.team}} - AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}</a> 
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    </table>
                                 {% endif %}
-                            </table>
-                            {% endif %}
                             {% endfor %}
                         </div>
                     </div>
                 </div>
-                
-
             {% endfor %}
+            {% comment %} Total team score {% endcomment %}
             <table class="table table-hover">
                 <tbody>
                     <tr>
-                        <td>Total </td>
-                        <td></td>
+                        <td class='alltoright'><em>Predicted {{team1.LineUp.all|current_week:matchup.week|predicted_team_score}}</em> <b>Total {{team1.LineUp.all|current_week:matchup.week|actual_team_score}}</b></td>
                     </tr>
                 </tbody>
             </table>
         </div>
+
+
+
+        {% comment %} Team 2 {% endcomment %}
         <div class="col alltoright">
+             {% comment %} Team name (link to view team) {% endcomment %}
             <h2><a style="color:inherit; text-decoration: none;" href="{% url 'view_team' team2.pk %}">{{team2}}</a></td></h2>
-            {% for lineup in team2.LineUp.all %}
-                <table class="table table-hover">
+            {% comment %} loops through all lineups for this matchup week {% endcomment %}
+            {% for lineup in team2.LineUp.all|current_week:matchup.week %}
+                <table class="table tablesorter table-hover" data-sortlist="[[0, 1]]">
                     <thead>
-                        <tr>{{lineup.event}}</tr>
+                        {% comment %} Lineup event name and capcity {% endcomment %}
+                        <td class='alltoleft'>
+                            <b>{{lineup|actual_lineup_score}} Actual</b>
+                            <em>{{lineup|predicted_lineup_score}} Predicted</em>
+                        </td>
+                        <th colspan="2">{{lineup.event}} {{ lineup.gymnasts.all.count }}/{{ team1.league.event_lineup_size }}</th>
                     </thead>
                     <tbody>
+                        {% comment %} Loops through gymnasts in lineup {% endcomment %}
                         {% for gymnast in lineup.gymnasts.all %}
                             <tr>
+                                {% comment %} Gymnast name and score for event {% endcomment %}
                                 <td>
+                                    {% comment %} Gymnast score if theyve competed {% endcomment %}
                                     {% if scores|from_gymnast:gymnast|has_event_score:lineup.event %}
                                         <b>{{ scores|from_gymnast:gymnast|get_highest_event_score:lineup.event }}</b>
+                                    {% elif  gymnast|team_has_competed:lineup.week %}
+                                        <b>0.00</b>
+                                    {% comment %} Gymnast event average if they havent competed {% endcomment %}
                                     {% else %}
-                                        {% comment %} {% if averages|from_gymnast:gymnast|event_average:lineup.event%}
+                                        {% if averages|from_gymnast:gymnast|event_average:lineup.event%}
                                             <em>{{averages|from_gymnast:gymnast|event_average:lineup.event}}</em>
                                         {% else %}
                                             <em>0.00</em>
-                                        {% endif %} {% endcomment %}
+                                        {% endif %} 
                                     {% endif %}
-                                    
                                 </td>
-                                <td>{{gymnast.name}}</td>
+                                <td>{{gymnast.name}} - {{gymnast.team}}</td>
                             </tr>
-                        {% endfor %}
-
+                        {% endfor %}                        
                     </tbody>
                 </table>
             {% endfor %}
+            {% comment %} Total team score {% endcomment %}
             <table class="table table-hover">
                 <tbody>
                     <tr>
-                        <td>Total </td>
+                        <td class='alltoleft'><b>{{team2.LineUp.all|current_week:matchup.week|actual_team_score}} Actual</b> <em>{{team2.LineUp.all|current_week:matchup.week|predicted_team_score}} Predicted</em></td>
                     </tr>
                 </tbody>
             </table>
@@ -124,5 +163,30 @@
 
 <style>
     .alltoright { text-align: right; }
+    .alltoleft { text-align: left; }
 </style>
+
+<!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>   
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js" integrity="sha512-qzgd5cYSZcosqpzpn7zF2ZId8f/8CHmFKZ8j7mU4OUXTNRd5g+ZHBPsgKEwoqxCtdQvExE5LprwwPAgoicguNg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.widgets.min.js" integrity="sha512-dj/9K5GRIEZu+Igm9tC16XPOTz0RdPk9FGxfZxShWf65JJNU2TjbElGjuOo3EhwAJRPhJxwEJ5b+/Ouo+VqZdQ==" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $("table.tablesorter").tablesorter({
+                headerTemplate: '{content} {icon}',
+                widgets: ['uitheme'],
+                cssIcon: 'fas',
+                cssIconNone: 'fa-sort',
+                cssIconAsc: 'fa-sort-up',
+                cssIconDesc: 'fa-sort-down',
+                headers : {
+                    0 : {  sorter: false },
+                    1 : {  sorter: false },
+                    2 : {  sorter: false },
+                    3 : {  sorter: false },
+                }
+            });
+        });
+    </script>
 {% endblock %}

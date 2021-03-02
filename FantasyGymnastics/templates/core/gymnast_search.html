@@ -11,37 +11,70 @@
     </div>
     <div class="d-flex align-items-center justify-content-center mb-4">
         <form action="{% url 'gymnast_search' team.pk %}" method="get">
-            <input class="form-control" name="query" type="text" placeholder="Gymnast Name">
+            <input class="form-control" name="query" type="text" placeholder="Gymnast or Team Name">
         </form>
     </div>
     <a href="{% url 'view_team' team.pk %}">
         <button class="btn btn-outline-primary algin-right" type="button">Back to team</button>
     </a>
     {% if gymnasts %}
-        <table class="table table-hover">
+        <table id="myTable" class="table tablesorter">
             <thead>
-                <td>Name</td>
-                <td>Team</td>
-                <td>Year</td>
-                <td>FX</td>
-                <td>PH</td>
-                <td>SR</td>
-                <td>VT</td>
-                <td>PB</td>
-                <td>HB</td>   
+                <th></th>
+                <th>Name</th>
+                <th>Team</th>
+                <th>Year</th>
+                <th>FX</th>
+                <th>PH</th>
+                <th>SR</th>
+                <th>VT</th>
+                <th>PB</th>
+                <th>HB</th>   
             </thead>
             {% for gymnast in gymnasts %}
                 <tr>
-                    <td><a style="color:inherit; text-decoration: none;"  href="{% url 'add_gymnast_to_roster' team.pk gymnast.pk %}">{{gymnast.name}}</a></td>
+                    <td><a class="btn btn-outline-primary" role="button" href="{% url 'add_gymnast_to_roster' team.pk gymnast.pk %}">Add</a></td>
+                    <td><a href="{% url 'view_gymnast' gymnast.pk %}">{{gymnast.name}}</a></td>
                     <td>{{gymnast.team}}</td>
                     <td>{{gymnast.year}}</td>
                     {% for average_from_gymnast in averages|from_gymnast:gymnast %}
-                            <td>{{ average_from_gymnast.floor }}</td>
+                        {% if average_from_gymnast.score == 0 %}
+                            <td></td>
+                        {% else %}
+                            <td>{{ average_from_gymnast.score }}</td>
+                        {% endif %}
+                        
                     {% endfor %}
                 </tr>
             {% endfor %}
         </table>
     {% endif %}
-<script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
 
+<!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>   
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js" integrity="sha512-qzgd5cYSZcosqpzpn7zF2ZId8f/8CHmFKZ8j7mU4OUXTNRd5g+ZHBPsgKEwoqxCtdQvExE5LprwwPAgoicguNg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.widgets.min.js" integrity="sha512-dj/9K5GRIEZu+Igm9tC16XPOTz0RdPk9FGxfZxShWf65JJNU2TjbElGjuOo3EhwAJRPhJxwEJ5b+/Ouo+VqZdQ==" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $("#myTable").tablesorter({
+                headerTemplate: '{content} {icon}',
+                widgets: ['uitheme'],
+                cssIcon: 'fas',
+                cssIconNone: 'fa-sort',
+                cssIconAsc: 'fa-sort-up',
+                cssIconDesc: 'fa-sort-down',
+                sortList: [[1, 0]],
+                headers : {
+                    3 : { sortInitialOrder: 'desc' },
+                    4 : { sortInitialOrder: 'desc' },
+                    5 : { sortInitialOrder: 'desc' },
+                    6 : { sortInitialOrder: 'desc' },
+                    7 : { sortInitialOrder: 'desc' },
+                    8 : { sortInitialOrder: 'desc' },
+                    9 : { sortInitialOrder: 'desc' },
+                }
+            });
+        });
+    </script>
 {% endblock content %}

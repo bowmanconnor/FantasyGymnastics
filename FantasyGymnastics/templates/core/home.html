@@ -1,82 +1,17 @@
 {% extends 'base.html' %}
 {% load custom_tags %}
 {% load static %}
-{% block title %}Home{% endblock title %}
+{% block title %}My Fantasy Gymnastics League{% endblock title %}
 {% block content %}
 
-<h1>Home page</h1>
 
-<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-    </div>
-    <div class="carousel-inner" >
-        <div class="carousel-item active">
-            <table class="table">
-                <tr>
-                    <td>
-                        s1r1c1
-                    </td>
-                    <td>
-                        s1r1c2
-                    </td>
-                    <td>
-                        s1r1c3
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        s1r2c1
-                    </td>
-                    <td>
-                        s1r2c2
-                    </td>
-                    <td>
-                        s1r2c3
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div class="carousel-item">
-            <table class="table">
-                <tr>
-                    <td>
-                        s2r1c1
-                    </td>
-                    <td>
-                        s2r1c2
-                    </td>
-                    <td>
-                        s2r1c3
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        s2r2c1
-                    </td>
-                    <td>
-                        s2r2c2
-                    </td>
-                    <td>
-                        s2r2c3
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div class="carousel-item">
-            <img src="..." class="d-block w-100" alt="...">
-        </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-</div>
+<h2>Welcome</h2>
+
+<p>To get started, click the login button in the top right, and then the register button on the next page and make an account!</p>
+<p> Note: This is your real account, so use your real email address and username as they can’t be changed later (for now at least)</p>
+<p>Once you’re logged in, navigate to the My Leagues link in the top left.</p>
+<p>Once you’ve created a league, figure out with your league how you want to go through the drafting process. Our suggestion is that you call each other and follow a snake draft (there’ll be a ‘draft’ feature coming soon, but for now you’ll need to draft gymnasts yourself).</p>
+<p>The manager of the league will also need to set matchups for each week (again, automated matchups are coming soon – for now, we recommend you have an even number of players in the league so that everyone gets to play each week).</p>
+<p>Once you have all your players, go ahead and set your lineups for this weekend and play!</p>
 
 {% endblock %}

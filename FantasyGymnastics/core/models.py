@@ -12,6 +12,7 @@ class Gymnast(models.Model):
 
     class Meta:
         unique_together = ('name', 'team')
+        ordering = ['name']
     
     def __str__(self):
         return self.name
@@ -49,12 +50,13 @@ class LineUp(models.Model):
     team = models.ForeignKey(FantasyTeam, related_name='LineUp', on_delete = models.CASCADE, blank=False)
     event = models.CharField(max_length=2, choices = EVENT_CHOICES, blank=False)
     gymnasts = models.ManyToManyField(Gymnast, related_name = 'LineUp', blank=True)
+    week = models.PositiveIntegerField(blank=False)
     class Meta:
-        unique_together = ('team', 'event')
+        unique_together = ('team', 'event', 'week')
         ordering = ['id']
 
     def __str__(self):
-        return str(self.team) + "'s " + str(self.event)
+        return str(self.team) + "'s " + str(self.event) + " week: " + str(self.week)
 
 
 class Score(models.Model):

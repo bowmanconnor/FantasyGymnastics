@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% load static %}
+{% block title %}{{ gymnast.name }}{% endblock title %}
+{% block content %}
+
+
+<div class="container mb-4">
+    <div class='d-flex align-items-center justify-content-center'>
+        <h1>{{gymnast.name}}</h1>
+    </div>
+    <div class='d-flex align-items-center justify-content-center'>
+        <h4>{{gymnast.team}}</h4>
+    </div>
+    <div class='d-flex align-items-center justify-content-center mb-4'>
+        <h4>{{gymnast_year}}</h4>
+    </div>
+    <h4>Averages</h4>
+    <table class="table">
+        <thead>
+            <th>FX</th>
+            <th>PH</th>
+            <th>SR</th>
+            <th>VT</th>
+            <th>PB</th>
+            <th>HB</th>   
+        </thead>
+            <tr>
+                {% for average in averages %}
+                    <td>{{average.score}}</td>
+                {% endfor %}
+            </tr>
+    </table>
+     <h4>Competitions</h4>
+    <table id="myTable" class="table tablesorter">
+        <thead>
+            <th>Meet </th>
+            <th>FX</th>
+            <th>PH</th>
+            <th>SR</th>
+            <th>VT</th>
+            <th>PB</th>
+            <th>HB</th>   
+        </thead>
+        {% for meet in scores|meets %}
+            <tr>
+                <td>{{meet.date}} - {{meet.name}}</td>
+                {% for score in scores|meet_scores:meet %}
+                    <td>{{score}}</td>
+                {% endfor %} 
+            </tr>
+        {% endfor %}
+    </table>
+
+</div>
+{% endblock %}
