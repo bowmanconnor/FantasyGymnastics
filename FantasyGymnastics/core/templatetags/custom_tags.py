@@ -56,7 +56,7 @@ def current_week(lineup, week):
     return lineup.filter(week=week)
 
 @register.filter
-def lineup_score(lineup):
+def actual_lineup_score(lineup):
     total = decimal.Decimal(0.00)
     scores = []
     for gymnast in lineup.gymnasts.all():
@@ -73,9 +73,37 @@ def lineup_score(lineup):
     for score in scores:
         total += score
     return round(total,2)
-  
+
 @register.filter
-def team_score(lineups):
+def predicted_lineup_score(lineup):
+    total = decimal.Decimal(0.00)
+    score_ids = []
+    scores_and_averages = []
+    averages = Average.objects.filter(gymnast__in=lineup.gymnasts.all(), event=lineup.event).order_by('-score')
+    for gymnast in lineup.gymnasts.all():
+        gymnast_scores = Score.objects.filter(gymnast=gymnast, event=lineup.event, week=lineup.week)
+        if gymnast_scores.exists():
+            gymnasts_highest = gymnast_scores.first()
+            for score in gymnast_scores:
+                if score.score > gymnasts_highest.score:
+                    gymnasts_highest = score
+            score_ids.append(gymnasts_highest.id)
+    scores = Score.objects.filter(id__in=score_ids).order_by('-score')
+    for score in scores:
+        averages = averages.exclude(gymnast=score.gymnast)
+        scores_and_averages.append(score.score)
+    for average in averages:
+        scores_and_averages.append(average.score)
+   
+    if len(scores_and_averages) > int(lineup.team.league.event_count_size):
+        scores_and_averages.sort(reverse=True)
+        scores_and_averages = scores_and_averages[:int(lineup.team.league.event_count_size)]
+    for score in scores_and_averages:
+        total += score
+    return round(total,2)
+
+@register.filter
+def actual_team_score(lineups):
     total = decimal.Decimal(0.00)
     for lineup in lineups:
         scores = []
@@ -91,6 +119,35 @@ def team_score(lineups):
             scores.sort(reverse=True)
             scores = scores[:int(lineup.team.league.event_count_size)]
         for score in scores:
+            total += score
+    return round(total,2)
+
+@register.filter
+def predicted_team_score(lineups):
+    total = decimal.Decimal(0.00)
+    for lineup in lineups:
+        score_ids = []
+        scores_and_averages = []
+        averages = Average.objects.filter(gymnast__in=lineup.gymnasts.all(), event=lineup.event).order_by('-score')
+        for gymnast in lineup.gymnasts.all():
+            gymnast_scores = Score.objects.filter(gymnast=gymnast, event=lineup.event, week=lineup.week)
+            if gymnast_scores.exists():
+                gymnasts_highest = gymnast_scores.first()
+                for score in gymnast_scores:
+                    if score.score > gymnasts_highest.score:
+                        gymnasts_highest = score
+                score_ids.append(gymnasts_highest.id)
+        scores = Score.objects.filter(id__in=score_ids).order_by('-score')
+        for score in scores:
+            averages = averages.exclude(gymnast=score.gymnast)
+            scores_and_averages.append(score.score)
+        for average in averages:
+            scores_and_averages.append(average.score)
+    
+        if len(scores_and_averages) > int(lineup.team.league.event_count_size):
+            scores_and_averages.sort(reverse=True)
+            scores_and_averages = scores_and_averages[:int(lineup.team.league.event_count_size)]
+        for score in scores_and_averages:
             total += score
     return round(total,2)
 
