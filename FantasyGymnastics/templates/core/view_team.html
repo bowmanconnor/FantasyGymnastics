@@ -12,6 +12,10 @@
             <a href="{% url 'edit_team' team.pk %}">Edit Team</a>
         {% endif %}
     </div>
+
+   <a href="{% url 'league_standings' team.league.pk %}">
+        <button class="btn btn-outline-primary algin-right mb-2" type="button">Back to league</button>
+    </a>
     <div class="row">
         {% comment %} ROSTER {% endcomment %}
         <div class="col-md-5">
