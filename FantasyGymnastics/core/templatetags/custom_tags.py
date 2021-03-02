@@ -76,10 +76,13 @@ def actual_lineup_score(lineup):
 
 @register.filter
 def predicted_lineup_score(lineup):
+    teams_competed = Score.objects.filter(week=lineup.week).values('gymnast__team').distinct()
+    print(teams_competed)
     total = decimal.Decimal(0.00)
     score_ids = []
     scores_and_averages = []
     averages = Average.objects.filter(gymnast__in=lineup.gymnasts.all(), event=lineup.event).order_by('-score')
+    averages = averages.exclude(gymnast__team__in=teams_competed)
     for gymnast in lineup.gymnasts.all():
         gymnast_scores = Score.objects.filter(gymnast=gymnast, event=lineup.event, week=lineup.week)
         if gymnast_scores.exists():
@@ -90,7 +93,6 @@ def predicted_lineup_score(lineup):
             score_ids.append(gymnasts_highest.id)
     scores = Score.objects.filter(id__in=score_ids).order_by('-score')
     for score in scores:
-        averages = averages.exclude(gymnast__team=score.gymnast.team)
         scores_and_averages.append(score.score)
     for average in averages:
         scores_and_averages.append(average.score)
