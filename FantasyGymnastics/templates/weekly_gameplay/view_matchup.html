@@ -45,8 +45,8 @@
                                     {% comment %} Gymnast score if their team has competed {% endcomment %}
                                     {% if scores|from_gymnast:gymnast|has_event_score:lineup.event %}
                                         <b>{{ scores|from_gymnast:gymnast|get_highest_event_score:lineup.event }}</b>
-                                    {% comment %} {% elif  gymnast|team_has_competed:lineup.week %}
-                                        <b>0.00</b> {% endcomment %}
+                                    {% elif  gymnast|team_has_competed:lineup.week %}
+                                        <b>0.00</b>
                                     {% comment %} Gymnast average if their team hasnt competed {% endcomment %}
                                     {% else %}
                                         {% if averages|from_gymnast:gymnast|event_average:lineup.event%}
@@ -128,8 +128,8 @@
                                     {% comment %} Gymnast score if theyve competed {% endcomment %}
                                     {% if scores|from_gymnast:gymnast|has_event_score:lineup.event %}
                                         <b>{{ scores|from_gymnast:gymnast|get_highest_event_score:lineup.event }}</b>
-                                    {% comment %} {% elif  gymnast|team_has_competed:lineup.week %}
-                                        <b>0.00</b> {% endcomment %}
+                                    {% elif  gymnast|team_has_competed:lineup.week %}
+                                        <b>0.00</b>
                                     {% comment %} Gymnast event average if they havent competed {% endcomment %}
                                     {% else %}
                                         {% if averages|from_gymnast:gymnast|event_average:lineup.event%}

@@ -90,7 +90,7 @@ def predicted_lineup_score(lineup):
             score_ids.append(gymnasts_highest.id)
     scores = Score.objects.filter(id__in=score_ids).order_by('-score')
     for score in scores:
-        averages = averages.exclude(gymnast=score.gymnast)
+        averages = averages.exclude(gymnast__team=score.gymnast.team)
         scores_and_averages.append(score.score)
     for average in averages:
         scores_and_averages.append(average.score)
