@@ -161,9 +161,9 @@ def team_has_competed(gymnast, week):
 @register.filter
 def has_users_team(matchup, user):
     if matchup.team1.user == user or matchup.team2.user == user:
-        return "carousel-item active"
+        return "active"
     else:
-         return "carousel-item"
+         return ""
 
 def meets(scores):
     meets = []
