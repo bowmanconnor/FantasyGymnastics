@@ -74,6 +74,13 @@ def total_score(scores, team):
     
     
 
+@register.filter
+def has_users_team(matchup, user):
+    if matchup.team1.user == user or matchup.team2.user == user:
+        return "carousel-item active"
+    else:
+         return "carousel-item"
+
 
 # @register.filter
 # def num_gymnasts(obj, event):

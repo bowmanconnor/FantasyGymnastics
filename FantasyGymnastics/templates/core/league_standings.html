@@ -45,38 +45,24 @@
     <div class="carousel-indicators">
         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
         {% for matchup in matchups %}
-        {% if matchup.week == current_week %}
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide {{forloop.counter}}"></button>
-        {% endif %}
+            {% if matchup.week == current_week %}
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide {{forloop.counter}}"></button>
+            {% endif %}
         {% endfor %}
     </div>
     <div class="carousel-inner">
         {% for matchup in matchups %}
-        {% if matchup.week == current_week %}
-        {% if matchup.team1 == user.team %}
-
-        <div class="carousel-item active">
-            <table class="table table-hover" id="matchup_tables">
-                <tr>
-                    <td class="col-sm-auto">
-                        <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        {% elseif %}
-
-        <div class="carousel-item">
-            <table class="table table-hover" id="matchup_tables">
-                <tr>
-                    <td class="col-sm-auto">
-                        <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        {% endif %}
-        {% endif %}
+            {% if matchup.week == current_week %}
+                <div class="{{matchup|has_users_team:user}}" >
+                    <table class="table table-hover" id="matchup_tables">
+                        <tr>
+                            <td class="col-sm-auto">
+                                <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            {% endif %}
         {% endfor %}
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#currentMatchups" data-bs-slide="prev">
