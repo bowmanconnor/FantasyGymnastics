@@ -32,7 +32,7 @@ def team_score(lineups):
         return total
 
 class Command(BaseCommand):
-    help = 'Retrieves scores from a week'
+    help = 'Computes matchups for a week and creates next weeks lineups'
 
     def add_arguments(self, parser):
         parser.add_argument('year', type=int)
