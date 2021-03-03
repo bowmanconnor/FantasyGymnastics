@@ -25,11 +25,14 @@ def add_gymnast_to_roster(request, team_pk, gymnast_pk):
     return redirect('view_team', pk=team_pk)
 
 def remove_gymnast_from_roster(request, team_pk, gymnast_pk):
+    scraper = Scraper()
+    current_week = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
+
     gymnast = get_object_or_404(Gymnast, pk=gymnast_pk)
     team = get_object_or_404(FantasyTeam, pk=team_pk)
     team.roster.remove(gymnast)
     league = team.league
-    lineups = LineUp.objects.filter(team=team)
+    lineups = LineUp.objects.filter(team=team, week=current_week)
     for lineup in lineups:
         lineup.gymnasts.remove(gymnast)
     league.drafted.remove(gymnast)
