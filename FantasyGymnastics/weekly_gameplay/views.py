@@ -85,8 +85,8 @@ class ViewMatchup(DetailView):
             context['team1'] = context['object'].team1
             context['team2'] = context['object'].team2
         gymnasts = Gymnast.objects.filter(id__in=(context['team1'].roster.all() | context['team2'].roster.all()))
-        context['scores'] = Score.objects.filter(gymnast__in=gymnasts, week=context['object'].week)
-        context['averages'] = Average.objects.filter(gymnast__in=gymnasts)
+        context['scores'] = Score.objects.filter(gymnast__in=(context['team1'].LineUp.all() | context['team2'].LineUp.all()), week=context['object'].week)
+        context['averages'] = Average.objects.filter(gymnast__in=(context['team1'].LineUp.all() | context['team2'].LineUp.all()))
         context['current_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
 
         return context      
