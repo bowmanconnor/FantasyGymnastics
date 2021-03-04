@@ -139,7 +139,7 @@
                                 <td>
                                     {% comment %} Gymnast score if theyve competed {% endcomment %}
                                     {% if gymnast|scores_from_week:lineup.week|has_event_score:lineup.event %}
-                                        <b>{{ gymnast|get_highest_event_score:lineup.event }}</b>
+                                        <b>{{ gymnast|scores_from_week:lineup.week|get_highest_event_score:lineup.event }}</b>
                                     {% elif  gymnast|team_has_competed:lineup.week %}
                                         <b>0.00</b>
                                     {% comment %} Gymnast event average if they havent competed  {% endcomment %}
