@@ -37,11 +37,11 @@
                     <td><a href="{% url 'view_gymnast' gymnast.pk %}">{{gymnast.name}}</a></td>
                     <td>{{gymnast.team}}</td>
                     <td>{{gymnast.year}}</td>
-                    {% for average_from_gymnast in averages|from_gymnast:gymnast %}
-                        {% if average_from_gymnast.score == 0 %}
+                    {% for average in gymnast|all_averages %}
+                        {% if average.score == 0 %}
                             <td></td>
                         {% else %}
-                            <td>{{ average_from_gymnast.score }}</td>
+                            <td>{{ average.score }}</td>
                         {% endif %}
                         
                     {% endfor %}

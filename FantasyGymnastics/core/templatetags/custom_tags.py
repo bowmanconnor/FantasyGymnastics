@@ -28,16 +28,17 @@ def get_fields(obj):
     if obj:
         return [(field.name, field.value_to_string(obj)) for field in obj._meta.fields]
 
-# Used in view matchup and gymnast search
-@register.filter
-def from_gymnast(obj, gymnast):
-    return obj.filter(gymnast=gymnast)
 
+#######
 @register.filter
-def has_event_score(obj, event):
-    if obj.filter(event=event).exists():
+def has_event_score(scores, event):
+    if scores.filter(event=event).exists():
         return True
-      
+        
+@register.filter
+def scores_from_week(gymnast, week):
+    return Score.objects.filter(gymnast=gymnast, week=week)
+
 @register.filter
 def get_highest_event_score(score, event):
     scores = score.filter(event=event)
@@ -48,8 +49,14 @@ def get_highest_event_score(score, event):
     return highest
 
 @register.filter
-def event_average(averages, event):
-    return averages.get(event=event)
+def all_averages(gymnast):
+    return Average.objects.filter(gymnast=gymnast)
+
+@register.filter
+def event_average(gymnast, event):
+    average = Average.objects.filter(gymnast=gymnast, event=event)
+    if len(average):
+        return Average.objects.get(gymnast=gymnast, event=event)
     
 @register.filter
 def current_week(lineup, week):
