@@ -18,7 +18,7 @@
     </a>
     <div class="row">
         {% comment %} ROSTER {% endcomment %}
-        <div class="col-md-5">
+        <div class="col">
             <h2>Roster</h2>
             <table  id="myTable" class="table tablesorter">
                 <thead>
@@ -31,28 +31,27 @@
                     <th>VT</th>
                     <th>PB</th>
                     <th>HB</th>
-		{% if user == team.user %}
-		    <tr></tr>   
-		{% endif %}
+                    {% if user == team.user %}
+                        <tr></tr>   
+                    {% endif %}
                 </thead>
                 <tbody>
                     {% for gymnast in roster %}
-                    <tr>
+                        <tr>
                             <td><a href="{% url 'view_gymnast' gymnast.pk %}">{{gymnast.name}}</a></td>
                             <td>{{gymnast.team}}</td>
                             <td>{{gymnast.year}}</td>
-                            {% for average_from_gymnast in averages|from_gymnast:gymnast %}
-                                {% if average_from_gymnast.score == 0 %}
+                            {% for average in gymnast|all_averages %}
+                                {% if average.score == 0 %}
                                     <td></td>
                                 {% else %}
-                                    <td>{{ average_from_gymnast.score }}</td>
-                                {% endif %}
-                                
+                                    <td>{{ average.score }}</td>
+                                {% endif %} 
                             {% endfor %}
-			    {% if user == team.user %}
-			    <td><a href="{% url 'remove_gymnast_to_roster' team.pk gymnast.pk %}">X</a></td>
+                            {% if user == team.user %}
+                            <td><a href="{% url 'remove_gymnast_to_roster' team.pk gymnast.pk %}">X</a></td>
                             {% endif %}
-			 </tr>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -64,9 +63,9 @@
             {% endif %}
             <p class='mt-4'>{{ team.roster.all.count }}/{{ team.league.roster_size}}</p>
         </div>
-        <div class="col-md-2"></div>
+        {% comment %} <div class="col-md-2"></div> {% endcomment %}
         {% comment %} Lineups {% endcomment %}
-        <div class="col-md-5">
+        <div class="col">
             <h2>Lineups</h2>
             {% comment %} Tab Headers {% endcomment %}
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
@@ -86,7 +85,7 @@
                             {% for gymnast in lineup.gymnasts.all %}
                                 <tr>
                                     {% comment %} Remove gymnast from lineup {% endcomment %}
-                                    <td>{{gymnast.name}} - {{gymnast.team}} - AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}</td>
+                                    <td>{{gymnast.name}} - {{gymnast.team}} - AVG:{{gymnast|event_average:lineup.event}}</td>
                                     {% if user == team.user and not gymnast|team_has_competed:lineup.week %}
                                         <td><a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}">X</a></td>
                                     {% else %}
@@ -113,9 +112,9 @@
                                                     <tr>
                                                         <td>
                                                             {% if gymnast|team_has_competed:lineup.week %}
-                                                                {{gymnast.name}} - {{gymnast.team}} - AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}
+                                                                {{gymnast.name}} - {{gymnast.team}} - AVG:{{gymnast|event_average:lineup.event}}
                                                             {% else %}
-                                                                <a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}} - {{gymnast.team}} - AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}</a> 
+                                                                <a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}} - {{gymnast.team}} - AVG:{{gymnast|event_average:lineup.event}}</a> 
                                                             {% endif %}
                                                         </td>
                                                     </tr>
