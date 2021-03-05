@@ -10,11 +10,7 @@ from scraper.Scraper import Scraper
 from datetime import datetime
 from weekly_gameplay.models import Average, Matchup
 from django.db.models import Q
-
 from .forms import NewLeagueForm, NewFantasyTeamForm, NewGymnastForm
-# Create your views here.
-
-
 
 #Helper Function
 def create_team_with_lineups(user, league):
