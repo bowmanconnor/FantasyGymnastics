@@ -24,7 +24,7 @@
             function send() {
                 message = document.getElementById("testInput").value;
                 console.log(message)
-                draftSocket.send(JSON.stringify({'message': message}))
+                draftSocket.send(JSON.stringify({'gymnast_pk': message}))
             }
 
         </script>
