@@ -15,6 +15,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
+    'channels',
     'social_django',
     'authentication',
     'core',
@@ -181,5 +182,16 @@ CELERY_BEAT_SCHEDULE = {
     "import_scores": {
         "task": "scraper.tasks.import_scores",
         "schedule": crontab(minute=0, hour=0), # Import scores daily at midnight
+    }
+}
+
+# Channels
+ASGI_APPLICATION = 'FantasyGymnastics.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)] # Specify redis server
+        }
     }
 }

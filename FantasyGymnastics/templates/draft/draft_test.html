@@ -1,0 +1,26 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        {{league_pk|json_script:"league_pk"}}
+        <script>
+            const leaguePk = JSON.parse(document.getElementById('league_pk').textContent)
+
+            console.log("Connecting to draft WebSocket for league pk " + leaguePk)
+            const draftSocket = new WebSocket(
+                'ws://' + window.location.host + '/ws/draft/' + leaguePk + '/'
+            );
+
+            draftSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                console.log("message received back", data);
+            }
+
+            draftSocket.onopen = function(e) {
+                console.log("Connected");
+            }
+        </script>
+        This is the draft for league #{{league_pk}}
+    </body>
+</html>
