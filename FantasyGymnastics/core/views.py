@@ -10,11 +10,7 @@ from scraper.Scraper import Scraper
 from datetime import datetime
 from weekly_gameplay.models import Average, Matchup
 from django.db.models import Q
-
 from .forms import NewLeagueForm, NewFantasyTeamForm, NewGymnastForm
-# Create your views here.
-
-
 
 #Helper Function
 def create_team_with_lineups(user, league):
@@ -145,7 +141,7 @@ class ViewFantasyTeam(DetailView):
         drafted = context['object'].league.drafted.all()
         context["draftable_gymnasts"] = Gymnast.objects.exclude(id__in=drafted)
         context["lineups"] = LineUp.objects.filter(team=context['object'], week=int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])).order_by('pk')
-        context['averages'] = Average.objects.filter(gymnast__in=context['roster'])
+        # context['averages'] = Average.objects.filter(gymnast__in=context['roster'])
         return context      
 
 class UpdateFantasyTeam(UserPassesTestMixin, UpdateView):

@@ -13,7 +13,7 @@
     <div class='d-flex align-items-center justify-content-center mb-4'>
         <h3>Week {{matchup.week}} Matchup</h3>
     </div>
-   <a href="{% url 'league_standings' matchup.team1.league.pk %}">
+    <a href="{% url 'league_standings' matchup.team1.league.pk %}">
         <button class="btn btn-outline-primary algin-right mb-2" type="button">Back to league</button>
     </a>
     <div class="row">
@@ -28,7 +28,9 @@
                         {% comment %} Lineup event name and capcity {% endcomment %}
                         <th colspan="2">{{lineup.event}} {{ lineup.gymnasts.all.count }}/{{ team1.league.event_lineup_size }}</th>
                         <td class='alltoright'>
-                            <em>Predicted {{lineup|predicted_lineup_score}}</em>
+                            {% if matchup.week == current_week %}
+                                <em>Predicted {{lineup|predicted_lineup_score}}</em>
+                            {% endif %}
                             <b>Actual {{lineup|actual_lineup_score}}</b>
                         </td>
                     </thead>
@@ -46,23 +48,24 @@
                                 <td>{{gymnast.name}} - {{gymnast.team}} </td>
                                 <td class='alltoright'>
                                     {% comment %} Gymnast score if their team has competed {% endcomment %}
-                                    {% if scores|from_gymnast:gymnast|has_event_score:lineup.event %}
-                                        <b>{{ scores|from_gymnast:gymnast|get_highest_event_score:lineup.event }}</b>
+                                    {% if gymnast|scores_from_week:lineup.week|has_event_score:lineup.event %}
+                                        <b>{{ gymnast|scores_from_week:lineup.week|get_highest_event_score:lineup.event }}</b>
                                     {% elif  gymnast|team_has_competed:lineup.week %}
                                         <b>0.00</b>
-                                    {% comment %} Gymnast average if their team hasnt competed {% endcomment %}
+                                    {% comment %} Gymnast average if their team hasnt competed  {% endcomment %}
                                     {% else %}
-                                        {% if averages|from_gymnast:gymnast|event_average:lineup.event%}
-                                            <em>{{averages|from_gymnast:gymnast|event_average:lineup.event}}</em>
+                                        {% if gymnast|event_average:lineup.event%}
+                                            <em>{{gymnast|event_average:lineup.event}}</em>
                                         {% else %}
                                             <em>0.00</em>
                                         {% endif %} 
                                     {% endif %}
                                 </td>
                             </tr>
+                            
                         {% endfor %}
                         {% comment %} Add gymnast to lineup button. Only if the current week {% endcomment %}
-                        {% if user == team1.user and matchup.week == current_week%}
+                        {% if user == team1.user and matchup.week == current_week %}
                             {% if lineup.gymnasts.all.count < team1.league.event_lineup_size %} <p>
                                 <tr><td colspan="3"><a data-bs-toggle="collapse" href="#multiCollapse{{lineup.event}}" aria-expanded="false"
                                     aria-controls="multiCollapse{{lineup.event}}"><i class="fas fa-user-plus"></i></a>
@@ -82,9 +85,9 @@
                                             <td>
                                                 {% comment %} Allow user to add gymnast to lineup if their team hasnt competed {% endcomment %}
                                                 {% if gymnast|team_has_competed:lineup.week %}
-                                                    {{gymnast.name}} - {{gymnast.team}} - AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}
+                                                    {{gymnast.name}} - {{gymnast.team}} - AVG:{{gymnast|event_average:lineup.event}}
                                                 {% else %}
-                                                    <a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}} - {{gymnast.team}} - AVG:{{averages|from_gymnast:gymnast|event_average:lineup.event}}</a> 
+                                                    <a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}} - {{gymnast.team}} - AVG:{{gymnast|event_average:lineup.event}}</a> 
                                                 {% endif %}
                                             </td>
                                         </tr>
@@ -99,7 +102,11 @@
             <table class="table table-hover">
                 <tbody>
                     <tr>
-                        <td class='alltoright'><em>Predicted {{team1.LineUp.all|current_week:matchup.week|predicted_team_score}}</em> <b>Total {{team1.LineUp.all|current_week:matchup.week|actual_team_score}}</b></td>
+                        <td class='alltoright'>
+                            {% if matchup.week == current_week %}
+                                <em>Predicted {{team1.LineUp.all|current_week:matchup.week|predicted_team_score}}</em>
+                            {% endif %} 
+                            <b>Actual {{team1.LineUp.all|current_week:matchup.week|actual_team_score}}</b></td>
                     </tr>
                 </tbody>
             </table>
@@ -118,7 +125,9 @@
                         {% comment %} Lineup event name and capcity {% endcomment %}
                         <td class='alltoleft'>
                             <b>{{lineup|actual_lineup_score}} Actual</b>
-                            <em>{{lineup|predicted_lineup_score}} Predicted</em>
+                            {% if matchup.week == current_week %}
+                                <em>{{lineup|predicted_lineup_score}} Predicted</em>
+                            {% endif %}
                         </td>
                         <th colspan="2">{{lineup.event}} {{ lineup.gymnasts.all.count }}/{{ team1.league.event_lineup_size }}</th>
                     </thead>
@@ -129,14 +138,14 @@
                                 {% comment %} Gymnast name and score for event {% endcomment %}
                                 <td>
                                     {% comment %} Gymnast score if theyve competed {% endcomment %}
-                                    {% if scores|from_gymnast:gymnast|has_event_score:lineup.event %}
-                                        <b>{{ scores|from_gymnast:gymnast|get_highest_event_score:lineup.event }}</b>
+                                    {% if gymnast|scores_from_week:lineup.week|has_event_score:lineup.event %}
+                                        <b>{{ gymnast|scores_from_week:lineup.week|get_highest_event_score:lineup.event }}</b>
                                     {% elif  gymnast|team_has_competed:lineup.week %}
                                         <b>0.00</b>
-                                    {% comment %} Gymnast event average if they havent competed {% endcomment %}
+                                    {% comment %} Gymnast event average if they havent competed  {% endcomment %}
                                     {% else %}
-                                        {% if averages|from_gymnast:gymnast|event_average:lineup.event%}
-                                            <em>{{averages|from_gymnast:gymnast|event_average:lineup.event}}</em>
+                                        {% if gymnast|event_average:lineup.event%}
+                                            <em>{{gymnast|event_average:lineup.event}}</em>
                                         {% else %}
                                             <em>0.00</em>
                                         {% endif %} 
@@ -152,7 +161,11 @@
             <table class="table table-hover">
                 <tbody>
                     <tr>
-                        <td class='alltoleft'><b>{{team2.LineUp.all|current_week:matchup.week|actual_team_score}} Actual</b> <em>{{team2.LineUp.all|current_week:matchup.week|predicted_team_score}} Predicted</em></td>
+                        <td class='alltoleft'>
+                            <b>{{team2.LineUp.all|current_week:matchup.week|actual_team_score}} Actual</b> 
+                            {% if matchup.week == current_week %}
+                                <em>{{team2.LineUp.all|current_week:matchup.week|predicted_team_score}} Predicted</em></td>
+                            {% endif %}
                     </tr>
                 </tbody>
             </table>
