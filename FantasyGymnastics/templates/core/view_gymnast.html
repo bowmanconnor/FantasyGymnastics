@@ -49,7 +49,12 @@
                 <tr>
                     <td>{{meet.date}} - {{meet.name}}</td>
                     {% for score in scores|meet_scores:meet %}
-                        <td>{{score}}</td>
+                        {% if score != 0.0 %}
+                            <td>{{score}}</td>
+                        {% else %}
+                            <td>0.00</td>
+                        {% endif %}
+                        
                     {% endfor %} 
                 </tr>
             {% endfor %}
