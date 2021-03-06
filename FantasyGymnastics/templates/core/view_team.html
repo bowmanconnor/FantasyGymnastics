@@ -58,10 +58,14 @@
                 </table>
             </div>
             {% comment %} Add to roster button {% endcomment %}
+            <a class="mb-4" href="{% url 'gymnast_search' team.pk %}">
             {% if user == team.user %}
-                {% if team.roster.all.count < team.league.roster_size %} <a class="mb-4"
-                    href="{% url 'gymnast_search' team.pk %}"><i class="fas fa-user-plus"></i>ADD</a>
+                {% if team.roster.all.count < team.league.roster_size %} 
+                    <i class="fas fa-user-plus"></i>
+                {% else %}
+                    <i class="fas fa-users"></i>
                 {% endif %}
+            </a>
             {% endif %}
             <p class='mt-4'>{{ team.roster.all.count }}/{{ team.league.roster_size}}</p>
         </div>
