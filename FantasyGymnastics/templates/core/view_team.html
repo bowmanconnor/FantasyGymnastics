@@ -21,43 +21,45 @@
     </a>
     <div class="row">
         {% comment %} ROSTER {% endcomment %}
-        <div class="col-sm" style="overflow-x: auto">
+        <div class="col-sm" >
             <h2>Roster</h2>
-            <table  id="myTable" class="table tablesorter"  style="width:auto">
-                <thead>
-                    <th>Name</th>
-                    <th>Team</th>
-                    <th>Year</th>
-                    <th>FX</th>
-                    <th>PH</th>
-                    <th>SR</th>
-                    <th>VT</th>
-                    <th>PB</th>
-                    <th>HB</th>
-                    {% if user == team.user %}
-                        <tr></tr>   
-                    {% endif %}
-                </thead>
-                <tbody>
-                    {% for gymnast in roster %}
-                        <tr>
-                            <td><a href="{% url 'view_gymnast' gymnast.pk %}">{{gymnast.name}}</a></td>
-                            <td>{{gymnast.team}}</td>
-                            <td>{{gymnast.year}}</td>
-                            {% for average in gymnast|all_averages %}
-                                {% if average.score == 0 %}
-                                    <td></td>
-                                {% else %}
-                                    <td>{{ average.score }}</td>
-                                {% endif %} 
-                            {% endfor %}
-                            {% if user == team.user %}
-                            <td><a href="{% url 'remove_gymnast_to_roster' team.pk gymnast.pk %}">X</a></td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div style="overflow-x: auto">
+                <table  id="myTable" class="table tablesorter"  style="width:auto">
+                    <thead>
+                        <th>Name</th>
+                        <th>Team</th>
+                        <th>Year</th>
+                        <th>FX</th>
+                        <th>PH</th>
+                        <th>SR</th>
+                        <th>VT</th>
+                        <th>PB</th>
+                        <th>HB</th>
+                        {% if user == team.user %}
+                            <tr></tr>   
+                        {% endif %}
+                    </thead>
+                    <tbody>
+                        {% for gymnast in roster %}
+                            <tr>
+                                <td><a href="{% url 'view_gymnast' gymnast.pk %}">{{gymnast.name}}</a></td>
+                                <td>{{gymnast.team}}</td>
+                                <td>{{gymnast.year}}</td>
+                                {% for average in gymnast|all_averages %}
+                                    {% if average.score == 0 %}
+                                        <td></td>
+                                    {% else %}
+                                        <td>{{ average.score }}</td>
+                                    {% endif %} 
+                                {% endfor %}
+                                {% if user == team.user %}
+                                <td><a href="{% url 'remove_gymnast_to_roster' team.pk gymnast.pk %}">X</a></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
             {% comment %} Add to roster button {% endcomment %}
             {% if user == team.user %}
                 {% if team.roster.all.count < team.league.roster_size %} <a class="mb-4"
