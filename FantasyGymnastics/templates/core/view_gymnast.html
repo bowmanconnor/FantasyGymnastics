@@ -16,41 +16,45 @@
         <h4>{{gymnast_year}}</h4>
     </div>
     <h4>Averages</h4>
-    <table class="table">
-        <thead>
-            <th>FX</th>
-            <th>PH</th>
-            <th>SR</th>
-            <th>VT</th>
-            <th>PB</th>
-            <th>HB</th>   
-        </thead>
-            <tr>
-                {% for average in averages %}
-                    <td>{{average.score}}</td>
-                {% endfor %}
-            </tr>
-    </table>
-     <h4>Competitions</h4>
-    <table id="myTable" class="table tablesorter">
-        <thead>
-            <th>Meet </th>
-            <th>FX</th>
-            <th>PH</th>
-            <th>SR</th>
-            <th>VT</th>
-            <th>PB</th>
-            <th>HB</th>   
-        </thead>
-        {% for meet in scores|meets %}
-            <tr>
-                <td>{{meet.date}} - {{meet.name}}</td>
-                {% for score in scores|meet_scores:meet %}
-                    <td>{{score}}</td>
-                {% endfor %} 
-            </tr>
-        {% endfor %}
-    </table>
+    <div style="overflow-x: auto" style="width:auto">
+        <table class="table">
+            <thead>
+                <th>FX</th>
+                <th>PH</th>
+                <th>SR</th>
+                <th>VT</th>
+                <th>PB</th>
+                <th>HB</th>   
+            </thead>
+                <tr>
+                    {% for average in averages %}
+                        <td>{{average.score}}</td>
+                    {% endfor %}
+                </tr>
+        </table>
+    </div>
+    <h4>Competitions</h4>
+    <div style="overflow-x: auto">
+        <table id="myTable" class="table tablesorter" style="width:auto">
+            <thead>
+                <th>Meet </th>
+                <th>FX</th>
+                <th>PH</th>
+                <th>SR</th>
+                <th>VT</th>
+                <th>PB</th>
+                <th>HB</th>   
+            </thead>
+            {% for meet in scores|meets %}
+                <tr>
+                    <td>{{meet.date}} - {{meet.name}}</td>
+                    {% for score in scores|meet_scores:meet %}
+                        <td>{{score}}</td>
+                    {% endfor %} 
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 
 </div>
 {% endblock %}
