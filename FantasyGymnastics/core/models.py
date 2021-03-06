@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+import random
 
-# Create your models here.
-    
 class Gymnast(models.Model):
     YEAR_CHOICES = [('FR' , 'Freshman'), ('SO' , 'Sophomore'), ('JR' , 'Junior'), ('SR' , 'Senior')]
     rtn_id = models.CharField(max_length=10, blank=False)
@@ -26,9 +25,21 @@ class League(models.Model):
     event_count_size = models.PositiveIntegerField(blank=False)
     requested_to_join = models.ManyToManyField(User, related_name="RequestedLeague", blank=True)
     drafted = models.ManyToManyField(Gymnast, related_name="DraftedGymnasts", blank=True)
-    
+    currently_drafting = models.PositiveIntegerField(default=0, blank=True)
+
     def __str__(self):
         return self.name
+    
+    # Create an ordering from 0 through num teams - 1 and distribute to each team
+    def generate_drafting_order(self):
+        teams = FantasyTeam.objects.filter(league=self)
+        num_teams = len(teams)
+        ordering = random.sample(range(num_teams), num_teams)
+        i = 0
+        for team in teams:
+            team.draft_position = ordering[i]
+            team.save()
+            i = i + 1
 
 
 class FantasyTeam(models.Model):
@@ -38,6 +49,7 @@ class FantasyTeam(models.Model):
     name = models.CharField(max_length=50, blank=False)
     wins = models.PositiveIntegerField(default=0)
     losses = models.PositiveIntegerField(default=0)
+    draft_position = models.PositiveIntegerField(default=0)
 
     class Meta:
         unique_together = ('user', 'league')
@@ -58,7 +70,6 @@ class LineUp(models.Model):
     def __str__(self):
         return str(self.team) + "'s " + str(self.event) + " week: " + str(self.week)
 
-
 class Score(models.Model):
     EVENT_CHOICES = [('FX' , 'Floor Exercise'), ('PH' , 'Pommel Horse'), ('SR' , 'Still Rings'), ('VT' , 'Vault'), ('PB' , 'Parallel Bars'), ('HB' , 'Horizontal Bar')]
     gymnast = models.ForeignKey(Gymnast, related_name='Scores', on_delete=models.CASCADE, null=False, blank=False)
@@ -73,4 +84,3 @@ class Score(models.Model):
 
     def __str__(self):
         return str(round(self.score,2))
- 
