@@ -2,6 +2,9 @@
 {% load custom_tags %}
 {% load static %}
 {% block title %}Team {{ team.name }}{% endblock title %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'css/hor_scroll.css' %}">
+{% endblock stylesheet %}
 {% block content %}
 
 
@@ -18,9 +21,9 @@
     </a>
     <div class="row">
         {% comment %} ROSTER {% endcomment %}
-        <div class="col">
+        <div class="col-sm" style="overflow-x: auto">
             <h2>Roster</h2>
-            <table  id="myTable" class="table tablesorter">
+            <table  id="myTable" class="table tablesorter"  style="width:auto">
                 <thead>
                     <th>Name</th>
                     <th>Team</th>
@@ -65,7 +68,7 @@
         </div>
         {% comment %} <div class="col-md-2"></div> {% endcomment %}
         {% comment %} Lineups {% endcomment %}
-        <div class="col">
+        <div class="col-sm">
             <h2>Lineups</h2>
             {% comment %} Tab Headers {% endcomment %}
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
