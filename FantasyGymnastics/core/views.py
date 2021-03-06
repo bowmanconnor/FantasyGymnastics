@@ -139,6 +139,7 @@ class ViewFantasyTeam(DetailView):
         scraper = Scraper()
         context = super().get_context_data(**kwargs)
         context["roster"] = context["object"].roster.all()
+        context['current_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
         drafted = context['object'].league.drafted.all()
         context["draftable_gymnasts"] = Gymnast.objects.exclude(id__in=drafted)
         context["lineups"] = LineUp.objects.filter(team=context['object'], week=int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])).order_by('pk')
