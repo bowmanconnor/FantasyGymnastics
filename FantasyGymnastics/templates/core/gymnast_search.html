@@ -18,36 +18,38 @@
         <button class="btn btn-outline-primary algin-right" type="button">Back to team</button>
     </a>
     {% if gymnasts %}
-        <table id="myTable" class="table tablesorter">
-            <thead>
-                <th></th>
-                <th>Name</th>
-                <th>Team</th>
-                <th>Year</th>
-                <th>FX</th>
-                <th>PH</th>
-                <th>SR</th>
-                <th>VT</th>
-                <th>PB</th>
-                <th>HB</th>   
-            </thead>
-            {% for gymnast in gymnasts %}
-                <tr>
-                    <td><a class="btn btn-outline-primary" role="button" href="{% url 'add_gymnast_to_roster' team.pk gymnast.pk %}">Add</a></td>
-                    <td><a href="{% url 'view_gymnast' gymnast.pk %}">{{gymnast.name}}</a></td>
-                    <td>{{gymnast.team}}</td>
-                    <td>{{gymnast.year}}</td>
-                    {% for average in gymnast|all_averages %}
-                        {% if average.score == 0 %}
-                            <td></td>
-                        {% else %}
-                            <td>{{ average.score }}</td>
-                        {% endif %}
-                        
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </table>
+        <div style="overflow-x: auto">
+            <table id="myTable" class="table tablesorter" style="width:auto">
+                <thead>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Team</th>
+                    <th>Year</th>
+                    <th>FX</th>
+                    <th>PH</th>
+                    <th>SR</th>
+                    <th>VT</th>
+                    <th>PB</th>
+                    <th>HB</th>   
+                </thead>
+                {% for gymnast in gymnasts %}
+                    <tr>
+                        <td><a class="btn btn-outline-primary" role="button" href="{% url 'add_gymnast_to_roster' team.pk gymnast.pk %}">Add</a></td>
+                        <td><a href="{% url 'view_gymnast' gymnast.pk %}">{{gymnast.name}}</a></td>
+                        <td>{{gymnast.team}}</td>
+                        <td>{{gymnast.year}}</td>
+                        {% for average in gymnast|all_averages %}
+                            {% if average.score == 0 %}
+                                <td></td>
+                            {% else %}
+                                <td>{{ average.score }}</td>
+                            {% endif %}
+                            
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     {% endif %}
 
 <!-- JQuery -->

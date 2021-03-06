@@ -87,7 +87,22 @@
                             {% for gymnast in lineup.gymnasts.all %}
                                 <tr>
                                     {% comment %} Remove gymnast from lineup {% endcomment %}
-                                    <td>{{gymnast.name}} - {{gymnast.team}} - AVG:{{gymnast|event_average:lineup.event}}</td>
+                                    <td>{{gymnast.name}}</td>
+                                    <td>{{gymnast.team}}</td>
+                                    <td>
+                                        {% if gymnast|scores_from_week:lineup.week|has_event_score:lineup.event %}
+                                            <b>{{ gymnast|scores_from_week:lineup.week|get_highest_event_score:lineup.event }}</b>
+                                        {% elif  gymnast|team_has_competed:lineup.week %}
+                                            <b>0.00</b>
+                                        {% comment %} Gymnast event average if they havent competed  {% endcomment %}
+                                        {% else %}
+                                            {% if gymnast|event_average:lineup.event%}
+                                                <em>{{gymnast|event_average:lineup.event}}</em>
+                                            {% else %}
+                                                <em>0.00</em>
+                                            {% endif %} 
+                                        {% endif %}
+                                    </td>
                                     {% if user == team.user and not gymnast|team_has_competed:lineup.week %}
                                         <td><a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}">X</a></td>
                                     {% else %}
