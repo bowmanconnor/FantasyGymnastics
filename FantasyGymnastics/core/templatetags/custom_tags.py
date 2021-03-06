@@ -168,7 +168,7 @@ def team_has_competed(gymnast, week):
 @register.filter
 def meets(scores):
     meets = []
-    for meet in scores.values('meet').distinct():
+    for meet in scores.values('meet').order_by('-date').distinct():
        meets.append({'name' : meet['meet'], 'date' : scores.filter(meet=meet['meet']).first().date})
     return meets
 
