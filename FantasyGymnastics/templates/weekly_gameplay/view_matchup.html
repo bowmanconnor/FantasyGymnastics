@@ -154,7 +154,8 @@
                                 <em>{{lineup|predicted_lineup_score}} </em>
                             {% endif %}
                         </td>
-                        <th colspan="2">{{lineup.event}} {{ lineup.gymnasts.all.count }}/{{ team1.league.event_lineup_size }}</th>
+                        <th>{{lineup.event}} {{ lineup.gymnasts.all.count }}/{{ team1.league.event_lineup_size }}</th>
+                        <th></th>
                     </thead>
                     <tbody>
                         {% comment %} Loops through gymnasts in lineup {% endcomment %}
