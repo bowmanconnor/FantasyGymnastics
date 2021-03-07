@@ -78,22 +78,38 @@
                 <div class="row">
                     <div class="col">
                         <div class="collapse multi-collapse" id="multiCollapse{{lineup.event}}">
-                            {% for gymnast in team1.roster.all %}
-                                {% if gymnast not in lineup.gymnasts.all %}
-                                    <table>
-                                        <tr>
-                                            <td>
-                                                {% comment %} Allow user to add gymnast to lineup if their team hasnt competed {% endcomment %}
-                                                {% if gymnast|team_has_competed:lineup.week %}
-                                                    {{gymnast.name}} - {{gymnast.team}} - AVG:{{gymnast|event_average:lineup.event}}
-                                                {% else %}
-                                                    <a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}} - {{gymnast.team}} - AVG:{{gymnast|event_average:lineup.event}}</a> 
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                {% endif %}
-                            {% endfor %}
+                            <table class="table table-hover">
+                                {% for gymnast in team1.roster.all %}
+                                    {% if gymnast not in lineup.gymnasts.all %}
+                                        {% if user == team1.user %}
+                                            <tr>
+                                                <td>
+                                                    {% if gymnast|team_has_competed:lineup.week %}
+                                                        {{gymnast.name}}
+                                                    {% else %}
+                                                        <a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}}</a> 
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{gymnast.team}}</td>
+                                                <td>
+                                                    {% if gymnast|scores_from_week:lineup.week|has_event_score:lineup.event %}
+                                                        <b>{{ gymnast|scores_from_week:lineup.week|get_highest_event_score:lineup.event }}</b>
+                                                    {% elif  gymnast|team_has_competed:lineup.week %}
+                                                        <b>0.00</b>
+                                                    {% comment %} Gymnast event average if they havent competed  {% endcomment %}
+                                                    {% else %}
+                                                        {% if gymnast|event_average:lineup.event%}
+                                                            <em>{{gymnast|event_average:lineup.event}}</em>
+                                                        {% else %}
+                                                            <em>0.00</em>
+                                                        {% endif %} 
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -136,7 +152,7 @@
                         {% for gymnast in lineup.gymnasts.all %}
                             <tr>
                                 {% comment %} Gymnast name and score for event {% endcomment %}
-                                <td>
+                                <td class='alltoleft'>
                                     {% comment %} Gymnast score if theyve competed {% endcomment %}
                                     {% if gymnast|scores_from_week:lineup.week|has_event_score:lineup.event %}
                                         <b>{{ gymnast|scores_from_week:lineup.week|get_highest_event_score:lineup.event }}</b>
