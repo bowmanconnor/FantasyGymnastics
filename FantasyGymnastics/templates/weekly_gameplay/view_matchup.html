@@ -32,9 +32,9 @@
                         <th>{{lineup.event}} {{ lineup.gymnasts.all.count }}/{{ team1.league.event_lineup_size }}</th>
                         <td class='alltoright'>
                             {% if matchup.week == current_week %}
-                                <em> {{lineup|predicted_lineup_score}}</em>
+                                <em>{{lineup|predicted_lineup_score}}</em>
                             {% endif %}
-                            <b> {{lineup|actual_lineup_score}}</b>
+                            <b>{{lineup|actual_lineup_score}}</b>
                         </td>
                     </thead>
                     <tbody>
@@ -101,7 +101,7 @@
                                                 <td>{{gymnast.team}}</td>
                                                 <td>
                                                     {% if gymnast|scores_from_week:lineup.week|has_event_score:lineup.event %}
-                                                        <b>{{ gymnast|scores_from_week:lineup.week|get_highest_event_score:lineup.event }}</b>
+                                                        <b>{{gymnast|scores_from_week:lineup.week|get_highest_event_score:lineup.event }}</b>
                                                     {% elif  gymnast|team_has_competed:lineup.week %}
                                                         <b>0.00</b>
                                                     {% comment %} Gymnast event average if they havent competed  {% endcomment %}
