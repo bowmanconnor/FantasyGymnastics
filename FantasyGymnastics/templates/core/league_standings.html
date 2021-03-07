@@ -40,7 +40,7 @@
             {% for matchup in matchups %}
                 {% if matchup.week == current_week %}
                     <tr>
-                        <td><a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} ({{matchup.team1.LineUp.all|current_week:matchup.week|actual_team_score}}) vs ({{matchup.team2.LineUp.all|current_week:matchup.week|actual_team_score}}) {{matchup.team2}}</a></td>
+                        <td><a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1.user.first_name}} ({{matchup.team1.LineUp.all|current_week:matchup.week|actual_team_score}}) vs ({{matchup.team2.LineUp.all|current_week:matchup.week|actual_team_score}}) {{matchup.team2.user.first_name}}</a></td>
                         {% if user == league.manager %}
                             <td><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
                         {% endif %}
