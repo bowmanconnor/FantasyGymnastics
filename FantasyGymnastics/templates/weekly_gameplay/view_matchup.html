@@ -45,7 +45,7 @@
                                     <td></td>
                                 {% endif %}
                                 {% comment %} Gymnast name and score for event {% endcomment %}
-                                <td>{{gymnast.name}} - {{gymnast.team}} </td>
+                                <td><a href="{% url 'view_gymnast' gymnast.pk %}">{{gymnast.name}}</a></td>
                                 <td class='alltoright'>
                                     {% comment %} Gymnast score if their team has competed {% endcomment %}
                                     {% if gymnast|scores_from_week:lineup.week|has_event_score:lineup.event %}
@@ -167,7 +167,7 @@
                                         {% endif %} 
                                     {% endif %}
                                 </td>
-                                <td>{{gymnast.name}} - {{gymnast.team}}</td>
+                                <td><a href="{% url 'view_gymnast' gymnast.pk %}">{{gymnast.name}}</a></td>
                             </tr>
                         {% endfor %}                        
                     </tbody>
