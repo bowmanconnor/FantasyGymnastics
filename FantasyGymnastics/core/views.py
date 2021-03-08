@@ -180,12 +180,12 @@ def teams_competing_this_week():
         # For each meet on that day
         for meet in schedule[day]['meets']:
             # Create a name for the meet depending on home vs. away teams or virtual;
-            print(meet['away_teams'].split(", "))
-            print(meet['home_teams'].split(", "))
-            for team in meet['away_teams'].split(", "):
-                teams.append(team)
-            for team in meet['home_teams'].split(", "):
-                teams.append(team)     
+            if meet['away_teams'] != None:
+                for team in meet['away_teams'].split(", "):
+                    teams.append(team)
+            if meet['home_teams'] != None:
+                for team in meet['home_teams'].split(", "):
+                    teams.append(team)     
     return teams
 
 class SearchGymnasts(DetailView):
