@@ -90,7 +90,7 @@
     {% with ''|center:max_week as range %}
         {% for _ in range %}
             <tr>
-                <td>{{forloop.counter}}</td>
+                <td>Week {{forloop.counter}}</td>
                 <td>
                     <table class='d-flex align-items-center justify-content-center mb-4'>
                         {% for matchup in matchups %}
