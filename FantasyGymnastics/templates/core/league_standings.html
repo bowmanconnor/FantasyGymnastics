@@ -35,6 +35,7 @@
             {% if user == league.manager %}
                 <td><a href="{% url 'remove_team_from_league' league.pk team.pk %}">X</a></td>
             {% endif %}        
+
             </tr>
         {% endfor %}
     </table>
@@ -89,25 +90,25 @@
 <table id="outer_tables">
     {% comment %} Creates rows for each week in the season {% endcomment %}
     {% with ''|center:max_week as range %}
-    {% for _ in range %}
-        <tr>
-            <td>{{forloop.counter}}</td>
-            <td>
-                <table class='d-flex align-items-center justify-content-center mb-4'>
-                    {% for matchup in matchups %}
-                        {% if matchup.week == forloop.parentloop.counter %}
-                            <tr >
-                                <td><a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a></td>
-                                {% if user == league.manager %}
-                                    <td><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
-                                {% endif %}
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-                </table>
-            </td>
-        </tr>
-    {% endfor %}
+        {% for _ in range %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>
+                    <table class='d-flex align-items-center justify-content-center mb-4'>
+                        {% for matchup in matchups %}
+                            {% if matchup.week == forloop.parentloop.counter %}
+                                <tr >
+                                    <td><a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a></td>
+                                    {% if user == league.manager %}
+                                        <td><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
+                                    {% endif %}
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                </td>
+            </tr>
+        {% endfor %}
     {% endwith %}    
 </table>
 
