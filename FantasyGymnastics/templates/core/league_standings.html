@@ -25,9 +25,8 @@
     {% endif %}
 </div>
 
-<div id="outer_tables">
     <h2>Rank</h2>
-    <table class="table table-hover">
+    <table class="table table-hover" id="outer_tables">
         {% for team in teams %}
         <tr>
             <td><a style="color:inherit; text-decoration: none;" href="{% url 'view_team' team.pk %}">{{team.name}}</a></td>
@@ -39,7 +38,6 @@
             </tr>
         {% endfor %}
     </table>
-</div>
 
 <div class="row">
     <h2 class="col-auto">Current Week</h2>
@@ -82,12 +80,12 @@
 
 <div class="row">
     <h2 class="col-auto">Schedule</h2>
-    {% if league.manager == user %}
+        {% if league.manager == user %}
     <a class="col-auto" href="{% url 'create_matchup' league.pk %}"> <button class="btn btn-success" type="button">Create Matchup</button></a>
     {% endif %}
 </div>
 
-<table id="outer_tables">
+<table class ='table table-hover' id="outer_tables">
     {% comment %} Creates rows for each week in the season {% endcomment %}
     {% with ''|center:max_week as range %}
         {% for _ in range %}
