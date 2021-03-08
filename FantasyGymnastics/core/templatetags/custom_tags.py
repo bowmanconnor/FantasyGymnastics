@@ -189,3 +189,12 @@ def has_team_in_league(user, league):
     if FantasyTeam.objects.filter(league=league, user=user).exists():
         return True
     return False
+
+
+@register.filter
+def competes_this_week(gymnast, teams):
+    if gymnast.team in teams:
+        return True
+    return False
+
+

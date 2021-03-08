@@ -34,6 +34,7 @@
                     <th>VT</th>
                     <th>PB</th>
                     <th>HB</th>   
+                    <th>Meet this week</th>
                 </thead>
                 {% for gymnast in gymnasts %}
                     <tr>
@@ -49,8 +50,14 @@
                             {% else %}
                                 <td>{{ average.score }}</td>
                             {% endif %}
-                            
                         {% endfor %}
+                        <td>
+                            {% if gymnast|competes_this_week:teams_competing %}
+                                <i class="fas fa-check"></i> Yes
+                            {% else %}
+                                <i class="far fa-times-circle"></i> No
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
             </table>
@@ -80,6 +87,7 @@
                     7 : { sortInitialOrder: 'desc' },
                     8 : { sortInitialOrder: 'desc' },
                     9 : { sortInitialOrder: 'desc' },
+                    10 : { sortInitialOrder: 'desc' },
                 }
             });
         });

@@ -113,6 +113,13 @@
                                                         {% endif %} 
                                                     {% endif %}
                                                 </td>
+                                                <td>
+                                                    {% if gymnast|competes_this_week:teams_competing %}
+                                                        <i class="fas fa-check"></i> Yes
+                                                    {% else %}
+                                                        <i class="far fa-times-circle"></i> No
+                                                    {% endif %}
+                                                </td>
                                             </tr>
                                         {% endif %}
                                     {% endif %}

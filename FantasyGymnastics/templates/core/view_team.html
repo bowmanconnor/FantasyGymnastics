@@ -32,6 +32,7 @@
                         <th>VT</th>
                         <th>PB</th>
                         <th>HB</th>
+                        <th>Meet this week</th>
                         {% if user == team.user %}
                             <tr></tr>   
                         {% endif %}
@@ -49,8 +50,15 @@
                                         <td>{{ average.score }}</td>
                                     {% endif %} 
                                 {% endfor %}
+                                <td>
+                                    {% if gymnast|competes_this_week:teams_competing %}
+                                        <i class="fas fa-check"></i> Yes
+                                    {% else %}
+                                        <i class="far fa-times-circle"></i> No
+                                    {% endif %}
+                                </td>
                                 {% if user == team.user and not gymnast|team_has_competed:current_week %}
-                                <td><a href="{% url 'remove_gymnast_to_roster' team.pk gymnast.pk %}">X</a></td>
+                                    <td><a href="{% url 'remove_gymnast_to_roster' team.pk gymnast.pk %}">X</a></td>
                                 {% endif %}
                             </tr>
                         {% endfor %}
@@ -107,11 +115,13 @@
                                             {% endif %} 
                                         {% endif %}
                                     </td>
-                                    {% if user == team.user and not gymnast|team_has_competed:lineup.week %}
-                                        <td><a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}">X</a></td>
-                                    {% else %}
-                                        <td></td>
-                                    {% endif %}
+                                    <td>
+                                        {% if user == team.user and not gymnast|team_has_competed:lineup.week %}
+                                            <a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}">X</a>
+                                        {% else %}
+                                            
+                                        {% endif %}
+                                    </td>
                                 </tr>
                             {% endfor %}
                         {% comment %} Add to lineup button {% endcomment %}
@@ -151,6 +161,13 @@
                                                                 {% else %}
                                                                     <em>0.00</em>
                                                                 {% endif %} 
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>
+                                                            {% if gymnast|competes_this_week:teams_competing %}
+                                                                <i class="fas fa-check"></i> Yes
+                                                            {% else %}
+                                                                <i class="far fa-times-circle"></i> No
                                                             {% endif %}
                                                         </td>
                                                     </tr>
