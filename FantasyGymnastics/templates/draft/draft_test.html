@@ -1,35 +1,60 @@
-<html>
-    <head>
+{% extends 'base.html' %}
+{% load custom_tags widget_tweaks %}
 
-    </head>
-    <body>
-        {{league_pk|json_script:"league_pk"}}
-        <script>
-            const leaguePk = JSON.parse(document.getElementById('league_pk').textContent)
+{% block title %}Draft{% endblock title %}
 
-            console.log("Connecting to draft WebSocket for league pk " + leaguePk)
-            const draftSocket = new WebSocket(
-                'ws://' + window.location.host + '/ws/draft/' + leaguePk + '/'
-            );
+{% block content %}
+{{league_pk|json_script:"league_pk"}}
+    <script>
+        const leaguePk = JSON.parse(document.getElementById('league_pk').textContent)
+        var team_information;
+        var user_team_pk;
 
-            draftSocket.onmessage = function(e) {
-                const data = JSON.parse(e.data);
-                console.log("message received back", data);
+        console.log("Connecting to draft WebSocket for league pk " + leaguePk)
+        const draftSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/draft/' + leaguePk + '/'
+        );
+
+        draftSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+
+            if(data['draft_info']) {
+                team_information = data['draft_info'];
             }
 
-            draftSocket.onopen = function(e) {
-                console.log("Connected");
+            if(data['user_team_pk']) {
+                user_team_pk = data['user_team_pk'];
             }
 
-            function send() {
-                message = document.getElementById("testInput").value;
-                console.log(message)
-                draftSocket.send(JSON.stringify({'gymnast_pk': message}))
-            }
+            console.log("Received message", data);
 
-        </script>
-        This is the draft for league #{{league_pk}}
-        <input type="text" id="testInput">
-        <button onclick="send()">Send</button>
-    </body>
-</html>
+            if (data['currently_up_position'] != null) {
+                team = team_information.find(team => team.draft_position === data['currently_up_position']);
+                if(team.team_pk == user_team_pk) {
+                    team_name = "Your team";
+                } else {
+                    team_name = team.team_name;
+                }
+                document.getElementById('teamName').innerText = team_name;
+            }
+        }
+
+        draftSocket.onopen = function(e) {
+            console.log("Connected");
+        }
+
+        function send() {
+            message = document.getElementById("testInput").value;
+            draftSocket.send(JSON.stringify({'gymnast_pk': message}))
+        }
+
+    </script>
+
+    This is the draft for league #{{league_pk}}
+    <div id="draftingOrder">
+    </div>
+    <input type="text" id="testInput">
+    <button onclick="send()">Send</button>
+    <br>
+    <span id="teamName"></span> is currently up to draft.
+{% endblock content %}
