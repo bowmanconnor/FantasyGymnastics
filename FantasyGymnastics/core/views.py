@@ -241,4 +241,7 @@ def delete_gymnast(request, pk):
     g.delete()
     return redirect('home')
 
+@login_required
+def cutter(request):
+    return render(request, 'core/cutter.html')
 

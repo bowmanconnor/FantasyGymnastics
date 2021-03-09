@@ -1,0 +1,71 @@
+body {
+  background-color: #F8F8F8;
+  color: #0D1D59;
+}
+
+body {
+  background-color: #F8F8F8;
+  color: #0D1D59;
+}
+
+#navbar {
+  background-color: #004A10;
+  color: #B2BCBD;
+}
+
+#navbar a {
+  color: #F5C800;
+}
+
+a {
+  color: #004A10;
+}
+
+h1 {
+  color: #0D1D59;
+  font-size: 72px;
+}
+
+h2 {
+  color: #0D1D59;
+}
+
+table {
+  background-color: #B2BCBD;
+  color: #0D1D59;
+  border-radius: 12px;
+}
+
+.btn-outline-primary {
+  border-color: #F5C800;
+  color: #F5C800;
+}
+
+.btn-outline-primary:hover {
+  border-color: #F5C800;
+  background-color: #F5C800;
+  color: #004A10;
+}
+
+.btn-outline-success {
+  border-color: #004A10;
+  color: #004A10;
+}
+
+.btn-outline-success:hover {
+  border-color: #004A10;
+  background-color: #004A10;
+  color: #F8F8F8;
+}
+
+.btn-success {
+  background-color: #004A10;
+  border-color: #004A10;
+  color: #F8F8F8;
+}
+
+#myCarousel h1 {
+  color: #B2BCBD;
+}
+
+/*# sourceMappingURL=home.css.map */

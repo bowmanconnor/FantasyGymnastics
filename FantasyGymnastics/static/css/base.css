@@ -1,67 +1,77 @@
 body {
-  background-color: #F8F8F8;
-  color: #0D1D59;
+  background-color: #F0EDEE;
+  color: #415166;
 }
 
 body {
-  background-color: #F8F8F8;
-  color: #0D1D59;
+  background-color: #F0EDEE;
+  color: #111D4A;
 }
 
 #navbar {
-  background-color: #004A10;
-  color: #B2BCBD;
+  background-color: #ACCAEC;
+  color: #415166;
 }
 
 #navbar a {
-  color: #F5C800;
+  color: #111D4A;
+}
+
+#navButton:hover {
+  color: #111D4A;
 }
 
 a {
-  color: #004A10;
+  color: #415166;
 }
 
 h1 {
-  color: #0D1D59;
+  color: #415166;
   font-size: 72px;
 }
 
 h2 {
-  color: #0D1D59;
+  color: #415166;
 }
 
 table {
-  background-color: #B2BCBD;
-  color: #0D1D59;
+  background-color: #BDC6C7;
+  color: #415166;
   border-radius: 12px;
 }
 
-.btn-outline-primary {
-  border-color: #F5C800;
-  color: #F5C800;
-}
-
-.btn-outline-primary:hover {
-  border-color: #F5C800;
-  background-color: #F5C800;
-  color: #004A10;
-}
-
 .btn-outline-success {
-  border-color: #004A10;
-  color: #004A10;
+  border-color: #415166;
+  color: #415166;
 }
 
 .btn-outline-success:hover {
-  border-color: #004A10;
-  background-color: #004A10;
-  color: #F8F8F8;
+  border-color: #415166;
+  background-color: #415166;
+  color: #F0EDEE;
+}
+
+.btn-outline-primary {
+  border-color: #111D4A;
+  color: #111D4A;
+}
+
+.btn-outline-primary:hover {
+  border-color: #111D4A;
+  background-color: #111D4A;
+  color: #F0EDEE;
 }
 
 .btn-success {
-  background-color: #004A10;
-  border-color: #004A10;
-  color: #F8F8F8;
+  background-color: #315D32;
+  border-color: #315D32;
+  color: #F0EDEE;
+}
+
+.btn-success:hover {
+  background-color: #F0EDEE;
+  border-color: #315D32;
+  color: #315D32;
 }
 
 /*# sourceMappingURL=base.css.map */

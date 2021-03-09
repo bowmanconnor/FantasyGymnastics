@@ -51,12 +51,8 @@
                         <button id ="top_right_button" class="btn btn-outline-primary me-2 ml-4" type="button">Logout</button>
                     </a>
                 {% else %}
-                    <a href="{% url 'login' %}">
-                        <button class="btn btn-outline-primary me-2" type="button">Login</button>
-                    </a>
-                    <a href="{% url 'register' %}">
-                        <button class="btn btn-outline-primary me-2" type="button">Register</button>
-                    </a>
+                    <a id="navButton" class="btn btn-outline-primary me-2" href="{% url 'login' %}" role="button">Login</a>
+                    <a id="navButton" class="btn btn-outline-primary me-2" href="{% url 'register' %}" role="button">Register</a>
                 {% endif %}
           </span>
         </div>
