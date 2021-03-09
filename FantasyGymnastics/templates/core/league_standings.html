@@ -5,12 +5,16 @@
 <link rel="stylesheet" href="{% static 'css/clickable_row.css' %}">{% endblock stylesheet %}
 {% block content %}
 
-<div class='d-flex align-items-center justify-content-center mb-4'>
+<div class='d-flex align-items-center justify-content-center mb-2'>
     <h1>{{league.name}}</h1>
-     {% if user == league.manager %}
-        <a href="{% url 'edit_league' league.pk %}">Edit League</a>
-    {% endif %}
 </div>
+
+{% if user == league.manager %}
+    <div class='d-flex align-items-center justify-content-center mb-2'>
+            <a class="btn btn-outline-success col-sm-2 btn1 " href="{% url 'edit_league' league.pk %}" role="button">Edit League</a>
+            <a class="btn btn-outline-success col-sm-2 btn1 " href="sms:?&body=Hey, join my Fantasy Gymnastics League!!! https://www.myfgl.com/league/{{league.pk}}/standings">Invite your friends</a>
+    </div>
+{% endif %}
 <div class='d-flex align-items-center justify-content-center'>
     {% if not user|has_team_in_league:league %}
         <a href="{% url 'request_to_join_league' league.pk %}">
