@@ -62,7 +62,7 @@ class LineUp(models.Model):
     team = models.ForeignKey(FantasyTeam, related_name='LineUp', on_delete = models.CASCADE, blank=False)
     event = models.CharField(max_length=2, choices = EVENT_CHOICES, blank=False)
     gymnasts = models.ManyToManyField(Gymnast, related_name = 'LineUp', blank=True)
-    week = models.PositiveIntegerField(blank=False)
+    week = models.PositiveIntegerField(blank=False, default=1)
     class Meta:
         unique_together = ('team', 'event', 'week')
         ordering = ['id']
@@ -74,7 +74,7 @@ class Score(models.Model):
     EVENT_CHOICES = [('FX' , 'Floor Exercise'), ('PH' , 'Pommel Horse'), ('SR' , 'Still Rings'), ('VT' , 'Vault'), ('PB' , 'Parallel Bars'), ('HB' , 'Horizontal Bar')]
     gymnast = models.ForeignKey(Gymnast, related_name='Scores', on_delete=models.CASCADE, null=False, blank=False)
     date = models.DateField()
-    week = models.PositiveIntegerField(blank=False)
+    week = models.PositiveIntegerField(blank=False, default=1)
     meet = models.CharField(max_length=100)
     event = models.CharField(max_length=2, choices = EVENT_CHOICES, blank=False)
     score = models.DecimalField(max_digits=6, decimal_places=4)
