@@ -17,6 +17,7 @@
         <button class="btn btn-outline-primary algin-right" type="button">Back to team</button>
     </a>
     {% if gymnasts %}
+    <div style="overflow-x: auto">
         <table id="myTable" class="table tablesorter">
             <thead>
                 <th></th>
@@ -43,12 +44,18 @@
                             {% else %}
                                 <td>{{ average.score }}</td>
                             {% endif %}
-                            
                         {% endfor %}
+                        <td>
+                            {% if gymnast|competes_this_week:teams_competing %}
+                                <i class="fas fa-check"></i> Yes
+                            {% else %}
+                                <i class="far fa-times-circle"></i> No
+                            {% endif %}
+                        </td>
                     </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                {% endfor %}
+            </table>
+        </div>
     {% endif %}
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
@@ -82,6 +89,7 @@
                     7 : { sortInitialOrder: 'desc' },
                     8 : { sortInitialOrder: 'desc' },
                     9 : { sortInitialOrder: 'desc' },
+                    10 : { sortInitialOrder: 'desc' },
                 },
                 widgetOptions : {
                     filter_external : '.search',
@@ -89,6 +97,7 @@
                     filter_columnFilters: false,
                     filter_saveFilters : true,
                 },                
+
             });
         });
     </script>

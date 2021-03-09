@@ -168,7 +168,7 @@ def team_has_competed(gymnast, week):
 @register.filter
 def meets(scores):
     meets = []
-    for meet in scores.values('meet').distinct():
+    for meet in scores.values('meet').order_by('-date').distinct():
        meets.append({'name' : meet['meet'], 'date' : scores.filter(meet=meet['meet']).first().date})
     return meets
 
@@ -189,3 +189,12 @@ def has_team_in_league(user, league):
     if FantasyTeam.objects.filter(league=league, user=user).exists():
         return True
     return False
+
+
+@register.filter
+def competes_this_week(gymnast, teams):
+    if gymnast.team in teams:
+        return True
+    return False
+
+

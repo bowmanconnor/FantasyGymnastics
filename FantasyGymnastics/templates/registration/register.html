@@ -3,6 +3,13 @@
 
 {% block form_title %}Register{% endblock form_title %}
 {% block submit_text %}Register{% endblock submit_text %}
+{% block top_card %}
+<div class='form-signin mb-4'>
+    <a class='btn btn-block btn-facebook mb-2' href="{% url 'social:begin' 'facebook' %}"><i class="fa fa-facebook"></i> Continue with Facebook</a>
+    <a class='btn btn-block btn-google' href="{% url 'social:begin' 'google-oauth2' %}"><i class="fa fa-google"></i> Continue with Google</a>
+</div>
+<hr>
+{% endblock top_card %}
 {% block bottom_card %}
     <div class="text-center mt-2">
         <small>

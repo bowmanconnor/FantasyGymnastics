@@ -11,6 +11,7 @@ from .models import Matchup, Average
 from scraper.Scraper import Scraper, ScraperConstants
 from datetime import datetime
 import random 
+from core.views import teams_competing_this_week
 # Create your views here.
 
 def add_gymnast_to_roster(request, team_pk, gymnast_pk):
@@ -90,6 +91,7 @@ class ViewMatchup(DetailView):
         # context['averages'] = Average.objects.filter(gymnast__in=gymnasts)
         # print(context['averages'])
         context['current_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
+        context['teams_competing'] = teams_competing_this_week()
 
         return context      
 

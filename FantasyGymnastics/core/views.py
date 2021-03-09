@@ -139,9 +139,12 @@ class ViewFantasyTeam(DetailView):
         scraper = Scraper()
         context = super().get_context_data(**kwargs)
         context["roster"] = context["object"].roster.all()
+        context['current_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
         drafted = context['object'].league.drafted.all()
         context["draftable_gymnasts"] = Gymnast.objects.exclude(id__in=drafted)
         context["lineups"] = LineUp.objects.filter(team=context['object'], week=int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])).order_by('pk')
+        context['teams_competing'] = teams_competing_this_week()
+
         # context['averages'] = Average.objects.filter(gymnast__in=context['roster'])
         return context      
 
@@ -161,6 +164,30 @@ class UpdateFantasyTeam(UserPassesTestMixin, UpdateView):
         team.save()
         return redirect('view_team', pk=team.pk)
 
+def teams_competing_this_week():
+    scraper = Scraper()
+    # Get all weeks and their dates for the season
+    weeks = scraper.get_year_weeks(ScraperConstants.Men, datetime.now().year)
+    # Get date to scrape specified week
+    date = [week for week in weeks if int(week['current']) == 1][0]['date']
+    # Gets the schedule for the week
+    schedule = scraper.get_schedule(ScraperConstants.Men, date)
+
+    # Create a list of team names
+    teams = []
+    # For each day in the schedule with a meet on it
+    for day in schedule:
+        # For each meet on that day
+        for meet in schedule[day]['meets']:
+            # Create a name for the meet depending on home vs. away teams or virtual;
+            if meet['away_teams'] != None:
+                for team in meet['away_teams'].split(", "):
+                    teams.append(team)
+            if meet['home_teams'] != None:
+                for team in meet['home_teams'].split(", "):
+                    teams.append(team)     
+    return teams
+
 class SearchGymnasts(DetailView):
     model = FantasyTeam
     template_name = 'core/gymnast_search.html'
@@ -177,6 +204,7 @@ class SearchGymnasts(DetailView):
             context['gymnasts'] = Gymnast.objects.all().exclude(id__in=drafted)
         context['averages'] = Average.objects.filter(gymnast__in=context['gymnasts'])
         context['events'] = ('FX', 'PH', 'SR', 'VT', 'PB', 'HB')
+        context['teams_competing'] = teams_competing_this_week()
         return context
 
 def view_gymnast(request, gymnast_pk):
