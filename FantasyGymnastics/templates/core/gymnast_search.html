@@ -20,7 +20,9 @@
     <div style="overflow-x: auto">
         <table id="myTable" class="table tablesorter">
             <thead>
-                <th></th>
+                {% if team.roster.all.count < team.league.roster_size %}
+                    <th></th>
+                {% endif %}
                 <th>Name</th>
                 <th>Team</th>
                 <th>Year</th>
@@ -29,12 +31,15 @@
                 <th>SR</th>
                 <th>VT</th>
                 <th>PB</th>
-                <th>HB</th>   
+                <th>HB</th> 
+                <th></th>  
             </thead>
             <tbody>
                 {% for gymnast in gymnasts %}
                     <tr>
-                        <td><a class="btn btn-outline-primary" role="button" href="{% url 'add_gymnast_to_roster' team.pk gymnast.pk %}">Add</a></td>
+                        {% if team.roster.all.count < team.league.roster_size %}
+                            <td><a class="btn btn-outline-primary" role="button" href="{% url 'add_gymnast_to_roster' team.pk gymnast.pk %}">Add</a></td>
+                        {% endif %}                         
                         <td><a href="{% url 'view_gymnast' gymnast.pk %}">{{gymnast.name}}</a></td>
                         <td>{{gymnast.team}}</td>
                         <td>{{gymnast.year}}</td>
