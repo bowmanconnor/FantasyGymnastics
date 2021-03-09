@@ -50,6 +50,7 @@ class FantasyTeam(models.Model):
     wins = models.PositiveIntegerField(default=0)
     losses = models.PositiveIntegerField(default=0)
     draft_position = models.PositiveIntegerField(default=0)
+    currently_in_draft = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('user', 'league')

@@ -30,7 +30,7 @@ class DraftConsumer(WebsocketConsumer):
 
             # Send TEAM_JOIN message to group
             async_to_sync(self.channel_layer.group_send)(self.draft_group, {
-                'type': 'team_connect',
+                'type': 'team_disconnect',
                 'team_pk': team.pk,
             })
 
@@ -48,7 +48,6 @@ class DraftConsumer(WebsocketConsumer):
 
             # Send draft info, which team is currently up to draft, and user's team pk
             self.send(text_data=json.dumps({
-                'event': 'SYNC',
                 'user_team_pk': team.pk,
                 'position_currently_drafting': position_currently_drafting,
                 'teams': teams
@@ -58,12 +57,11 @@ class DraftConsumer(WebsocketConsumer):
             self.close()
     
     def disconnect(self, close_code):
-        print('DISCONNECT')
         # Leave draft group
         async_to_sync(self.channel_layer.group_discard)(self.draft_group, self.channel_name)
 
         # Set team status to not in draft
-        team = FantasyTeam.objects.filter(league=self.league_pk, user=self.scope['user']).first()
+        team = FantasyTeam.objects.filter(league=self.league_pk, user=self.scope['user'])
         team.currently_in_draft = False
         team.save()
 
@@ -82,6 +80,8 @@ class DraftConsumer(WebsocketConsumer):
         league = League.objects.filter(pk=self.league_pk).first()
         # Get user's team
         team = FantasyTeam.objects.filter(user=user, league=self.league_pk).first()
+
+        print(self.channel_layer.hosts)
         
         # Get the position that is up to draft
         currently_drafting = league.currently_drafting
@@ -89,35 +89,21 @@ class DraftConsumer(WebsocketConsumer):
         if team.draft_position == currently_drafting:
             # Do something here with the gymnast_pk and the team
             gymnast = get_object_or_404(Gymnast, pk=gymnast_pk)
-            if gymnast not in league.drafted.all():
-                print("DRAFTED")
-                team.roster.add(gymnast)
-                league = team.league
-                league.drafted.add(gymnast)
-                # Increment currently drafting (change to rollover or go backwards eventually)
-                num_teams = len(FantasyTeam.objects.filter(league=self.league_pk))
-                league.currently_drafting = (league.currently_drafting + 1) % num_teams
-                league.save()
+            team.roster.add(gymnast)
+            league = team.league
+            league.drafted.add(gymnast)
+            # Increment currently drafting (change to rollover or go backwards eventually)
+            num_teams = len(FantasyTeam.objects.filter(league=self.league_pk))
+            league.currently_drafting = (league.currently_drafting + 1) % num_teams
+            league.save()
 
-                # Send message to rest of draft group
-                async_to_sync(self.channel_layer.group_send)(self.draft_group, {
-                    'type': 'gymnast_drafted',
-                    'gymnast_pk': gymnast_pk,
-                    'gymnast_name': gymnast.name,
-                    'team_pk': team.pk,
-                    'position_currently_drafting': league.currently_drafting
-                })
-            else:
-                print("DRAFTING ERROR")
-                async_to_sync(self.channel_layer.group_send)(self.draft_group, {
-                    'type': 'gymnast_draft_error',
-                    'error': 'Gymnast has already been drafted'
-                })
+            # Send message to rest of draft group
+            async_to_sync(self.channel_layer.group_send)(self.draft_group, {'type': 'draft_message', 'gymnast_pk': gymnast_pk, 'currently_up_position': league.currently_drafting})
     
-    def team_connect(self, event):
+    def team_join(self, event):
         team_pk = event['team_pk']
         self.send(text_data=json.dumps({
-            'event': 'TEAM_CONNECT',
+            'event': 'TEAM_JOIN',
             'team_pk': team_pk
         }))
 
@@ -128,18 +114,10 @@ class DraftConsumer(WebsocketConsumer):
             'team_pk': team_pk
         }))
 
-    def gymnast_drafted(self, event):
-        # Send message to consumer
-        self.send(text_data=json.dumps({
-            'event': 'GYMNAST_DRAFTED',
-            'team_pk': event['team_pk'],
-            'gymnast_pk': event['gymnast_pk'],
-            'gymnast_name': event['gymnast_name'],
-            'position_currently_drafting': event['position_currently_drafting'],
-        }))
-    
-    def gymnast_draft_error(self, event):
-        self.send(text_data=json.dumps({
-            'event': 'GYMNAST_DRAFT_ERROR',
-            'error': event['error'],
-        }))
+    # Receive message from draft group
+    def draft_message(self, event):
+        gymnast_pk = event['gymnast_pk']
+        currently_up_position = event['currently_up_position']
+        
+        # Send message to websocket
+        self.send(text_data=json.dumps({'gymnast_pk_drafted': gymnast_pk, 'currently_up_position': currently_up_position}))

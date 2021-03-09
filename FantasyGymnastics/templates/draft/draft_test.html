@@ -6,9 +6,27 @@
 {% block content %}
 {{league_pk|json_script:"league_pk"}}
     <script>
+        // Code that runs when a TEAM_CONNECT message is received
+        function team_connected(data) {
+            console.log("team_connect", data)
+        }
+
+        // Code that runs when a TEAM_DISCONNECT message is received
+        function team_disconnected(data) {
+            console.log("team_disconnect", data)
+        }
+
+        // Code that runs when a GYMNAST_DRAFTED message is received
+        function gymnast_drafted(data) {
+            console.log("gymnast_drafted", data)
+        }
+
+        // Code that runs when a SYNC message is received
+        function sync(data) {
+            console.log("sync", data)
+        }
+
         const leaguePk = JSON.parse(document.getElementById('league_pk').textContent)
-        var team_information;
-        var user_team_pk;
 
         console.log("Connecting to draft WebSocket for league pk " + leaguePk)
         const draftSocket = new WebSocket(
@@ -18,29 +36,28 @@
         draftSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
 
-            if(data['draft_info']) {
-                team_information = data['draft_info'];
-            }
-
-            if(data['user_team_pk']) {
-                user_team_pk = data['user_team_pk'];
-            }
-
-            console.log("Received message", data);
-
-            if (data['currently_up_position'] != null) {
-                team = team_information.find(team => team.draft_position === data['currently_up_position']);
-                if(team.team_pk == user_team_pk) {
-                    team_name = "Your team";
-                } else {
-                    team_name = team.team_name;
-                }
-                document.getElementById('teamName').innerText = team_name;
+            switch(data['event']) {
+                case 'TEAM_CONNECT':
+                    team_connected(data);
+                    break;
+                case 'TEAM_DISCONNECT':
+                    team_disconnected(data);
+                    break;
+                case 'GYMNAST_DRAFTED':
+                    gymnast_drafted(data);
+                    break;
+                case 'GYMNAST_DRAFT_ERROR':
+                    console.log("Gymnast draft error", data['error']);
+                case 'SYNC':
+                    sync(data);
+                    break;
+                default:
+                    console.log("Unknown websocket message received", data);
             }
         }
 
         draftSocket.onopen = function(e) {
-            console.log("Connected");
+            console.log("Connected to WebSocket");
         }
 
         function send() {
