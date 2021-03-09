@@ -53,8 +53,23 @@
     This is the draft for league #{{league_pk}}
     <div id="draftingOrder">
     </div>
-    <input type="text" id="testInput">
+    <input type="number" id="testInput">
     <button onclick="send()">Send</button>
     <br>
     <span id="teamName"></span> is currently up to draft.
+    <br>
+    Teams 
+    <br>
+    <div class='row'>
+        {% for team in teams %}
+        <div class='col'>
+            {{team.name}}
+            {% for gymnast in team.roster.all %}
+                {{gymnast.pk}}
+                <br>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+
 {% endblock content %}

@@ -4,7 +4,10 @@ from core.models import FantasyTeam
 
 @login_required
 def index(request, league_pk):
+    context = {}
+    context['league_pk'] = league_pk
+    context['teams'] = FantasyTeam.objects.filter(league=league_pk)
     if FantasyTeam.objects.filter(user=request.user, league=league_pk).exists():
-        return render(request, 'draft/draft_test.html', {'league_pk': league_pk})
+        return render(request, 'draft/draft_test.html', context)
     else:
         return redirect('home')

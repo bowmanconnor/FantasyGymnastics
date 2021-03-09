@@ -1,7 +1,8 @@
 import json
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
-from core.models import FantasyTeam, League
+from core.models import FantasyTeam, League, Gymnast
+from django.shortcuts import get_object_or_404
 
 class DraftConsumer(WebsocketConsumer):
     def connect(self):
@@ -63,7 +64,10 @@ class DraftConsumer(WebsocketConsumer):
         # Check if user who send draft request is currently up
         if team.draft_position == currently_drafting:
             # Do something here with the gymnast_pk and the team
-            
+            gymnast = get_object_or_404(Gymnast, pk=gymnast_pk)
+            team.roster.add(gymnast)
+            league = team.league
+            league.drafted.add(gymnast)
             # Increment currently drafting (change to rollover or go backwards eventually)
             num_teams = len(FantasyTeam.objects.filter(league=self.league_pk))
             league.currently_drafting = (league.currently_drafting + 1) % num_teams
@@ -76,6 +80,6 @@ class DraftConsumer(WebsocketConsumer):
     def draft_message(self, event):
         gymnast_pk = event['gymnast_pk']
         currently_up_position = event['currently_up_position']
-
+        
         # Send message to websocket
         self.send(text_data=json.dumps({'gymnast_pk_drafted': gymnast_pk, 'currently_up_position': currently_up_position}))

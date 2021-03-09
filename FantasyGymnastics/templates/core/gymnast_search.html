@@ -32,7 +32,7 @@
                 <th>HB</th>   
             </thead>
             {% for gymnast in gymnasts %}
-                <tr>
+                <tr id='{{gymnast_pk}}'>
                     <td><a class="btn btn-outline-primary" role="button" href="{% url 'add_gymnast_to_roster' team.pk gymnast.pk %}">Add</a></td>
                     <td><a href="{% url 'view_gymnast' gymnast.pk %}">{{gymnast.name}}</a></td>
                     <td>{{gymnast.team}}</td>
