@@ -2,100 +2,176 @@
 {% load custom_tags static %}
 {% block title %}League Standings{% endblock title %}
 {% block stylesheet %}
-<link rel="stylesheet" href="{% static 'css/clickable_row.css' %}">{% endblock stylesheet %}
+<link rel="stylesheet" href="{% static 'css/clickable_row.css' %}">
+<link rel="stylesheet" href="{% static 'css/leagueHome.css' %}">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock stylesheet %}
 {% block content %}
 
+
+<div class='d-flex align-items-center justify-content-center mb-2'>
+    <h1>{{league.name}}</h1>
+</div>
+{% if user == league.manager %}
+    <div class='d-flex align-items-center justify-content-center mb-2'>
+            <a class="btn btn-outline-primary col-auto" href="sms:?&body=Hey, join my Fantasy Gymnastics League!!! https://www.myfgl.com/league/{{league.pk}}/standings">Invite your friends</a>
+    </div>
+{% endif %}
+
 <div class='d-flex align-items-center justify-content-center mb-4'>
-    <h1>{{league.name}} </h1>
-     {% if user == league.manager %}
-        <a href="{% url 'edit_league' league.pk %}">Edit League </a>
-        {% if not league.draft_started %}
-            <a href="{% url 'start_draft' league.pk %}">Start draft</a>
-        {% endif %}
+    {% if user == league.manager %}
+    <a class="btn btn-outline-primary col-auto" href="{% url 'edit_league' league.pk %}" role="button">Edit League</a>
     {% endif %}
 </div>
+
+</div>
+
+
 <div class='d-flex align-items-center justify-content-center'>
     {% if not user|has_team_in_league:league %}
-        <a href="{% url 'request_to_join_league' league.pk %}">
-            <button class="btn btn-outline-primary" type="button">Request to join league</button>
-        </a>
+    <a href="{% url 'request_to_join_league' league.pk %}">
+        <button class="btn btn-primary" type="button">Request to join league</button>
+    </a>
     {% endif %}
 </div>
-<h2>Rank</h2>
-<table class="table table-hover">
-    {% for team in teams %}
-    <tr >
-        <td><a style="color:inherit; text-decoration: none;" href="{% url 'view_team' team.pk %}">{{team.name}}</a></td>
-        <td>({{team.wins}}-{{team.losses}})</td>
-        {% if user == league.manager %}
-            <td><a href="{% url 'remove_team_from_league' league.pk team.pk %}">X</a></td>
-        {% endif %}
-    </tr>
-    {% endfor %}
-</table>
 
-<h2>Schedule</h2>
-<table class="table table-hover">
-    <tr>
-        <td>{{current_week}}</td>
-        <td>
-            <table class='d-flex align-items-center justify-content-center mb-4'>
-            {% for matchup in matchups %}
-                {% if matchup.week == current_week %}
-                    <tr>
-                        <td><a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1.user.first_name}} ({{matchup.team1.LineUp.all|current_week:matchup.week|actual_team_score}}) vs ({{matchup.team2.LineUp.all|current_week:matchup.week|actual_team_score}}) {{matchup.team2.user.first_name}}</a></td>
-                        {% if user == league.manager %}
-                            <td><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
-                        {% endif %}
-                    </tr>
-                {% endif %}
-            {% endfor %}
-            </table>
-        </td>
-    </tr>
-    {% comment %} Creates rows for each week in the season {% endcomment %}
-    {% with ''|center:max_week as range %}
-        {% for _ in range %}
+<div class="container-lg">
+    <div class="row" id="outer_tables">
+        <h2 class="col-auto">Rank</h2>
+        <table class="table table-hover">
+            {% for team in teams %}
             <tr>
-                <td>{{forloop.counter}}</td>
-                <td>
-                    <table class='d-flex align-items-center justify-content-center mb-4'>
-                        {% for matchup in matchups %}
-                            {% if matchup.week == forloop.parentloop.counter %}
-                                <tr >
-                                    <td><a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1.user.first_name}} ({{matchup.team1.LineUp.all|current_week:matchup.week|actual_team_score}}) vs ({{matchup.team2.LineUp.all|current_week:matchup.week|actual_team_score}}) {{matchup.team2.user.first_name}}</a></td>
-                                    {% if user == league.manager %}
-                                        <td><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
-                                    {% endif %}
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </table>
-                </td>
+                <td><a style="color:inherit; text-decoration: none;" href="{% url 'view_team' team.pk %}">{{team.name}}</a></td>
+                <td>({{team.wins}}-{{team.losses}})</td>
+                {% if user == league.manager %}
+                <td><a href="{% url 'remove_team_from_league' league.pk team.pk %}">X</a></td>
+                {% endif %}
             </tr>
-        {% endfor %}
-    {% endwith %}    
-</table>
+            {% endfor %}
+        </table>
+    </div>
 
-{% if league.manager == user %}
-    <a href="{% url 'create_matchup' league.pk %}">
-        <button class="btn btn-outline-primary" type="button">Create Matchup</button>
-    </a>
-{% endif %}
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-4" id="outer_tables">
+            <h2 class="col-auto">Current Week</h2>
+            <div id="currentMatchups" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
+                <div class="carousel-inner">
+                    {% for matchup in matchups %}
+                    {% if matchup.week == current_week %}
+                    <div class="carousel-item {{matchup|has_users_team:user}}">
+                        <table class="table" id="matchup_tables">
+                            <tr class="d-flex justify-content-center">
+                                <td class="col-auto">
+                                    <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a>
+                                </td>
+                            </tr>
+                            <tr class="d-flex justify-content-center">
+                                <td class="col-auto">
+                                    <p>FX: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'FX'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'FX'|actual_lineup_score}}</p>
+                                </td>
+                            </tr>
+                            <tr class="d-flex justify-content-center">
+                                <td class="col-auto">
+                                    <p>PH: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'PH'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'PH'|actual_lineup_score}}</p>
+                                </td>
+                            </tr>
+                            <tr class="d-flex justify-content-center">
+                                <td class="col-auto">
+                                    <p>SR: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'SR'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'SR'|actual_lineup_score}}</p>
+                                </td>
+                            </tr>
+                            <tr class="d-flex justify-content-center">
+                                <td class="col-auto">
+                                    <p>VT: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'VT'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'VT'|actual_lineup_score}}</p>
+                                </td>
+                            </tr>
+                            <tr class="d-flex justify-content-center">
+                                <td class="col-auto">
+                                    <p>PB: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'PB'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'PB'|actual_lineup_score}}</p>
+                                </td>
+                            </tr>
+                            <tr class="d-flex justify-content-center">
+                                <td class="col-auto">
+                                    <p>HB: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'HB'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'HB'|actual_lineup_score}}</p>
+                                </td>
+                            </tr>
+                            <tr class="d-flex justify-content-center">
+                                <td class="col-auto">
+                                    <p>Total: {{matchup.team1.LineUp.all|current_week:matchup.week|actual_team_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|actual_team_score}}</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <div>
+                    <i class="fas fa-angle-left fa-5x" data-bs-target="#currentMatchups" data-bs-slide="prev"></i>
+                    <span class="visually-hidden">Previous</span>
+                </div>
+                <div>
+                    <i class="fas fa-angle-right fa-5x" data-bs-target="#currentMatchups" data-bs-slide="next"></i>
+                    <span class="visually-hidden">Next</span>
+                </div>
+            </div>
+        </div>
 
-
-{% if league.manager == user %}
-    <h2>Requested to Join</h2>
-    <table class="table table-hover">
-        <tbody>
-            {% for requested_user in league.requested_to_join.all %}
+        <div class="col-md-4" id="outer_tables">
+            <div class="row">
+                <h2 class="col-auto">Schedule</h2>
+                {% if league.manager == user %}
+                <a class="col-auto" href="{% url 'create_matchup' league.pk %}"> <button class="btn btn-primary" type="button">Create Matchup</button></a>
+                {% endif %}
+            </div>
+            <table class="table">
+                {% comment %} Creates rows for each week in the season {% endcomment %}
+                {% with ''|center:max_week as range %}
+                {% for _ in range %}
                 <tr>
-                    <td><a style="color:inherit; text-decoration: none;" href="{% url 'approve_player_into_league' league.pk requested_user.pk %}" >{{requested_user}}</a> </td>
-                    <td><a href="{% url 'reject_player_from_league' league.pk requested_user.pk %}">X</a></td>
+                    <td>
+                    {% if forloop.counter == current_week %}
+                        <b>Week {{forloop.counter}}</b>
+                    {% else %}
+                        Week {{forloop.counter}}
+                    {% endif %}
+                    </td>
+                    <td>
+                        <table class='d-flex align-items-center justify-content-center mb-4'>
+                            {% for matchup in matchups %}
+                            {% if matchup.week == forloop.parentloop.counter %}
+                            <tr>
+                                <td><a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a></td>
+                                {% if user == league.manager %}
+                                <td><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
+                                {% endif %}
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </table>
+                    </td>
                 </tr>
-            {% endfor %}                
-        </tbody>
-    </table
-{% endif %}
+                {% endfor %}
+                {% endwith %}
+            </table>
+        </div>
+    </div>
+</div>
 
-{% endblock %}
+    {% if league.manager == user %}
+<h2>Requested to Join</h2>
+<table class="table table-hover">
+    <tbody>
+        {% for requested_user in league.requested_to_join.all %}
+        <tr>
+            <td><a style="color:inherit; text-decoration: none;" href="{% url 'approve_player_into_league' league.pk requested_user.pk %}">{{requested_user}}</a> </td>
+            <td><a href="{% url 'reject_player_from_league' league.pk requested_user.pk %}">X</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+    {% endif %}
+
+    {% endblock %}
+

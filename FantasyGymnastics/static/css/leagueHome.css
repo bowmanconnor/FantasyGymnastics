@@ -58,8 +58,31 @@ table {
   color: #C8CFD0;
 }
 
-#myCarousel h1 {
-  color: #C8CFD0;
+#outer_tables {
+  padding: 16px 16px 16px 16px;
+  margin: 16px 4px;
 }
 
-/*# sourceMappingURL=home.css.map */
+#matchup_tables {
+  padding: 16px;
+  margin: auto;
+}
+
+#matchup_tables td {
+  padding: 4px 16px;
+}
+
+#matchupCarousel {
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+.carousel-control.left {
+  margin-left: -25px;
+}
+
+.carousel-control.right {
+  margin-right: -25px;
+}
+
+/*# sourceMappingURL=leagueHome.css.map */
