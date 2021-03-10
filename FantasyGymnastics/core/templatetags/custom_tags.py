@@ -175,7 +175,8 @@ def has_users_team(matchup, user):
         return "active"
     else:
          return ""
-
+         
+@register.filter
 def meets(scores):
     meets = []
     for meet in scores.values('meet').order_by('-date').distinct():
