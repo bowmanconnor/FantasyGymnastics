@@ -56,10 +56,45 @@
             {% for matchup in matchups %}
             {% if matchup.week == current_week %}
             <div class="carousel-item {{matchup|has_users_team:user}}">
-                <table class="table table-hover" id="matchup_tables">
+                <table class="table" id="matchup_tables">
                     <tr class="d-flex justify-content-center">
                         <td class="col-auto">
                             <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a>
+                        </td>
+                    </tr>
+                    <tr class="d-flex justify-content-center">
+                        <td class="col-auto">
+                            <p>FX: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'FX'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'FX'|actual_lineup_score}}</p>
+                        </td>
+                    </tr>
+                    <tr class="d-flex justify-content-center">
+                        <td class="col-auto">
+                            <p>PH: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'PH'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'PH'|actual_lineup_score}}</p>
+                        </td>
+                    </tr>
+                    <tr class="d-flex justify-content-center">
+                        <td class="col-auto">
+                            <p>SR: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'SR'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'SR'|actual_lineup_score}}</p>
+                        </td>
+                    </tr>
+                    <tr class="d-flex justify-content-center">
+                        <td class="col-auto">
+                            <p>VT: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'VT'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'VT'|actual_lineup_score}}</p>
+                        </td>
+                    </tr>
+                    <tr class="d-flex justify-content-center">
+                        <td class="col-auto">
+                            <p>PB: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'PB'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'PB'|actual_lineup_score}}</p>
+                        </td>
+                    </tr>
+                    <tr class="d-flex justify-content-center">
+                        <td class="col-auto">
+                            <p>HB: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'HB'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'HB'|actual_lineup_score}}</p>
+                        </td>
+                    </tr>
+                    <tr class="d-flex justify-content-center">
+                        <td class="col-auto">
+                            <p>Total: {{matchup.team1.LineUp.all|current_week:matchup.week|actual_team_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|actual_team_score}}</p>
                         </td>
                     </tr>
                 </table>

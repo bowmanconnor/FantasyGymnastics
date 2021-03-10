@@ -63,6 +63,10 @@ def current_week(lineup, week):
     return lineup.filter(week=week)
 
 @register.filter
+def event(lineup, event):
+    return lineup.get(event=event)
+
+@register.filter
 def actual_lineup_score(lineup):
     total = decimal.Decimal(0.00)
     scores = []
