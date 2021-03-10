@@ -1,7 +1,7 @@
 $base-light: #F0EDEE;
 $base-dark: #111D4A;
 $dark-highlight: #415166;
-$primary-highlight: #ACCAEC;
+$primary-highlight: #5863F8;
 $light-highlight: #C8CFD0;
 $green-button: #315D32;
     
@@ -77,7 +77,7 @@ table {
 }
 
 .btn-success:hover {
-    background-color: $base-light;
-    border-color: $green-button;
+    background-color: $primary-highlight;
+    border-color: $primary-highlight;
     color: $green-button;
 }

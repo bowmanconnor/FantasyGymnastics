@@ -25,26 +25,21 @@
     {% endif %}
 </div>
 
-    <h2>Rank</h2>
-    <table class="table table-hover" id="outer_tables">
+
+<div id="outer_tables">
+    <h2 class="col-auto">Rank</h2>
+    <table class="table table-hover">
         {% for team in teams %}
         <tr>
             <td><a style="color:inherit; text-decoration: none;" href="{% url 'view_team' team.pk %}">{{team.name}}</a></td>
             <td>({{team.wins}}-{{team.losses}})</td>
             {% if user == league.manager %}
-<<<<<<< Updated upstream
-                <td><a href="{% url 'remove_team_from_league' league.pk team.pk %}">X</a></td>
-            {% endif %}        
-
-            </tr>
-=======
             <td><a href="{% url 'remove_team_from_league' league.pk team.pk %}">X</a></td>
             {% endif %}
         </tr>
->>>>>>> Stashed changes
         {% endfor %}
     </table>
-
+</div>
 
 <div id="outer_tables">
     <h2 class="col-auto">Current Week</h2>
@@ -54,8 +49,8 @@
             {% if matchup.week == current_week %}
             <div class="carousel-item {{matchup|has_users_team:user}}">
                 <table class="table table-hover" id="matchup_tables">
-                    <tr>
-                        <td class="col-sm-auto">
+                    <tr class="d-flex justify-content-center">
+                        <td class="col-auto">
                             <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a>
                         </td>
                     </tr>
@@ -67,49 +62,19 @@
     </div>
 </div>
 
-
-<<<<<<< Updated upstream
-<div class="row">
-    <h2 class="col-auto">Schedule</h2>
-        {% if league.manager == user %}
-    <a class="col-auto" href="{% url 'create_matchup' league.pk %}"> <button class="btn btn-success" type="button">Create Matchup</button></a>
-    {% endif %}
+<div class="d-flex justify-content-center">
+    <button class="btn btn-success" type="button" data-bs-target="#currentMatchups" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="btn btn-success" type="button" data-bs-target="#currentMatchups" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
 </div>
 
-<table class ='table table-hover' id="outer_tables">
-    {% comment %} Creates rows for each week in the season {% endcomment %}
-    {% with ''|center:max_week as range %}
-        {% for _ in range %}
-            <tr>
-                <td>Week {{forloop.counter}}</td>
-                <td>
-                    <table class='d-flex align-items-center justify-content-center mb-4'>
-                        {% for matchup in matchups %}
-                            {% if matchup.week == forloop.parentloop.counter %}
-                                <tr >
-                                    <td><a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a></td>
-                                    {% if user == league.manager %}
-                                        <td><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
-                                    {% endif %}
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </table>
-                </td>
-            </tr>
-        {% endfor %}
-    {% endwith %}    
-</table>
-=======
 
-<button class="btn btn-success" type="button" data-bs-target="#currentMatchups" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-</button>
-<button class="btn btn-success" type="button" data-bs-target="#currentMatchups" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-</button>
+
 
 
 <div id="outer_tables">
@@ -144,22 +109,21 @@
         {% endwith %}
     </table>
 </div>
->>>>>>> Stashed changes
 
 
 
     {% if league.manager == user %}
-    <h2>Requested to Join</h2>
-    <table class="table table-hover">
-        <tbody>
-            {% for requested_user in league.requested_to_join.all %}
-            <tr>
-                <td><a style="color:inherit; text-decoration: none;" href="{% url 'approve_player_into_league' league.pk requested_user.pk %}">{{requested_user}}</a> </td>
-                <td><a href="{% url 'reject_player_from_league' league.pk requested_user.pk %}">X</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<h2>Requested to Join</h2>
+<table class="table table-hover">
+    <tbody>
+        {% for requested_user in league.requested_to_join.all %}
+        <tr>
+            <td><a style="color:inherit; text-decoration: none;" href="{% url 'approve_player_into_league' league.pk requested_user.pk %}">{{requested_user}}</a> </td>
+            <td><a href="{% url 'reject_player_from_league' league.pk requested_user.pk %}">X</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
     {% endif %}
 
     {% endblock %}

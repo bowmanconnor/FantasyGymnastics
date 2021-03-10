@@ -9,7 +9,7 @@ body {
 }
 
 #navbar {
-  background-color: #ACCAEC;
+  background-color: #5863F8;
   color: #415166;
 }
 
@@ -35,7 +35,7 @@ h2 {
 }
 
 table {
-  background-color: #BDC6C7;
+  background-color: #C8CFD0;
   color: #415166;
   border-radius: 12px;
 }
@@ -69,8 +69,8 @@ table {
 }
 
 .btn-success:hover {
-  background-color: #F0EDEE;
-  border-color: #315D32;
+  background-color: #5863F8;
+  border-color: #5863F8;
   color: #315D32;
 }
 
