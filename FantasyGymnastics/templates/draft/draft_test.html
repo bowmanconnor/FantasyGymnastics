@@ -30,11 +30,19 @@
             // Remove row from table
             table_row.parentElement.removeChild(table_row);
 
-            roster = document.getElementById('team_row_' + data['team_pk']);
-            p = document.createElement('p');
-            p.innerText = data['gymnast_pk'];
+            roster = document.getElementById('team_table_body_' + data['team_pk']);
 
-            roster.appendChild(p);
+            tr = document.createElement('tr');
+            td_name = document.createElement('td');
+            td_team = document.createElement('td');
+
+            td_name.innerText = data['gymnast_name'];
+            td_team.innerText = data['ncaa_team_name'];
+
+            tr.appendChild(td_name);
+            tr.appendChild(td_team);
+
+            roster.appendChild(tr);
 
             if(user_team_pk == get_team_currently_up(data['position_currently_drafting'])['pk']) {
                 document.getElementById('teamName').innerText = "Your team";
@@ -134,12 +142,12 @@
     <div class="row d-flex justify-content-center">
     {% for team in teams %}
         <div class="col-md-4" id="outer_tables">
-            <table class='table' id="team_row_{{team.pk}}">
+            <table class='table'>
                 <thead>
                     <th>{{team.name}}</th>
                     <th></th>
                 </thead>
-                <tbody>
+                <tbody id="team_table_body_{{team.pk}}">
                     {% for gymnast in team.roster.all %}
                         <tr>
                             <td>
