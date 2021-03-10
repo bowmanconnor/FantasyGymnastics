@@ -22,7 +22,7 @@
         <a class="btn btn-outline-primary col-auto" href="{% url 'start_draft' league.pk %}">Start draft</a>
     </div>
 {% endif %}
-{% if league.draft_started and not league.draft_complete %}
+{% if league.draft_started and not league.draft_complete and not user|has_team_in_league:league%}
     <div class='d-flex align-items-center justify-content-center mb-2'>
         <a class="btn btn-outline-primary col-auto" href="{% url 'index' league.pk %}">Join draft</a>
     </div>
@@ -36,11 +36,10 @@
 
 </div>
 
-
 <div class='d-flex align-items-center justify-content-center'>
     {% if not user|has_team_in_league:league %}
     <a href="{% url 'request_to_join_league' league.pk %}">
-        <button class="btn btn-primary" type="button">Request to join league</button>
+        <button class="btn btn-outline-primary" type="button">Request to join league</button>
     </a>
     {% endif %}
 </div>
