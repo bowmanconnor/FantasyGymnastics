@@ -112,6 +112,7 @@ class DraftConsumer(WebsocketConsumer):
                     'gymnast_pk': gymnast_pk,
                     'gymnast_name': gymnast.name,
                     'team_pk': team.pk,
+                    'ncaa_team_name': gymnast.team,
                     'position_currently_drafting': league.currently_drafting
                 })
             else:
@@ -144,6 +145,7 @@ class DraftConsumer(WebsocketConsumer):
         # Send message to consumer
         self.send(text_data=json.dumps({
             'event': 'GYMNAST_DRAFTED',
+            'ncaa_team_name': event['ncaa_team_name'],
             'team_pk': event['team_pk'],
             'gymnast_pk': event['gymnast_pk'],
             'gymnast_name': event['gymnast_name'],

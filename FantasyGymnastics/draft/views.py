@@ -24,6 +24,7 @@ def start_draft(request, league_pk):
 
     if league.manager == request.user:
         league.draft_started = True
+        league.generate_drafting_order()
         league.save()
         return redirect('/draft/%s' % league_pk)
     else:
