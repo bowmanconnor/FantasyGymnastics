@@ -180,12 +180,12 @@ def teams_competing_this_week():
         # For each meet on that day
         for meet in schedule[day]['meets']:
             # Create a name for the meet depending on home vs. away teams or virtual;
-            print(meet['away_teams'].split(", "))
-            print(meet['home_teams'].split(", "))
-            for team in meet['away_teams'].split(", "):
-                teams.append(team)
-            for team in meet['home_teams'].split(", "):
-                teams.append(team)     
+            if meet['away_teams'] != None:
+                for team in meet['away_teams'].split(", "):
+                    teams.append(team)
+            if meet['home_teams'] != None:
+                for team in meet['home_teams'].split(", "):
+                    teams.append(team)     
     return teams
 
 class SearchGymnasts(DetailView):
@@ -196,12 +196,8 @@ class SearchGymnasts(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        query = self.request.GET.get('query')
         drafted = context['object'].league.drafted.all()
-        if query:
-            context['gymnasts'] = Gymnast.objects.filter(Q(name__icontains=query) | Q(team__icontains=query)).exclude(id__in=drafted)
-        else:
-            context['gymnasts'] = Gymnast.objects.all().exclude(id__in=drafted)
+        context['gymnasts'] = Gymnast.objects.all().exclude(id__in=drafted)
         context['averages'] = Average.objects.filter(gymnast__in=context['gymnasts'])
         context['events'] = ('FX', 'PH', 'SR', 'VT', 'PB', 'HB')
         context['teams_competing'] = teams_competing_this_week()
