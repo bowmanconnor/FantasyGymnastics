@@ -46,7 +46,7 @@
                 {% if user.is_authenticated %}
                     {{user.first_name}}
                     <a href="{% url 'logout' %}">
-                        <button id ="top_right_button" class="btn btn-outline-primary me-2 ml-4" type="button">Logout</button>
+                        <button id ="navButton" class="btn btn-primary me-2 ml-4" type="button">Logout</button>
                     </a>
                 {% else %}
                     <a id="navButton" class="btn btn-outline-primary me-2" href="{% url 'login' %}" role="button">Login</a>

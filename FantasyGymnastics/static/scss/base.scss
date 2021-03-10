@@ -1,83 +1,72 @@
-$base-light: #F0EDEE;
-$base-dark: #111D4A;
-$dark-highlight: #415166;
-$primary-highlight: #5863F8;
-$light-highlight: #C8CFD0;
-$green-button: #315D32;
+$light-base: #F0EDEE;
+$dark-blue: #03012C;
+$dark-grey: #535965;
+$light-purple: #6E60B3;
+$light-grey: #C8CFD0;
     
 body {
-    background-color: $base-light;
-    color: $dark-highlight;
-}
-
-body {
-    background-color: $base-light;
-    color: $base-dark;
+    background-color: $light-base;
+    color: $dark-grey;
 }
 
 #navbar {
-    background-color: $primary-highlight;
-    color: $dark-highlight;
+    background-color: $light-purple;
+    color: $light-grey;
 }
 
 #navbar a{
-    color: $base-dark;
+    color: $dark-blue;
 }
 
 #navButton:hover{
-    color:$base-dark;
+    background-color: $light-purple;
+    outline-color: $dark-blue;
+    color: $dark-blue;
 }
 
 a {
-    color: $dark-highlight;
+    color: $light-purple;
 }
 
 
 h1 {
-    color: $dark-highlight;
+    color: $dark-blue;
     font-size: 72px;
 }
 
 h2 {
-    color: $dark-highlight;
+    color: $dark-blue;
 }
 
 table {
-    background-color: $light-highlight;
-    color: $dark-highlight;
+    background-color: $light-grey;
+    color: $dark-blue;
     border-radius: 12px;
 }
 
-.btn-outline-success {
-    border-color: $dark-highlight;
-    color: $dark-highlight;
-}
-
-.btn-outline-success:hover {
-    border-color: $dark-highlight;
-    background-color: $dark-highlight;
-    color: $base-light;
-}
-
 .btn-outline-primary {
-    border-color: $base-dark;
-    color: $base-dark;
+    border-color: $dark-blue;
+    color: $dark-blue;
 }
 
 .btn-outline-primary:hover {
-    border-color: $base-dark;
-    background-color: $base-dark;
-    color: $base-light;
+    border-color: $dark-blue;
+    background-color: $dark-blue;
+    color: $light-grey;
 }
 
-.btn-success {
-    background-color: $green-button;
-    border-color: $green-button;
-    color: $base-light;
+.btn-primary {
+    background-color: $dark-blue;
+    border-color: $dark-blue;
+    color: $light-grey;
 }
 
-.btn-success:hover {
-    background-color: $primary-highlight;
-    border-color: $primary-highlight;
-    color: $green-button;
+.btn-primary:hover {
+    background-color: $light-base;
+    border-color: $dark-blue;
+    color: $dark-blue;
+}
+
+i {
+    color: $light-purple;
 }
