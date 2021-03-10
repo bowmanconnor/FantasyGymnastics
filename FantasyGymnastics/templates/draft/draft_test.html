@@ -108,6 +108,9 @@
                 case 'SYNC':
                     sync(data);
                     break;
+                case 'DRAFT_COMPLETE':
+                    draft_complete(data);
+                    break;
                 default:
                     console.log("Unknown websocket message received", data);
             }
