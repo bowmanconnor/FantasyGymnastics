@@ -50,7 +50,7 @@
         </table>
     </div>
 
-    <div class="row">
+    <div class="row d-flex justify-content-center">
         <div class="col-md-4" id="outer_tables">
             <h2 class="col-auto">Current Week</h2>
             <div id="currentMatchups" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
@@ -106,14 +106,14 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center">
-                <button class="btn btn-primary" type="button" data-bs-target="#currentMatchups" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <div>
+                    <i class="fas fa-angle-left fa-5x" data-bs-target="#currentMatchups" data-bs-slide="prev"></i>
                     <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="btn btn-primary" type="button" data-bs-target="#currentMatchups" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </div>
+                <div>
+                    <i class="fas fa-angle-right fa-5x" data-bs-target="#currentMatchups" data-bs-slide="next"></i>
                     <span class="visually-hidden">Next</span>
-                </button>
+                </div>
             </div>
         </div>
 
@@ -129,7 +129,13 @@
                 {% with ''|center:max_week as range %}
                 {% for _ in range %}
                 <tr>
-                    <td>{{forloop.counter}}</td>
+                    <td>
+                    {% if forloop.counter == current_week %}
+                        <b>Week {{forloop.counter}}</b>
+                    {% else %}
+                        Week {{forloop.counter}}
+                    {% endif %}
+                    </td>
                     <td>
                         <table class='d-flex align-items-center justify-content-center mb-4'>
                             {% for matchup in matchups %}
