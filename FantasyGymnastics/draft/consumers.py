@@ -58,7 +58,6 @@ class DraftConsumer(WebsocketConsumer):
             self.close()
     
     def disconnect(self, close_code):
-        print('DISCONNECT')
         # Leave draft group
         async_to_sync(self.channel_layer.group_discard)(self.draft_group, self.channel_name)
 
@@ -86,17 +85,25 @@ class DraftConsumer(WebsocketConsumer):
         # Get the position that is up to draft
         currently_drafting = league.currently_drafting
         # Check if user who send draft request is currently up
-        if team.draft_position == currently_drafting:
+        if team.draft_position == currently_drafting and not league.draft_complete and league.draft_started:
             # Do something here with the gymnast_pk and the team
             gymnast = get_object_or_404(Gymnast, pk=gymnast_pk)
             if gymnast not in league.drafted.all():
-                print("DRAFTED")
                 team.roster.add(gymnast)
                 league = team.league
                 league.drafted.add(gymnast)
                 # Increment currently drafting (change to rollover or go backwards eventually)
                 num_teams = len(FantasyTeam.objects.filter(league=self.league_pk))
                 league.currently_drafting = (league.currently_drafting + 1) % num_teams
+
+                if len(league.drafted.all()) == league.roster_size * num_teams:
+                    league.draft_complete = True
+                    async_to_sync(self.channel_layer.group_send)(self.draft_group, {
+                        'type': 'draft_complete',
+                    })
+
+                # PERFORM CHECK AND AUTO DRAFT HERE
+
                 league.save()
 
                 # Send message to rest of draft group
@@ -113,6 +120,11 @@ class DraftConsumer(WebsocketConsumer):
                     'type': 'gymnast_draft_error',
                     'error': 'Gymnast has already been drafted'
                 })
+        else:
+            async_to_sync(self.channel_layer.group_send)(self.draft_group, {
+                'type': 'gymnast_draft_error',
+                'error': 'Not your turn to draft'
+            })
     
     def team_connect(self, event):
         team_pk = event['team_pk']
@@ -142,4 +154,9 @@ class DraftConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             'event': 'GYMNAST_DRAFT_ERROR',
             'error': event['error'],
+        }))
+
+    def draft_complete(self, event):
+        self.send(text_data=json.dumps({
+            'event': 'DRAFT_COMPLETE'
         }))

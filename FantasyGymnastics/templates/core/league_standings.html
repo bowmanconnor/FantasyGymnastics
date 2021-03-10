@@ -6,9 +6,12 @@
 {% block content %}
 
 <div class='d-flex align-items-center justify-content-center mb-4'>
-    <h1>{{league.name}}</h1>
+    <h1>{{league.name}} </h1>
      {% if user == league.manager %}
-        <a href="{% url 'edit_league' league.pk %}">Edit League</a>
+        <a href="{% url 'edit_league' league.pk %}">Edit League </a>
+        {% if not league.draft_started %}
+            <a href="{% url 'start_draft' league.pk %}">Start draft</a>
+        {% endif %}
     {% endif %}
 </div>
 <div class='d-flex align-items-center justify-content-center'>

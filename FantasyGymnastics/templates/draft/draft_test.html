@@ -1,11 +1,18 @@
 {% extends 'base.html' %}
-{% load custom_tags widget_tweaks %}
+{% load static custom_tags widget_tweaks %}
 
 {% block title %}Draft{% endblock title %}
 
 {% block content %}
 {{league_pk|json_script:"league_pk"}}
     <script>
+        teams = []
+        user_team_pk = -1;
+        // Code that runs when a DRAFT_COMPLETE message is received
+        function draft_complete(data) {
+            document.getElementById("header").innerText = "Draft complete"
+        }
+
         // Code that runs when a TEAM_CONNECT message is received
         function team_connected(data) {
             console.log("team_connect", data)
@@ -18,12 +25,62 @@
 
         // Code that runs when a GYMNAST_DRAFTED message is received
         function gymnast_drafted(data) {
-            console.log("gymnast_drafted", data)
+            console.log("gymnast_drafted", data);
+            table_row = document.getElementById('gymnast_row_' + data['gymnast_pk']);
+            // Remove row from table
+            table_row.parentElement.removeChild(table_row);
+
+            roster = document.getElementById('team_row_' + data['team_pk']);
+            p = document.createElement('p');
+            p.innerText = data['gymnast_pk'];
+
+            roster.appendChild(p);
+
+            if(user_team_pk == get_team_currently_up(data['position_currently_drafting'])['pk']) {
+                document.getElementById('teamName').innerText = "Your team";
+                buttons = document.getElementsByClassName('btn');
+                for(var i = 0; i < buttons.length; i++) {
+                    buttons[i].classList.remove('disabled');
+                }
+            } else {
+                document.getElementById('teamName').innerText = get_team_currently_up(data['position_currently_drafting'])['name'];
+                buttons = document.getElementsByClassName('btn');
+                for(var i = 0; i < buttons.length; i++) {
+                    buttons[i].classList.add('disabled');
+                }
+            }
         }
 
         // Code that runs when a SYNC message is received
         function sync(data) {
             console.log("sync", data)
+            user_team_pk = data['user_team_pk'];
+            store_teams(data);
+            if(user_team_pk == get_team_currently_up(data['position_currently_drafting'])['pk']) {
+                document.getElementById('teamName').innerText = "Your team";
+                buttons = document.getElementsByClassName('btn');
+                for(var i = 0; i < buttons.length; i++) {
+                    buttons[i].classList.remove('disabled');
+                }
+            } else {
+                document.getElementById('teamName').innerText = get_team_currently_up(data['position_currently_drafting'])['name'];
+            }
+        }
+
+        function store_teams(data) {
+            data['teams'].forEach(team => {
+                teams.push({
+                    'pk': team['pk'],
+                    'draft_position': team['fields']['draft_position'],
+                    'name': team['fields']['name'],
+                    'roster': team['fields']['roster'],
+                    'currently_in_draft': team['fields']['currently_in_draft']
+                });
+            });
+        }
+
+        function get_team_currently_up(currently_up_position) {
+            return teams.find(team => team.draft_position == currently_up_position);
         }
 
         const leaguePk = JSON.parse(document.getElementById('league_pk').textContent)
@@ -60,36 +117,114 @@
             console.log("Connected to WebSocket");
         }
 
-        function send() {
-            message = document.getElementById("testInput").value;
-            draftSocket.send(JSON.stringify({'gymnast_pk': message}))
+        function submit(gymnast_pk) {
+            console.log(gymnast_pk);
+            draftSocket.send(JSON.stringify({'gymnast_pk': gymnast_pk}))
         }
 
     </script>
-
-    This is the draft for league #{{league_pk}}
-    <div id="draftingOrder">
-    </div>
-    <input type="number" id="testInput">
-    <button onclick="send()">Send</button>
-    <br>
-    <span id="teamName"></span> is currently up to draft.
+    <h1 id="header"></h1>
+    <span><h3 id="teamName"></h3> is currently up to draft.</span>
     <br>
     Teams 
     <br>
     <div class='row'>
         {% for team in teams %}
-        <div class='col'>
-            {{team.name}}
+        <div class='col' style="height:400px;overflow-y:scroll;background-color:lightgray;" id="team_row_{{team.pk}}">
+            <h3>{{team.name}}</h3>
             {% for gymnast in team.roster.all %}
-                {{gymnast.pk}}
+                {{gymnast.name}}
                 <br>
             {% endfor %}
         </div>
         {% endfor %}
     </div>
 
-<div class='row'>
-    {% include 'includes/gymnast_search.html' %}
-</div>
+    <div style="overflow-x: auto">
+        <table id="myTable" class="table tablesorter">
+            <thead>
+                {% if team.roster.all.count < team.league.roster_size %}
+                    <th></th>
+                {% endif %}
+                <th>Name</th>
+                <th>Team</th>
+                <th>Year</th>
+                <th>FX</th>
+                <th>PH</th>
+                <th>SR</th>
+                <th>VT</th>
+                <th>PB</th>
+                <th>HB</th> 
+                <th></th>  
+            </thead>
+            <tbody>
+                {% for gymnast in gymnasts %}
+                    <tr id="gymnast_row_{{gymnast.pk}}">
+                        {% if team.roster.all.count < team.league.roster_size %}
+                            <td><a class="btn disabled btn-outline-primary" onclick="submit({{gymnast.pk}})" role="button">Add</a></td>
+                        {% endif %}                         
+                        <td>{{gymnast.name}}</td>
+                        <td>{{gymnast.team}}</td>
+                        <td>{{gymnast.year}}</td>
+                        {% for average in gymnast|all_averages %}
+                            {% if average.score == 0 %}
+                                <td></td>
+                            {% else %}
+                                <td>{{ average.score }}</td>
+                            {% endif %}
+                        {% endfor %}
+                        <td>
+                            {% if gymnast|competes_this_week:teams_competing %}
+                                <i class="fas fa-check"></i> Yes
+                            {% else %}
+                                <i class="far fa-times-circle"></i> No
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.29.0/js/jquery.tablesorter.combined.js" integrity="sha256-AQTn9CwiNvZG2zsoT0gswugjZp0alCQySLyt9brT9Cg="
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.29.0/js/jquery.tablesorter.js" integrity="sha256-serXvhbeEKdQIfTFSD3wpNCGNx2+/9py7VXfwLhYTfk="
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.29.0/js/jquery.tablesorter.widgets.js" integrity="sha256-U+0DXO4scYcNVpt7pnud6Fx3KZqK2I5mI6KOeAjSqOE="
+            crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.29.0/css/theme.bootstrap.min.css"
+            integrity="sha256-dXZ9g5NdsPlD0182JqLz9UFael+Ug5AYo63RfujWPu8=" crossorigin="anonymous" />
+        <style>
+        </style>
+        <script>
+    
+            $(document).ready(function () {
+                $("#myTable").tablesorter({
+                    headerTemplate: '{content} {icon}',
+                    widgets: ["uitheme", "filter"],
+                    cssIcon: 'fas',
+                    cssIconNone: 'fa-sort',
+                    cssIconAsc: 'fa-sort-up',
+                    cssIconDesc: 'fa-sort-down',
+                    sortList: [[1, 0]],
+                    headers : {
+                        3 : { sortInitialOrder: 'desc' },
+                        4 : { sortInitialOrder: 'desc' },
+                        5 : { sortInitialOrder: 'desc' },
+                        6 : { sortInitialOrder: 'desc' },
+                        7 : { sortInitialOrder: 'desc' },
+                        8 : { sortInitialOrder: 'desc' },
+                        9 : { sortInitialOrder: 'desc' },
+                        10 : { sortInitialOrder: 'desc' },
+                    },
+                    widgetOptions : {
+                        filter_external : '.search',
+                        filter_defaultFilter: { 1 : '~{query}' },
+                        filter_columnFilters: false,
+                        filter_saveFilters : true,
+                    },                
+    
+                });
+            });
+        </script>
 {% endblock content %}
