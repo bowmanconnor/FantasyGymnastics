@@ -17,9 +17,11 @@ urlpatterns = [
 
     path('team/view/<int:pk>/', views.ViewFantasyTeam.as_view(), name="view_team"),
     path('team/edit/<int:pk>/', views.UpdateFantasyTeam.as_view(), name="edit_team"),
-
+    
 
     path('team/<int:pk>/gymnast/search/', views.SearchGymnasts.as_view(), name='gymnast_search'),
     path('delete_gymnast/<int:pk>', views.delete_gymnast, name='delete_gymnast'),
     path('gymnast/view/<int:gymnast_pk>/', views.view_gymnast, name='view_gymnast'),
+
+    path('cutter/', views.cutter, name='cutter'),
 ]

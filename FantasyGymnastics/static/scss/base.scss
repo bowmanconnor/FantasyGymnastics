@@ -1,8 +1,9 @@
-$base-light: #F8F8F8;
-$base-dark: #004A10;
-$dark-highlight: #0D1D59;
-$primary-highlight: #F5C800;
-$light-highlight: #B2BCBD;
+$base-light: #F0EDEE;
+$base-dark: #111D4A;
+$dark-highlight: #415166;
+$primary-highlight: #5863F8;
+$light-highlight: #C8CFD0;
+$green-button: #315D32;
     
 body {
     background-color: $base-light;
@@ -11,20 +12,24 @@ body {
 
 body {
     background-color: $base-light;
-    color: $dark-highlight;
+    color: $base-dark;
 }
 
 #navbar {
-    background-color: $base-dark;
-    color: $light-highlight;
+    background-color: $primary-highlight;
+    color: $dark-highlight;
 }
 
 #navbar a{
-    color: $primary-highlight;
+    color: $base-dark;
+}
+
+#navButton:hover{
+    color:$base-dark;
 }
 
 a {
-    color: $base-dark;
+    color: $dark-highlight;
 }
 
 
@@ -43,30 +48,36 @@ table {
     border-radius: 12px;
 }
 
-.btn-outline-primary {
-    border-color: $primary-highlight;
-    color: $primary-highlight;
-}
-
-.btn-outline-primary:hover {
-    border-color: $primary-highlight;
-    background-color: $primary-highlight;
-    color: $base-dark;
-}
-
 .btn-outline-success {
+    border-color: $dark-highlight;
+    color: $dark-highlight;
+}
+
+.btn-outline-success:hover {
+    border-color: $dark-highlight;
+    background-color: $dark-highlight;
+    color: $base-light;
+}
+
+.btn-outline-primary {
     border-color: $base-dark;
     color: $base-dark;
 }
 
-.btn-outline-success:hover {
+.btn-outline-primary:hover {
     border-color: $base-dark;
     background-color: $base-dark;
     color: $base-light;
 }
 
 .btn-success {
-    background-color: $base-dark;
-    border-color: $base-dark;
+    background-color: $green-button;
+    border-color: $green-button;
     color: $base-light;
+}
+
+.btn-success:hover {
+    background-color: $primary-highlight;
+    border-color: $primary-highlight;
+    color: $green-button;
 }
