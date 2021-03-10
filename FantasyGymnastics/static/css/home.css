@@ -1,0 +1,65 @@
+body {
+  background-color: #F0EDEE;
+  color: #535965;
+}
+
+#navbar {
+  background-color: #6E60B3;
+  color: #C8CFD0;
+}
+
+#navbar a {
+  color: #03012C;
+}
+
+#navButton:hover {
+  color: #C8CFD0;
+}
+
+a {
+  color: #6E60B3;
+}
+
+h1 {
+  color: #03012C;
+  font-size: 72px;
+}
+
+h2 {
+  color: #03012C;
+}
+
+table {
+  background-color: #C8CFD0;
+  color: #03012C;
+  border-radius: 12px;
+}
+
+.btn-outline-primary {
+  border-color: #03012C;
+  color: #03012C;
+}
+
+.btn-outline-primary:hover {
+  border-color: #03012C;
+  background-color: #03012C;
+  color: #C8CFD0;
+}
+
+.btn-primary {
+  background-color: #03012C;
+  border-color: #03012C;
+  color: #C8CFD0;
+}
+
+.btn-primary:hover {
+  background-color: #6E60B3;
+  border-color: #6E60B3;
+  color: #C8CFD0;
+}
+
+#myCarousel h1 {
+  color: #C8CFD0;
+}
+
+/*# sourceMappingURL=home.css.map */

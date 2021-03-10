@@ -63,6 +63,10 @@ def current_week(lineup, week):
     return lineup.filter(week=week)
 
 @register.filter
+def event(lineup, event):
+    return lineup.get(event=event)
+
+@register.filter
 def actual_lineup_score(lineup):
     total = decimal.Decimal(0.00)
     scores = []
@@ -165,6 +169,13 @@ def team_has_competed(gymnast, week):
         return True
     return False
 
+@register.filter
+def has_users_team(matchup, user):
+    if matchup.team1.user == user or matchup.team2.user == user:
+        return "active"
+    else:
+         return ""
+         
 @register.filter
 def meets(scores):
     meets = []
