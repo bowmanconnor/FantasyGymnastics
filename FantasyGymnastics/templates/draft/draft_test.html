@@ -27,8 +27,8 @@
         function gymnast_drafted(data) {
             console.log("gymnast_drafted", data);
             table_row = document.getElementById('gymnast_row_' + data['gymnast_pk']);
-            // Remove row from table
-            table_row.parentElement.removeChild(table_row);
+
+            table_row.hidden = true;
 
             roster = document.getElementById('team_table_body_' + data['team_pk']);
 
@@ -135,9 +135,7 @@
 
     </script>
     <h1 id="header"></h1>
-    <span><h3 id="teamName"></h3> is currently up to draft.</span>
-    <br>
-    Teams 
+    <h3><b><span id="teamName"></span></b> is currently up to draft.</h3>
     <br>
     <div class="row d-flex justify-content-center">
     {% for team in teams %}
