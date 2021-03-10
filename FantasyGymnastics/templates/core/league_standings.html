@@ -22,7 +22,7 @@
         <a class="btn btn-outline-primary col-auto" href="{% url 'start_draft' league.pk %}">Start draft</a>
     </div>
 {% endif %}
-{% if league.draft_started %}
+{% if league.draft_started and not league.draft_complete %}
     <div class='d-flex align-items-center justify-content-center mb-2'>
         <a class="btn btn-outline-primary col-auto" href="{% url 'index' league.pk %}">Join draft</a>
     </div>
