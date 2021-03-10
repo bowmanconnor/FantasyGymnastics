@@ -131,17 +131,28 @@
     <br>
     Teams 
     <br>
-    <div class='row'>
-        {% for team in teams %}
-        <div class='col' style="height:400px;overflow-y:scroll;background-color:lightgray;" id="team_row_{{team.pk}}">
-            <h3>{{team.name}}</h3>
-            {% for gymnast in team.roster.all %}
-                {{gymnast.name}}
-                <br>
-            {% endfor %}
+    <div class="row d-flex justify-content-center">
+    {% for team in teams %}
+    
+        <div class="col-md-4" id="outer_tables">
+            <table class='table' id="team_row_{{team.pk}}">
+                <thead>
+                    <th>{{team.name}}</th>
+                </thead>
+                <tbody>
+                    {% for gymnast in team.roster.all %}
+                        <tr class='d-flex align-items-center justify-content-center' id="team_row_{{team.pk}}">
+                            <td>
+                                {{gymnast.name}}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-        {% endfor %}
+    {% endfor %}
     </div>
+
 
     <div style="overflow-x: auto">
         <table id="myTable" class="table tablesorter">
