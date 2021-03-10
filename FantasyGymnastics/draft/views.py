@@ -7,6 +7,7 @@ def index(request, league_pk):
     context = {}
     context['league_pk'] = league_pk
     context['teams'] = FantasyTeam.objects.filter(league=league_pk)
+    context['team'] = FantasyTeam.objects.get(league=league_pk, user=request.user)
     drafted = League.objects.get(pk=league_pk).drafted.all()
     context['gymnasts'] = Gymnast.objects.all().exclude(id__in=drafted)
     if FantasyTeam.objects.filter(user=request.user, league=league_pk).exists():
