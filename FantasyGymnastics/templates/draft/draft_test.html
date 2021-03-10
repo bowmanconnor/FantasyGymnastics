@@ -133,18 +133,21 @@
     <br>
     <div class="row d-flex justify-content-center">
     {% for team in teams %}
-    
         <div class="col-md-4" id="outer_tables">
             <table class='table' id="team_row_{{team.pk}}">
                 <thead>
                     <th>{{team.name}}</th>
+                    <th></th>
                 </thead>
                 <tbody>
                     {% for gymnast in team.roster.all %}
-                        <tr class='d-flex align-items-center justify-content-center' id="team_row_{{team.pk}}">
+                        <tr>
                             <td>
                                 {{gymnast.name}}
                             </td>
+                            <td>
+                                {{gymnast.team}}
+                            </td>              
                         </tr>
                     {% endfor %}
                 </tbody>
