@@ -17,9 +17,14 @@
             <a class="btn btn-outline-primary col-auto" href="sms:?&body=Hey, join my Fantasy Gymnastics League!!! https://www.myfgl.com/league/{{league.pk}}/standings">Invite your friends</a>
     </div>
 {% endif %}
-{% if not league.draft_started %}
+{% if not league.draft_started and user == league.manager %}
     <div class='d-flex align-items-center justify-content-center mb-2'>
         <a class="btn btn-outline-primary col-auto" href="{% url 'start_draft' league.pk %}">Start draft</a>
+    </div>
+{% endif %}
+{% if league.draft_started %}
+    <div class='d-flex align-items-center justify-content-center mb-2'>
+        <a class="btn btn-outline-primary col-auto" href="{% url 'index' league.pk %}">Join draft</a>
     </div>
 {% endif %}
 {% if user == league.manager %}
