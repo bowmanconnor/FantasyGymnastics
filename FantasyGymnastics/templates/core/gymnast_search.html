@@ -20,7 +20,7 @@
     <div style="overflow-x: auto">
         <table id="myTable" class="table tablesorter">
             <thead>
-                {% if team.roster.all.count < team.league.roster_size %}
+                {% if team.roster.all.count < team.league.roster_size and team.league.draft_complete%}
                     <th></th>
                 {% endif %}
                 <th>Name</th>
