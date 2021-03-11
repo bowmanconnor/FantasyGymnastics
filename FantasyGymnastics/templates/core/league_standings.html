@@ -115,6 +115,7 @@
                     {% endfor %}
                 </div>
             </div>
+            {% if matchups %}
             <div class="d-flex justify-content-center">
                 <div>
                     <i class="fas fa-angle-left fa-5x" data-bs-target="#currentMatchups" data-bs-slide="prev"></i>
@@ -125,6 +126,10 @@
                     <span class="visually-hidden">Next</span>
                 </div>
             </div>
+            {% else %}
+            No matchups
+            {% endif %}
+
         </div>
 
         <div class="col-md-4" id="outer_tables">
