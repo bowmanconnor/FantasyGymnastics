@@ -107,13 +107,14 @@
                             <div class="row">
                                 <div class="col-12 col-sm-6">
                                     <p>Are you sure you want to delete {{ league.name }}?</p>
+                                    <p>This cannot be undone.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <form action="#" method="POST">
+                        <form action="{% url 'delete_league' league.pk %}" method="POST">
                             {% csrf_token %}
                             <button class="btn btn-outline-danger">Delete</button>
                         </form>

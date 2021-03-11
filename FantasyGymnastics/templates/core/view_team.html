@@ -108,9 +108,9 @@
             <a class="mb-4" href="{% url 'gymnast_search' team.pk %}">
                 {% if user == team.user %}
                     {% if team.roster.all.count < team.league.roster_size and team.league.draft_complete %} 
-                        <i class="fas fa-user-plus mb-2">Add to roster</i>
+                        <i class="fas fa-user-plus">Add to roster</i>
                     {% else %}
-                        <i class="fas fa-users mb-2">View draftable gymnasts</i>
+                        <i class="fas fa-users">View draftable gymnasts</i>
                     {% endif %}
                 {% endif %}
             </a>
