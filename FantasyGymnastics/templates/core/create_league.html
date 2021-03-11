@@ -7,6 +7,8 @@
 <div class="d-flex align-items-center justify-content-center mb-4">
         <h1>New League</h1>
 </div>
+</div>
+
    <form method="post" novalidate>
     {% csrf_token %}
     <div class="row">
@@ -85,5 +87,6 @@
     </div>
     <button type="submit" class="btn btn-primary mb-4">Submit</button>
   </form>
+</div>
   {% comment %} <a href="{% url 'data' %}" class="btn btn-success" role="button">data</a> {% endcomment %}
 {% endblock %}
