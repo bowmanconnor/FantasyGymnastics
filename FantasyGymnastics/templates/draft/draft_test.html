@@ -95,7 +95,8 @@
 
         console.log("Connecting to draft WebSocket for league pk " + leaguePk)
         const draftSocket = new WebSocket(
-            'ws://' + window.location.host + '/ws/draft/' + leaguePk + '/'
+            (window.location.protocol == "https:") ? "wss" : "ws"
+ + '://' + window.location.host + '/ws/draft/' + leaguePk + '/'
         );
 
         draftSocket.onmessage = function(e) {
