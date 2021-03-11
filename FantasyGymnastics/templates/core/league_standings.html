@@ -13,28 +13,62 @@
     <h1>{{league.name}}</h1>
 </div>
 {% if user == league.manager %}
-    <div class='d-flex align-items-center justify-content-center mb-2'>
-            <a class="btn btn-outline-primary col-auto" href="sms:?&body=Hey, join my Fantasy Gymnastics League!!! https://www.myfgl.com/league/{{league.pk}}/standings">Invite your friends</a>
-    </div>
+<div class='d-flex align-items-center justify-content-center mb-2'>
+    <a class="btn btn-outline-primary col-auto"
+        href="sms:?&body=Hey, join my Fantasy Gymnastics League!!! https://www.myfgl.com/league/{{league.pk}}/standings">Invite
+        your friends</a>
+</div>
 {% endif %}
+
 {% if not league.draft_started and user == league.manager %}
-    <div class='d-flex align-items-center justify-content-center mb-2'>
-        <a class="btn btn-outline-primary col-auto" href="{% url 'start_draft' league.pk %}">Start draft</a>
+<div class='d-flex align-items-center justify-content-center mb-2'>
+    <div data-bs-toggle="modal" data-bs-target="#startDraft">
+        <a class="btn btn-outline-primary col-auto" data-bs-toggle="modal" data-bs-target="#startDraft">Start draft</a>
     </div>
+</div>
 {% endif %}
-{% if league.draft_started and not league.draft_complete and user|has_team_in_league:league%}
-    <div class='d-flex align-items-center justify-content-center mb-2'>
-        <a class="btn btn-outline-primary col-auto" href="{% url 'index' league.pk %}">Join draft</a>
+<div class="modal fade" id="startDraft" tabindex="-1" aria-labelledby="startDraftLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="startDraftLabel">Start draft</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row d-flex align-items-center justify-content-center">
+                            <div class="col">
+                                <p>Are you sure you want to start the draft?</p>
+                                <p>Once the draft begins, new users cannot join the league and you can not remove users from the league.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <form action="{% url 'start_draft' league.pk %}" method="POST">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-primary">Start</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
-{% endif %}
-{% if user == league.manager %}
-    <div class='d-flex align-items-center justify-content-center mb-4'>
-        <a class="btn btn-outline-primary col-auto" href="{% url 'edit_league' league.pk %}" role="button">Edit League</a>
-    </div>
-{% endif %}
 </div>
 
+{% if league.draft_started and not league.draft_complete and user|has_team_in_league:league%}
+<div class='d-flex align-items-center justify-content-center mb-2'>
+    <a class="btn btn-outline-primary col-auto" href="{% url 'index' league.pk %}">Join draft</a>
 </div>
+{% endif %}
+
+{% if user == league.manager %}
+<div class='d-flex align-items-center justify-content-center mb-4'>
+    <a class="btn btn-outline-primary col-auto" href="{% url 'edit_league' league.pk %}" role="button">Edit
+        League</a>
+</div>
+{% endif %}
+
 
 <div class='d-flex align-items-center justify-content-center'>
     {% if not user|has_team_in_league:league and not user|waiting_to_join:league and not league.draft_started%}
@@ -46,7 +80,7 @@
 
 <div class='d-flex align-items-center justify-content-center'>
     {% if user|waiting_to_join:league and not league.draft_started %}
-        <p>Waiting to join league</p>
+    <p>Waiting to join league</p>
     {% endif %}
 </div>
 
@@ -54,43 +88,50 @@
     <div class="row" id="outer_tables">
         <h2 class="col-auto">Rank</h2>
         <table class="table table-hover">
-                {% for team in teams %}
-                <tr>
-                    <td><a style="color:inherit; text-decoration: none;" href="{% url 'view_team' team.pk %}">{{team.name}}</a></td>
-                    <td>({{team.wins}}-{{team.losses}})</td>
-                    {% if user == league.manager and not league.draft_started %}
-                        <td><div data-bs-toggle="modal" data-bs-target="#team{{team.id}}"><i class="far fa-times-circle"></i></div></td>
-                    {% endif %}
-                    {% comment %} Pop up to remove team {% endcomment %}
-                        <div class="modal fade" id="team{{team.id}}" tabindex="-1" aria-labelledby="team{{team.id}}Label" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="team{{team.id}}Label">Remove team from league</h5>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-12 col-sm-6">
-                                                        <p>Are you sure you want to remove {{ team.name }}?</p>
-                                                    </div>
-                                                </div>
+            {% for team in teams %}
+            <tr>
+                <td><a style="color:inherit; text-decoration: none;"
+                        href="{% url 'view_team' team.pk %}">{{team.name}}</a></td>
+                <td>({{team.wins}}-{{team.losses}})</td>
+                {% if user == league.manager and not league.draft_started %}
+                <td>
+                    <div data-bs-toggle="modal" data-bs-target="#team{{team.id}}"><i class="far fa-times-circle"></i>
+                    </div>
+                </td>
+                {% endif %}
+                {% comment %} Pop up to remove team {% endcomment %}
+                <div class="modal fade" id="team{{team.id}}" tabindex="-1" aria-labelledby="team{{team.id}}Label"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="team{{team.id}}Label">Remove team from league
+                                    </h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-6">
+                                                <p>Are you sure you want to remove {{ team.name }}?</p>
                                             </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <form action="{% url 'remove_team_from_league' league.pk team.pk %}" method="POST">
-                                                {% csrf_token %}
-                                                <button class="btn btn-outline-danger">Remove</button>
-                                            </form>
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="modal-footer">
+                                    <form action="{% url 'remove_team_from_league' league.pk team.pk %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn btn-outline-danger">Remove</button>
+                                    </form>
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                </div>
                             </div>
                         </div>
-                </tr>
-                {% endfor %}
+                    </div>
+                </div>
+            </tr>
+            {% endfor %}
         </table>
     </div>
 
@@ -106,43 +147,71 @@
                             <table class="table" id="matchup_tables">
                                 <tr class="d-flex justify-content-center">
                                     <td class="col-auto ps-2 ps-3">
-                                        <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a>
-
+                                        <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs
+                                            {{matchup.team2}}</a>
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
                                     <td class="col-auto">
-                                        <p>FX: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'FX'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'FX'|actual_lineup_score}}</p>
+                                        <p>FX:
+                                            {{matchup.team1.LineUp.all|current_week:matchup.week|event:'FX'|actual_lineup_score}}
+                                            vs.
+                                            {{matchup.team2.LineUp.all|current_week:matchup.week|event:'FX'|actual_lineup_score}}
+                                        </p>
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
                                     <td class="col-auto">
-                                        <p>PH: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'PH'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'PH'|actual_lineup_score}}</p>
+                                        <p>PH:
+                                            {{matchup.team1.LineUp.all|current_week:matchup.week|event:'PH'|actual_lineup_score}}
+                                            vs.
+                                            {{matchup.team2.LineUp.all|current_week:matchup.week|event:'PH'|actual_lineup_score}}
+                                        </p>
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
                                     <td class="col-auto">
-                                        <p>SR: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'SR'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'SR'|actual_lineup_score}}</p>
+                                        <p>SR:
+                                            {{matchup.team1.LineUp.all|current_week:matchup.week|event:'SR'|actual_lineup_score}}
+                                            vs.
+                                            {{matchup.team2.LineUp.all|current_week:matchup.week|event:'SR'|actual_lineup_score}}
+                                        </p>
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
                                     <td class="col-auto">
-                                        <p>VT: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'VT'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'VT'|actual_lineup_score}}</p>
+                                        <p>VT:
+                                            {{matchup.team1.LineUp.all|current_week:matchup.week|event:'VT'|actual_lineup_score}}
+                                            vs.
+                                            {{matchup.team2.LineUp.all|current_week:matchup.week|event:'VT'|actual_lineup_score}}
+                                        </p>
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
                                     <td class="col-auto">
-                                        <p>PB: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'PB'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'PB'|actual_lineup_score}}</p>
+                                        <p>PB:
+                                            {{matchup.team1.LineUp.all|current_week:matchup.week|event:'PB'|actual_lineup_score}}
+                                            vs.
+                                            {{matchup.team2.LineUp.all|current_week:matchup.week|event:'PB'|actual_lineup_score}}
+                                        </p>
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
                                     <td class="col-auto">
-                                        <p>HB: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'HB'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'HB'|actual_lineup_score}}</p>
+                                        <p>HB:
+                                            {{matchup.team1.LineUp.all|current_week:matchup.week|event:'HB'|actual_lineup_score}}
+                                            vs.
+                                            {{matchup.team2.LineUp.all|current_week:matchup.week|event:'HB'|actual_lineup_score}}
+                                        </p>
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
                                     <td class="col-auto">
-                                        <p>Total: {{matchup.team1.LineUp.all|current_week:matchup.week|actual_team_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|actual_team_score}}</p>
+                                        <p>Total:
+                                            {{matchup.team1.LineUp.all|current_week:matchup.week|actual_team_score}}
+                                            vs.
+                                            {{matchup.team2.LineUp.all|current_week:matchup.week|actual_team_score}}
+                                        </p>
                                     </td>
                                 </tr>
                             </table>
@@ -173,7 +242,8 @@
             <div class="row">
                 <h2 class="col-auto">Schedule</h2>
                 {% if league.manager == user %}
-                <a class="col-auto" href="{% url 'create_matchup' league.pk %}"> <button class="btn btn-primary" type="button">Create Matchup</button></a>
+                <a class="col-auto" href="{% url 'create_matchup' league.pk %}"> <button class="btn btn-primary"
+                        type="button">Create Matchup</button></a>
                 {% endif %}
             </div>
             <table class="table">
@@ -181,19 +251,20 @@
                 {% with ''|center:max_week as range %}
                 {% for _ in range %}
                 <tr>
-                    <td class="ps-3" >
-                    {% if forloop.counter == current_week %}
+                    <td class="ps-3">
+                        {% if forloop.counter == current_week %}
                         <b>Week {{forloop.counter}}</b>
-                    {% else %}
+                        {% else %}
                         Week {{forloop.counter}}
-                    {% endif %}
-                    </tdclass="ms-4">
+                        {% endif %}
+                        </tdclass="ms-4">
                     <td>
                         <table class='d-flex align-items-center justify-content-center mb-4'>
                             {% for matchup in matchups %}
                             {% if matchup.week == forloop.parentloop.counter %}
                             <tr>
-                                <td><a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a></td>
+                                <td><a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs
+                                        {{matchup.team2}}</a></td>
                                 {% if user == league.manager %}
                                 <td class="pe-2"><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
                                 {% endif %}
@@ -214,7 +285,9 @@
         <tbody>
             {% for requested_user in league.requested_to_join.all %}
             <tr>
-                <td><a style="color:inherit; text-decoration: none;" href="{% url 'approve_player_into_league' league.pk requested_user.pk %}">{{requested_user}}</a> </td>
+                <td><a style="color:inherit; text-decoration: none;"
+                        href="{% url 'approve_player_into_league' league.pk requested_user.pk %}">{{requested_user}}</a>
+                </td>
                 <td><a href="{% url 'reject_player_from_league' league.pk requested_user.pk %}">X</a></td>
             </tr>
             {% endfor %}
@@ -224,11 +297,10 @@
 </div>
 
 
-    <!-- Button trigger modal -->
+<!-- Button trigger modal -->
 
-    <!-- Modal -->
+<!-- Modal -->
 
 
 
-    {% endblock %}
-
+{% endblock %}
