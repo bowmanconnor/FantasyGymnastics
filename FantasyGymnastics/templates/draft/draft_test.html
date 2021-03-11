@@ -27,14 +27,22 @@
         function gymnast_drafted(data) {
             console.log("gymnast_drafted", data);
             table_row = document.getElementById('gymnast_row_' + data['gymnast_pk']);
-            // Remove row from table
-            table_row.parentElement.removeChild(table_row);
 
-            roster = document.getElementById('team_row_' + data['team_pk']);
-            p = document.createElement('p');
-            p.innerText = data['gymnast_pk'];
+            table_row.hidden = true;
 
-            roster.appendChild(p);
+            roster = document.getElementById('team_table_body_' + data['team_pk']);
+
+            tr = document.createElement('tr');
+            td_name = document.createElement('td');
+            td_team = document.createElement('td');
+
+            td_name.innerText = data['gymnast_name'];
+            td_team.innerText = data['ncaa_team_name'];
+
+            tr.appendChild(td_name);
+            tr.appendChild(td_team);
+
+            roster.appendChild(tr);
 
             if(user_team_pk == get_team_currently_up(data['position_currently_drafting'])['pk']) {
                 document.getElementById('teamName').innerText = "Your team";
@@ -108,6 +116,9 @@
                 case 'SYNC':
                     sync(data);
                     break;
+                case 'DRAFT_COMPLETE':
+                    draft_complete(data);
+                    break;
                 default:
                     console.log("Unknown websocket message received", data);
             }
@@ -124,22 +135,40 @@
 
     </script>
     <h1 id="header"></h1>
-    <span><h3 id="teamName"></h3> is currently up to draft.</span>
+    <h3><b><span id="teamName"></span></b> is currently up to draft.</h3>
     <br>
-    Teams 
-    <br>
-    <div class='row'>
-        {% for team in teams %}
-        <div class='col' style="height:400px;overflow-y:scroll;background-color:lightgray;" id="team_row_{{team.pk}}">
-            <h3>{{team.name}}</h3>
-            {% for gymnast in team.roster.all %}
-                {{gymnast.name}}
-                <br>
-            {% endfor %}
+    <div class="row d-flex justify-content-center">
+    {% for team in teams %}
+        <div class="col-md-4" id="outer_tables">
+            <table class='table'>
+                <thead>
+                    <th>{{team.name}}</th>
+                    <th></th>
+                </thead>
+                <tbody id="team_table_body_{{team.pk}}">
+                    {% for gymnast in team.roster.all %}
+                        <tr>
+                            <td>
+                                {{gymnast.name}}
+                            </td>
+                            <td>
+                                {{gymnast.team}}
+                            </td>              
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-        {% endfor %}
+    {% endfor %}
     </div>
-
+    <div class="d-flex align-items-center justify-content-center mb-2">
+        <h2>Draftable Gymnasts</h2>
+    </div>
+    <div class="d-flex align-items-center justify-content-center mb-4">
+        <form>
+            <input class="search form-control" type="search" data-column="all" placeholder="Name, Team, or Score">
+        </form>
+    </div>
     <div style="overflow-x: auto">
         <table id="myTable" class="table tablesorter">
             <thead>
