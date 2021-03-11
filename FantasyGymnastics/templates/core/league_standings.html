@@ -61,7 +61,7 @@
                         <a style="color:inherit; text-decoration: none;" href="{% url 'view_matchup' matchup.pk %}">
                             <table class="table" id="matchup_tables">
                                 <tr class="d-flex justify-content-center">
-                                    <td class="col-auto">
+                                    <td class="col-auto ps-2 ps-3">
                                         <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a>
                                     </td>
                                 </tr>
@@ -131,13 +131,13 @@
                 {% with ''|center:max_week as range %}
                 {% for _ in range %}
                 <tr>
-                    <td>
+                    <td class="ps-3" >
                     {% if forloop.counter == current_week %}
                         <b>Week {{forloop.counter}}</b>
                     {% else %}
                         Week {{forloop.counter}}
                     {% endif %}
-                    </td>
+                    </tdclass="ms-4">
                     <td>
                         <table class='d-flex align-items-center justify-content-center mb-4'>
                             {% for matchup in matchups %}
@@ -145,7 +145,7 @@
                             <tr>
                                 <td><a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a></td>
                                 {% if user == league.manager %}
-                                <td><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
+                                <td class="pe-2"><a href="{% url 'delete_matchup' matchup.pk %}">X</a></td>
                                 {% endif %}
                             </tr>
                             {% endif %}
