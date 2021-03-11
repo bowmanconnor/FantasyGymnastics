@@ -57,8 +57,8 @@
                                         <i class="far fa-times-circle"></i> No
                                     {% endif %}
                                 </td>
-                                {% if user == team.user and not gymnast|team_has_competed:current_week %}
-                                    <td><a href="{% url 'remove_gymnast_to_roster' team.pk gymnast.pk %}">X</a></td>
+                                {% if user == team.user and not gymnast|team_has_competed:current_week and team.league.draft_complete %}
+                                    <td><a href="{% url 'remove_gymnast_to_roster' team.pk gymnast.pk %}"><i class="far fa-times-circle"></i></a></td>
                                 {% endif %}
                             </tr>
                         {% endfor %}
