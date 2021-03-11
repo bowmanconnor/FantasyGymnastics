@@ -58,9 +58,37 @@
                 <tr>
                     <td><a style="color:inherit; text-decoration: none;" href="{% url 'view_team' team.pk %}">{{team.name}}</a></td>
                     <td>({{team.wins}}-{{team.losses}})</td>
-                    {% if user == league.manager %}
-                    <td><a href="{% url 'remove_team_from_league' league.pk team.pk %}">X</a></td>
+                    {% if user == league.manager and not league.draft_started %}
+                        <td><div data-bs-toggle="modal" data-bs-target="#team{{team.id}}"><i class="far fa-times-circle"></i></div></td>
                     {% endif %}
+                    {% comment %} Pop up to remove team {% endcomment %}
+                        <div class="modal fade" id="team{{team.id}}" tabindex="-1" aria-labelledby="team{{team.id}}Label" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="team{{team.id}}Label">Remove team from league</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-6">
+                                                        <p>Are you sure you want to remove {{ team.name }}?</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form action="{% url 'remove_team_from_league' league.pk team.pk %}" method="POST">
+                                                {% csrf_token %}
+                                                <button class="btn btn-outline-danger">Remove</button>
+                                            </form>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                 </tr>
                 {% endfor %}
         </table>
@@ -194,6 +222,11 @@
     </table>
     {% endif %}
 </div>
+
+
+    <!-- Button trigger modal -->
+
+    <!-- Modal -->
 
 
 
