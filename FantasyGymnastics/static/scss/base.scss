@@ -93,3 +93,7 @@ table {
 i {
     color: $light-purple;
 }
+
+.nav-pills .nav-link.active {
+    background-color: $light-purple;
+}

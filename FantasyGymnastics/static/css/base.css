@@ -96,4 +96,8 @@ i {
   color: #6E60B3;
 }
 
+.nav-pills .nav-link.active {
+  background-color: #6E60B3;
+}
+
 /*# sourceMappingURL=base.css.map */
