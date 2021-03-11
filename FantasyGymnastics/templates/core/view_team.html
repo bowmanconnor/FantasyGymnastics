@@ -66,12 +66,13 @@
                 </table>
             </div>
             {% comment %} Add to roster button {% endcomment %}
+            
             <a class="mb-4" href="{% url 'gymnast_search' team.pk %}">
             {% if user == team.user %}
-                {% if team.roster.all.count < team.league.roster_size %} 
-                    <i class="fas fa-user-plus"></i>
+                {% if team.roster.all.count < team.league.roster_size and team.league.draft_complete %} 
+                    <i class="fas fa-user-plus">Add draftable gymnasts</i>
                 {% else %}
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-users">View draftable gymnasts</i>
                 {% endif %}
             {% endif %}
             </a>
@@ -117,7 +118,7 @@
                                     </td>
                                     <td>
                                         {% if user == team.user and not gymnast|team_has_competed:lineup.week %}
-                                            <a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}">X</a>
+                                            <a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}"><i class="far fa-times-circle"></i></a>
                                         {% else %}
                                             
                                         {% endif %}
