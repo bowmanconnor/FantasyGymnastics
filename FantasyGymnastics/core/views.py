@@ -36,9 +36,12 @@ def create_league(request):
         if form.is_valid():
             league = form.save(commit=False)
             league.manager = request.user
-            print(league)
-            league.save()
-            create_team_with_lineups(request.user, league)
+            if not League.objects.filter(name=league.name).exists():
+                league.save()
+                create_team_with_lineups(request.user, league)
+            else:
+                name = league.name
+                league = League.objects.filter(name=name).first()
             return redirect('league_standings', pk=league.pk)
     else:
         form = NewLeagueForm()
