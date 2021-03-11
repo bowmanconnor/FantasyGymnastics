@@ -86,9 +86,9 @@ class SearchLeagues(ListView):
         context = super().get_context_data()
         query = self.request.GET.get('query')
         if query:
-            context['leagues'] = League.objects.filter(name__icontains=query)
+            context['leagues'] = League.objects.filter(name__icontains=query).exclude(draft_started=True)
         else:
-            context['leagues'] = League.objects.all()
+            context['leagues'] = League.objects.all().exclude(draft_started=True)
         return context
  
         

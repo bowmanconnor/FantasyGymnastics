@@ -4,6 +4,7 @@
 {% block title %}My Fantasy Gymnastics League{% endblock title %}
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'css/carousel.css' %}">
+<link href="{% static 'css/pricing.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
 <link rel="stylesheet" href="{% static 'css/base.css' %}">
 {% endblock stylesheet %}
@@ -60,16 +61,14 @@
     </button>
   </div>
 
-<div class='container'>
+{% comment %} <div class='container'>
     <div class="row">
         <div class='col'>
             <img src="{% static "images/grippy.png" %}" alt="" height='400' width='400' class="d-inline-block align-top">
             <p>"Hi!" - Grippy</p>
         </div>
         <div class='col'>
-
             <h2>Welcome</h2>
-
             <p>To get started, click the login button in the top right, and then the register button on the next page and make an account!</p>
             <p> Note: This is your real account, so use your real email address and username as they can’t be changed later (for now at least)</p>
             <p>Once you’re logged in, navigate to the My Leagues link in the top left.</p>
@@ -79,34 +78,71 @@
             
         </div>
     </div>
-</div>
+</div> {% endcomment %}
+
+
+
+
+
+<!-- Profile cards -->
+    <div class="pricing-header px-3 py-3 pt-md-1 pb-md-4 mx-auto text-center">
+      <h1 class="display-4 mt-4">About Us</h1>
+      <p class="lead">We are all Strongsville High School graduates and are currently sophmores in college. We love being active and spending time outdoors. Passionate about our new business, we look forward to transforming your yard. </p>
+     <a href="#" class="btn btn-lg btn-outline-primary">Contact Us</a>
+    </div>
+
+
+      <div class="container marketing">
+        <div class="row d-flex justify-content-center">
+          <div class="col-lg-4">
+            <img class="rounded-circle mb-2" src="{% static 'images/connor.jpg'%}" alt="Generic placeholder image" width="140" height="140">
+            <h2>Connor Bowman</h2>
+            <div class='d-flex align-items-center justify-content-center mb-4'>
+                <a href='#' class='me-1'><i class="fab fa-linkedin-in fa-2x"></i></a>
+                {% comment %} <a href='#' class='me-1'><i class="fab fa-instagram fa-2x"></i></a> {% endcomment %}
+            </div>
+            <p>Connor is a student-athlete at William and Mary majoring in Computer Science and Business Analytics.</p>
+  
+
+          </div>
+          <div class="col-lg-4">
+            <img class="rounded-circle mb-2" src="{% static 'images/jack.png'%}" alt="Generic placeholder image" width="140" height="140">
+            <h2>Chris Cosma</h2>
+            <p>Jack is at The Ohio State University majoring in Finance and minoring in Computer Information Systems.</p>
+            <div class='d-flex align-items-center justify-content-center mb-4'>
+                <a href='#' class='me-1'><i class="fab fa-linkedin-in fa-2x"></i></a>
+                {% comment %} <a href='#' class='me-1'><i class="fab fa-instagram fa-2x"></i></a> {% endcomment %}
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <img class="rounded-circle mb-2" src="{% static 'images/aske.png'%}" alt="Generic placeholder image" width="140" height="140">
+            <h2>Jordan Kula</h2>
+            <p>Andrew is at The University of Cincinnati majoring in Computer Science Engineering.</p>
+            <div class='d-flex align-items-center justify-content-center mb-4'>
+                <a href='#' class='me-1'><i class="fab fa-linkedin-in fa-2x"></i></a>
+                {% comment %} <a href='#' class='me-1'><i class="fab fa-instagram fa-2x"></i></a> {% endcomment %}
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <img class="rounded-circle mb-2" src="{% static 'images/aske.png'%}" alt="Generic placeholder image" width="140" height="140">
+            <h2>Zane Petras</h2>
+            <p>Andrew is at The University of Cincinnati majoring in Computer Science Engineering.</p>
+            <div class='d-flex align-items-center justify-content-center mb-4'>
+                <a href='#' class='me-1'><i class="fab fa-linkedin-in fa-2x"></i></a>
+                {% comment %} <a href='#' class='me-1'><i class="fab fa-instagram fa-2x"></i></a> {% endcomment %}
+            </div>
+          </div
+        </div><!-- /.row -->
+      </div>
+
+
+
   <!-- Marketing messaging and featurettes
   ================================================== -->
   <!-- Wrap the rest of the page in another container to center all the content. -->
 
   <div class="container marketing">
 
-    <!-- Three columns of text below the carousel -->
-    <div class="row">
-      <div class="col-lg-4">
-        
-        <h2>Heading</h2>
-        <p>Some representative placeholder content for the three columns of text below the carousel. This is the first column.</p>
-        <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
-      </div><!-- /.col-lg-4 -->
-      <div class="col-lg-4">
-        
-        <h2>Heading</h2>
-        <p>Another exciting bit of representative placeholder content. This time, we've moved on to the second column.</p>
-        <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
-      </div><!-- /.col-lg-4 -->
-      <div class="col-lg-4">
-        
-        <h2>Heading</h2>
-        <p>And lastly this, the third column of representative placeholder content.</p>
-        <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
-      </div><!-- /.col-lg-4 -->
-    </div><!-- /.row -->
 
 
     <hr class="featurette-divider">

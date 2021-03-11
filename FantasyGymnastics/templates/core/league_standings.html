@@ -37,10 +37,16 @@
 </div>
 
 <div class='d-flex align-items-center justify-content-center'>
-    {% if not user|has_team_in_league:league %}
+    {% if not user|has_team_in_league:league and not user|waiting_to_join:league and not league.draft_started%}
     <a href="{% url 'request_to_join_league' league.pk %}">
         <button class="btn btn-outline-primary" type="button">Request to join league</button>
     </a>
+    {% endif %}
+</div>
+
+<div class='d-flex align-items-center justify-content-center'>
+    {% if user|waiting_to_join:league and not league.draft_started %}
+        <p>Waiting to join league</p>
     {% endif %}
 </div>
 
