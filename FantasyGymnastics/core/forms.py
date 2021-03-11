@@ -22,7 +22,7 @@ class NewLeagueForm(forms.ModelForm):
 class NewFantasyTeamForm(forms.ModelForm):
     class Meta:
         model = FantasyTeam
-        exclude = ['user', 'roster', 'league', 'wins', 'losses']
+        exclude = ['user', 'roster', 'league', 'wins', 'losses', 'draft_position', 'currently_in_draft']
 
 class NewGymnastForm(forms.ModelForm):
     class Meta:

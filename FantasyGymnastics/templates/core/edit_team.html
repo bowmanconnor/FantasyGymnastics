@@ -2,7 +2,10 @@
 {% block title %}Edit Team{% endblock title %}
 
 {% block content %}
-<div>
+<div class='container'>
+    <div class="d-flex align-items-center justify-content-center mb-4">
+        <h1>Edit Team</h1>
+    </div>
     <form method="post" novalidate>
         {% csrf_token %}
         {% include 'includes/forms.html' %}
