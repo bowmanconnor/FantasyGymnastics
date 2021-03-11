@@ -12,7 +12,7 @@
 <div class='d-flex align-items-center justify-content-center mb-2'>
     <h1>{{league.name}}</h1>
 </div>
-{% if user == league.manager %}
+{% if user == league.manager and not league.draft_started %}
 <div class='d-flex align-items-center justify-content-center mb-2'>
     <a class="btn btn-outline-primary col-auto"
         href="sms:?&body=Hey, join my Fantasy Gymnastics League!!! https://www.myfgl.com/league/{{league.pk}}/standings">Invite
@@ -20,7 +20,7 @@
 </div>
 {% endif %}
 
-{% if not league.draft_started and user == league.manager %}
+{% if user == league.manager and not league.draft_started %}
 <div class='d-flex align-items-center justify-content-center mb-2'>
     <div data-bs-toggle="modal" data-bs-target="#startDraft">
         <a class="btn btn-outline-primary col-auto" data-bs-toggle="modal" data-bs-target="#startDraft">Start draft</a>
@@ -39,7 +39,7 @@
                         <div class="row d-flex align-items-center justify-content-center">
                             <div class="col">
                                 <p>Are you sure you want to start the draft?</p>
-                                <p>Once the draft begins, new users cannot join the league and you can not remove users from the league.</p>
+                                <p>Once the draft begins, you will not be able to remove or add teams to this league.</p>
                             </div>
                         </div>
                     </div>
@@ -90,8 +90,7 @@
         <table class="table table-hover">
             {% for team in teams %}
             <tr>
-                <td><a style="color:inherit; text-decoration: none;"
-                        href="{% url 'view_team' team.pk %}">{{team.name}}</a></td>
+                <td><a href="{% url 'view_team' team.pk %}">{{team.name}}</a></td>
                 <td>({{team.wins}}-{{team.losses}})</td>
                 {% if user == league.manager and not league.draft_started %}
                 <td>
@@ -143,12 +142,11 @@
                     {% for matchup in matchups %}
                     {% if matchup.week == current_week %}
                     <div class="carousel-item {{matchup|has_users_team:user}}">
-                        <a style="color:inherit; text-decoration: none;" href="{% url 'view_matchup' matchup.pk %}">
+                        <a  href="{% url 'view_matchup' matchup.pk %}">
                             <table class="table" id="matchup_tables">
                                 <tr class="d-flex justify-content-center">
                                     <td class="col-auto ps-2 ps-3">
-                                        <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs
-                                            {{matchup.team2}}</a>
+                                        <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a>
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
@@ -285,8 +283,7 @@
         <tbody>
             {% for requested_user in league.requested_to_join.all %}
             <tr>
-                <td><a style="color:inherit; text-decoration: none;"
-                        href="{% url 'approve_player_into_league' league.pk requested_user.pk %}">{{requested_user}}</a>
+                <td><a href="{% url 'approve_player_into_league' league.pk requested_user.pk %}">{{requested_user}}</a>
                 </td>
                 <td><a href="{% url 'reject_player_from_league' league.pk requested_user.pk %}">X</a></td>
             </tr>
