@@ -15,7 +15,6 @@ from .forms import NewLeagueForm, NewFantasyTeamForm, NewGymnastForm
 #Helper Function
 def create_team_with_lineups(user, league):
     scraper = Scraper()
-
     team = FantasyTeam.objects.create(
         user=user,
         league=league,
@@ -36,7 +35,6 @@ def create_league(request):
         if form.is_valid():
             league = form.save(commit=False)
             league.manager = request.user
-            print(league)
             league.save()
             create_team_with_lineups(request.user, league)
             return redirect('league_standings', pk=league.pk)
@@ -44,7 +42,6 @@ def create_league(request):
         form = NewLeagueForm()
     return render(request, 'core/create_league.html', {'form': form})
 
-# is now league standings
 class LeagueStandings(DetailView):
     model = League
     template_name = 'core/league_standings.html'
@@ -85,11 +82,10 @@ class SearchLeagues(ListView):
         context = super().get_context_data()
         query = self.request.GET.get('query')
         if query:
-            context['leagues'] = League.objects.filter(name__icontains=query)
+            context['leagues'] = League.objects.filter(name__icontains=query).exclude(draft_started=True)
         else:
-            context['leagues'] = League.objects.all()
+            context['leagues'] = League.objects.all().exclude(draft_started=True)
         return context
- 
         
 @login_required
 def request_to_join_league(request, pk):
@@ -103,6 +99,7 @@ def request_to_join_league(request, pk):
             league.requested_to_join.add(request.user)
     return redirect('league_standings', pk=league.pk)
 
+@login_required
 def approve_player_into_league(request, league_pk, user_pk):
     league = get_object_or_404(League, pk=league_pk)
     if request.user == league.manager:
@@ -111,6 +108,7 @@ def approve_player_into_league(request, league_pk, user_pk):
         league.requested_to_join.remove(user)
     return redirect('league_standings', pk=league.pk)
 
+@login_required
 def reject_player_from_league(request, league_pk, user_pk):
     league = get_object_or_404(League, pk=league_pk)
     if request.user == league.manager:
@@ -118,6 +116,7 @@ def reject_player_from_league(request, league_pk, user_pk):
         league.requested_to_join.remove(user)
     return redirect('league_standings', pk=league.pk)
 
+@login_required
 def remove_team_from_league(request, league_pk, team_pk):
     league = get_object_or_404(League, pk=league_pk)
     if request.user == league.manager:
@@ -168,9 +167,9 @@ def teams_competing_this_week():
     scraper = Scraper()
     # Get all weeks and their dates for the season
     weeks = scraper.get_year_weeks(ScraperConstants.Men, datetime.now().year)
-    # Get date to scrape specified week
+    # Get date to scrape this week
     date = [week for week in weeks if int(week['current']) == 1][0]['date']
-    # Gets the schedule for the week
+    # Gets the schedule for this week
     schedule = scraper.get_schedule(ScraperConstants.Men, date)
 
     # Create a list of team names
@@ -198,7 +197,6 @@ class SearchGymnasts(DetailView):
         context = super().get_context_data(**kwargs)
         drafted = context['object'].league.drafted.all()
         context['gymnasts'] = Gymnast.objects.all().exclude(id__in=drafted)
-        context['averages'] = Average.objects.filter(gymnast__in=context['gymnasts'])
         context['events'] = ('FX', 'PH', 'SR', 'VT', 'PB', 'HB')
         context['teams_competing'] = teams_competing_this_week()
         return context
@@ -211,7 +209,6 @@ def view_gymnast(request, gymnast_pk):
     context['averages'] = Average.objects.filter(gymnast=context['gymnast'])
     context['gymnast_year'] = YEAR_CHOICES[context['gymnast'].year]
     return render(request, 'core/view_gymnast.html', context)
-
 
 @login_required
 def myleagues(request):
@@ -232,10 +229,11 @@ def home(request):
         form = NewGymnastForm()
     return render(request, 'core/home.html', {'form': form, 'gymnasts' : gymnasts})
 
-def delete_gymnast(request, pk):
-    g = get_object_or_404(Gymnast, pk=pk)
-    g.delete()
-    return redirect('home')
+def delete_league(request, pk):
+    league = get_object_or_404(League, pk=pk)
+    if request.user == league.manager:
+        league.delete()
+    return redirect('myleagues')
 
 @login_required
 def cutter(request):

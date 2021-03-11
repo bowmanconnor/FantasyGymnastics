@@ -8,10 +8,13 @@
 <div class="container mb-4">
     <div class='d-flex align-items-center justify-content-center mb-4'>
         <h1>{{team.name}}</h1>
-        {% if user == team.user %}
-            <a href="{% url 'edit_team' team.pk %}">Edit Team</a>
-        {% endif %}
     </div>
+    {% if user == team.user %}
+    <div class='d-flex align-items-center justify-content-center mb-4'>
+        <a class="btn btn-outline-primary col-auto" href="{% url 'edit_team' team.pk %}"role="button">Edit
+            Team</a>
+    </div>
+    {% endif %}
 
    <a href="{% url 'league_standings' team.league.pk %}">
         <button class="btn btn-outline-primary algin-right mb-2" type="button">Back to league</button>
@@ -32,7 +35,7 @@
                         <th>VT</th>
                         <th>PB</th>
                         <th>HB</th>
-                        <th>Meet this week</th>
+                        <th>Meet week</th>
                         {% if user == team.user %}
                             <tr></tr>   
                         {% endif %}
@@ -57,25 +60,61 @@
                                         <i class="far fa-times-circle"></i> No
                                     {% endif %}
                                 </td>
-                                {% if user == team.user and not gymnast|team_has_competed:current_week %}
-                                    <td><a href="{% url 'remove_gymnast_to_roster' team.pk gymnast.pk %}">X</a></td>
+                                {% if user == team.user and not gymnast|team_has_competed:current_week and team.league.draft_complete %}
+                                    <td>
+                                        <div data-bs-toggle="modal" data-bs-target="#dropGymnast{{gymnast.pk}}">
+                                            <a data-bs-toggle="modal" data-bs-target="#dropGymnast{{gymnast.pk}}"><i class="far fa-times-circle"></i></a>
+                                        </div>
+                                        <div class="modal fade" id="dropGymnast{{gymnast.pk}}" tabindex="-1" aria-labelledby="dropGymnast{{gymnast.pk}}Label" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="dropGymnast{{gymnast.pk}}Label">Drop gymnast</h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="container-fluid">
+                                                                <div class="row d-flex align-items-center justify-content-center">
+                                                                    <div class="col">
+                                                                        <p>Are you sure you want to drop {{gymnast.name}}?</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <form action="{% url 'remove_gymnast_to_roster' team.pk gymnast.pk %}" method="POST">
+                                                                {% csrf_token %}
+                                                                <button class="btn btn-outline-primary">Drop</button>
+                                                            </form>
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                 {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
+
+
+
+
+
             {% comment %} Add to roster button {% endcomment %}
+            <p>{{ team.roster.all.count }}/{{ team.league.roster_size}}</p>
             <a class="mb-4" href="{% url 'gymnast_search' team.pk %}">
-            {% if user == team.user %}
-                {% if team.roster.all.count < team.league.roster_size %} 
-                    <i class="fas fa-user-plus"></i>
-                {% else %}
-                    <i class="fas fa-users"></i>
+                {% if user == team.user %}
+                    {% if team.roster.all.count < team.league.roster_size and team.league.draft_complete %} 
+                        <i class="fas fa-user-plus">Add to roster</i>
+                    {% else %}
+                        <i class="fas fa-users">View draftable gymnasts</i>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
             </a>
-            <p class='mt-4'>{{ team.roster.all.count }}/{{ team.league.roster_size}}</p>
+            
         </div>
         {% comment %} <div class="col-md-2"></div> {% endcomment %}
         {% comment %} Lineups {% endcomment %}
@@ -117,7 +156,7 @@
                                     </td>
                                     <td>
                                         {% if user == team.user and not gymnast|team_has_competed:lineup.week %}
-                                            <a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}">X</a>
+                                            <a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}"><i class="far fa-times-circle"></i></a>
                                         {% else %}
                                             
                                         {% endif %}
@@ -183,7 +222,7 @@
             </div>
         </div>
     </div>
-    <a href="{% url 'league_standings' team.league.id %}">Back to league</a>
+    <a class='mt-4 btn btn-outline-primary' href="{% url 'league_standings' team.league.id %}">Back to league</a>
 </div>
 
 

@@ -18,7 +18,7 @@ class Gymnast(models.Model):
 
 class League(models.Model):
     manager = models.ForeignKey(User, related_name='League', on_delete=models.CASCADE, null=True, blank=True) #how do these look, cutie?
-    name = models.CharField(max_length=50, blank=False)
+    name = models.CharField(max_length=50, blank=False, unique=True)
     roster_size = models.PositiveIntegerField(blank=False)
     lineup_size = models.PositiveIntegerField(blank=False)
     event_lineup_size = models.PositiveIntegerField(blank=False)
