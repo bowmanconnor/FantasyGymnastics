@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load custom_tags widget_tweaks %}
+
+{% block title %}Users{% endblock title %}
+
+{% block content %}
+    <script>
+        var socket = new ReconnectingWebSocket('ws://' + window.location.host + '/ws/users/');
+
+        socket.onopen = function(e) {
+            console.log("open", e); 
+        }
+        socket.onmessage = function(e) {
+            console.log("message", e)
+            var userData = JSON.parse(e.data)
+            $('# new_user').html(userData.html_users)
+        }
+        socket.onerror = function(e) {
+            console.log("error", e)
+        }
+        socket.onclose = function(e) {
+            console.log("close", e)
+        }
+    </script>
+
+    <h2> USERS </h2>
+    <p> Automatically update user information when users edit information or subscribe. </p>            
+    <table class = "table">
+    <thead>
+        <tr>
+        <th> Username </th>
+        <th> First name </th>
+        <th> Last name </th>
+        <th> Email </th>
+        <th> Online Status</th>
+        </tr>
+    </thead>
+    <tbody id = "new_user">
+        {% include "includes/users.html"%}
+    </tbody>
+    </table>
+{% endblock content %}

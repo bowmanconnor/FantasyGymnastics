@@ -1,8 +1,11 @@
 from django.contrib import admin
 from django.urls import path
 from core import views as views
+
 urlpatterns = [
     path('', views.home, name="home"),
+
+    path('users/', views.user_list, name="users"),
 
     path('league/create/', views.create_league, name="create_league"),
     path('league/edit/<int:pk>/', views.UpdateLeague.as_view(), name="edit_league"),

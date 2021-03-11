@@ -19,7 +19,7 @@ def create_team_with_lineups(user, league):
     team = FantasyTeam.objects.create(
         user=user,
         league=league,
-        name=str(user.first_name)+"'s Team")
+        name=str(user.username)+"'s Team")
     events = ['FX', 'PH', 'SR', 'VT', 'PB', 'HB']
     for i in range(6):
         lineup = LineUp.objects.create(
@@ -43,6 +43,11 @@ def create_league(request):
     else:
         form = NewLeagueForm()
     return render(request, 'core/create_league.html', {'form': form})
+
+@login_required
+def user_list(request):
+    users = User.objects.all()
+    return render(request, 'core/user_list.html', {'users': users})
 
 # is now league standings
 class LeagueStandings(DetailView):
