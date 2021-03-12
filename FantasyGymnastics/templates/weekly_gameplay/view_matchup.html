@@ -21,14 +21,14 @@
     </a>
     <div class="row">
         {% comment %} Team 1 {% endcomment %}
-        <div class="col-6">
+        <div class="col-sm-6">
             {% comment %} Team name (link to view team) {% endcomment %}
             <h2><a style="color:inherit; text-decoration: none;" href="{% url 'view_team' team1.pk %}">{{team1}}</a></td></h2>
             {% comment %} loops through all lineups for this matchup week {% endcomment %}
             {% for lineup in team1.LineUp.all|current_week:matchup.week %}
                 <table class="table tablesorter table-hover" data-sortlist="[[2, 1]]">
                     <tr>
-                        {% comment %} Lineup event name and capcity {% endcomment %}
+                        {% comment %} Lineup event name and capacity {% endcomment %}
                         <th></th>
                         <th>{{lineup.event}} {{ lineup.gymnasts.all.count }}/{{ team1.league.event_lineup_size }}</th>
                         <td class='alltoright'>
@@ -145,10 +145,8 @@
             </table>
         </div>
 
-
-
         {% comment %} Team 2 {% endcomment %}
-        <div class="col-6 alltoright">
+        <div class="col-sm-6 alltoright">
              {% comment %} Team name (link to view team) {% endcomment %}
             <h2><a style="color:inherit; text-decoration: none;" href="{% url 'view_team' team2.pk %}">{{team2}}</a></td></h2>
             {% comment %} loops through all lineups for this matchup week {% endcomment %}
