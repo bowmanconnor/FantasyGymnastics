@@ -21,14 +21,14 @@
     </a>
     <div class="row">
         {% comment %} Team 1 {% endcomment %}
-        <div class="col-6">
+        <div class="col-sm-6">
             {% comment %} Team name (link to view team) {% endcomment %}
-            <h2><a style="color:inherit; text-decoration: none;" href="{% url 'view_team' team1.pk %}">{{team1}}</a></td></h2>
+            <h2><a href="{% url 'view_team' team1.pk %}">{{team1}}</a></td></h2>
             {% comment %} loops through all lineups for this matchup week {% endcomment %}
             {% for lineup in team1.LineUp.all|current_week:matchup.week %}
                 <table class="table tablesorter table-hover" data-sortlist="[[2, 1]]">
-                    <thead>
-                        {% comment %} Lineup event name and capcity {% endcomment %}
+                    <tr>
+                        {% comment %} Lineup event name and capacity {% endcomment %}
                         <th></th>
                         <th>{{lineup.event}} {{ lineup.gymnasts.all.count }}/{{ team1.league.event_lineup_size }}</th>
                         <td class='alltoright'>
@@ -37,7 +37,7 @@
                             {% endif %}
                             <b>{{lineup|actual_lineup_score}}</b>
                         </td>
-                    </thead>
+                    </tr>
                     <tbody>
                         {% comment %} Loops through gymnasts in lineup {% endcomment %}
                         {% for gymnast in lineup.gymnasts.all %}
@@ -45,7 +45,7 @@
                                 {% comment %} Remove from lineup button {% endcomment %}
                                 <td>
                                     {% if user == team1.user and matchup.week == current_week and not gymnast|team_has_competed:lineup.week%}
-                                        <a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}">X</a>                                
+                                        <a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}"><i class="far fa-times-circle"></i></a>                                
                                     {% endif %}
                                 </td>
                                 {% comment %} Gymnast name and score for event {% endcomment %}
@@ -84,7 +84,7 @@
                     </tbody>
                 </table>
                 {% comment %} Teams roster for adding to lineup {% endcomment %}
-                <div class="row">
+                <div class="row d-flex justify-content-center">
                     <div class="col">
                         <div class="collapse multi-collapse" id="multiCollapse{{lineup.event}}">
                             <table class="table table-hover">
@@ -145,12 +145,10 @@
             </table>
         </div>
 
-
-
         {% comment %} Team 2 {% endcomment %}
-        <div class="col-6 alltoright">
+        <div class="col-sm-6 alltoright">
              {% comment %} Team name (link to view team) {% endcomment %}
-            <h2><a style="color:inherit; text-decoration: none;" href="{% url 'view_team' team2.pk %}">{{team2}}</a></td></h2>
+            <h2><a href="{% url 'view_team' team2.pk %}">{{team2}}</a></td></h2>
             {% comment %} loops through all lineups for this matchup week {% endcomment %}
             {% for lineup in team2.LineUp.all|current_week:matchup.week %}
                 <table class="table tablesorter table-hover" data-sortlist="[[0, 1]]">

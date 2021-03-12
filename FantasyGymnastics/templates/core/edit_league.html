@@ -1,14 +1,129 @@
 {% extends 'base.html' %}
-{% block title %}New Team{% endblock title %}
+
+{% load static %}
+{% load custom_tags widget_tweaks %}
+
+{% block title %}Edit League{% endblock title %}
 
 {% block content %}
-<div>
+<div class='container'>
+    <div class="d-flex align-items-center justify-content-center mb-4">
+        <h1>Edit League</h1>
+    </div>
+
+
     <form method="post" novalidate>
         {% csrf_token %}
-        {% include 'includes/forms.html' %}
-        <button type="submit" class="btn btn-success mb-4">Submit</button>
+        <div class="row">
+            <div class="col">
+                <div class="form-group mb-4">
+                    {% render_field form.name class=form.name|input_class placeholder=form.name.label%}
+                    {% for error in form.name.errors %}
+                    <div class="invalid-feedback">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                    {% if form.name.help_text %}
+                    <small class="form-text text-muted">
+                        {{ form.name.help_text|safe }}
+                    </small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col form-group mb-4">
+                {% render_field form.roster_size class=form.roster_size|input_class placeholder=form.roster_size.label%}
+                {% for error in form.roster_size.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+                {% endfor %}
+                {% if form.roster_size.help_text %}
+                <small class="form-text text-muted">
+                    {{ form.roster_size.help_text|safe }}
+                </small>
+                {% endif %}
+            </div>
+            <div class="col form-group mb-4">
+                {% render_field form.lineup_size class=form.lineup_size|input_class placeholder=form.lineup_size.label%}
+                {% for error in form.lineup_size.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+                {% endfor %}
+                {% if form.lineup_size.help_text %}
+                <small class="form-text text-muted">
+                    {{ form.lineup_size.help_text|safe }}
+                </small>
+                {% endif %}
+            </div>
+        </div>
+        {% comment %} {% endcomment %}
+        <div class="row">
+            <div class="col form-group mb-4">
+                {% render_field form.event_lineup_size class=form.event_lineup_size|input_class placeholder=form.event_lineup_size.label%}
+                {% for error in form.event_lineup_size.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+                {% endfor %}
+                {% if form.event_lineup_size.help_text %}
+                <small class="form-text text-muted">
+                    {{ form.event_lineup_size.help_text|safe }}
+                </small>
+                {% endif %}
+            </div>
+            <div class="col form-group mb-4">
+                {% render_field form.event_count_size class=form.event_count_size|input_class placeholder=form.event_count_size.label%}
+                {% for error in form.event_count_size.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+                {% endfor %}
+                {% if form.event_count_size.help_text %}
+                <small class="form-text text-muted">
+                    {{ form.event_count_size.help_text|safe }}
+                </small>
+                {% endif %}
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mb-4">Submit</button>
     </form>
-    {% comment %} <a href="{% url 'data' %}" class="btn btn-success" role="button">data</a> {% endcomment %}
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete League</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    <p>Are you sure you want to delete {{ league.name }}?</p>
+                                    <p>This cannot be undone.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <form action="{% url 'delete_league' league.pk %}" method="POST">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-danger">Delete</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
-
