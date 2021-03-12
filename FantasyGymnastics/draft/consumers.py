@@ -32,7 +32,7 @@ class DraftConsumer(WebsocketConsumer):
             async_to_sync(self.channel_layer.group_send)(self.draft_group, {
                 'type': 'team_connect',
                 'team_pk': team.pk,
-                'team_name': team.name,
+                'team_name': team.name
             })
 
 
@@ -73,7 +73,7 @@ class DraftConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_send)(self.draft_group, {
             'type': 'team_disconnect',
             'team_pk': team.pk,
-            'team_name': team.name,
+            'team_name': team.name
         })
     
     # Receive message from websocket
@@ -138,7 +138,7 @@ class DraftConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             'event': 'TEAM_CONNECT',
             'team_pk': team_pk,
-            'team_name': team_name,
+            'team_name': team_name
         }))
 
     def team_disconnect(self, event):
@@ -147,7 +147,7 @@ class DraftConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             'event': 'TEAM_DISCONNECT',
             'team_pk': team_pk,
-            'team_name': team_name, 
+            'team_name': team_name
         }))
 
     def gymnast_drafted(self, event):
