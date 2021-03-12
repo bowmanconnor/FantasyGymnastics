@@ -142,7 +142,7 @@
                 <tbody>
                     {% for requested_user in league.requested_to_join.all %}
                     <tr>
-                        <td><a style="color:inherit; text-decoration: none;" href="{% url 'approve_player_into_league' league.pk requested_user.pk %}">{{requested_user}}</a> </td>
+                        <td><a href="{% url 'approve_player_into_league' league.pk requested_user.pk %}">{{requested_user}}</a> </td>
                         <td><a href="{% url 'reject_player_from_league' league.pk requested_user.pk %}"><i class="far fa-times-circle"></i></a></td>
                     </tr>
                     {% endfor %}
@@ -156,7 +156,7 @@
             <table class="table table-hover">
                 {% for team in teams %}
                 <tr>
-                    <td><a style="color:inherit; text-decoration: none;" href="{% url 'view_team' team.pk %}">{{team.name}}</a></td>
+                    <td><a href="{% url 'view_team' team.pk %}">{{team.name}}</a></td>
                     <td>({{team.wins}}-{{team.losses}})</td>
                     {% if user == league.manager and not league.draft_started %}
                     <td><a href="{% url 'remove_team_from_league' league.pk team.pk %}"><i class="far fa-times-circle"></i></a></td>
