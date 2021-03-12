@@ -20,6 +20,8 @@
         function team_connected(data) {
             console.log("team_connect", data);
             team_name = document.getElementById('team_table_header_' + data['team_pk']);
+            console.log("element", team_name);
+            console.log("connected", data['team_name']);
             set_online_status(team_name, true, data['team_name']);
 
         }
@@ -27,7 +29,8 @@
         // Code that runs when a TEAM_DISCONNECT message is received
         function team_disconnected(data) {
             console.log("team_disconnect", data)
-            team_name = document.getElementById('team_table_header_' + data['team_pk']);
+            team_name = document.getElementById('team_table_header_' + data['team_pk']);           
+            console.log("disconneocted", data['team_name']);
             set_online_status(team_name, false, data['team_name']);
         }
 
@@ -99,7 +102,6 @@
             });
         }
         function set_online_status(element, status, name) {
-            console.log(name);
             element.innerText = name + " ";
             icon = document.createElement('i');
             icon.classList.add('fas');
