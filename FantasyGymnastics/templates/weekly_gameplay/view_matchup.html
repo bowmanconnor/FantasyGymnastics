@@ -19,9 +19,9 @@
     <a href="{% url 'league_standings' matchup.team1.league.pk %}">
         <button class="btn btn-outline-primary algin-right mb-2" type="button">Back to league</button>
     </a>
-    <div class="row">
+    <div class="row d-flex justify-content-center">
         {% comment %} Team 1 {% endcomment %}
-        <div class="col-6">
+        <div class="col-auto">
             {% comment %} Team name (link to view team) {% endcomment %}
             <h2><a href="{% url 'view_team' team1.pk %}">{{team1}}</a></td></h2>
             {% comment %} loops through all lineups for this matchup week {% endcomment %}
@@ -84,8 +84,8 @@
                     </tbody>
                 </table>
                 {% comment %} Teams roster for adding to lineup {% endcomment %}
-                <div class="row">
-                    <div class="col">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-auto">
                         <div class="collapse multi-collapse" id="multiCollapse{{lineup.event}}">
                             <table class="table table-hover">
                                 {% for gymnast in team1.roster.all %}
@@ -148,7 +148,7 @@
 
 
         {% comment %} Team 2 {% endcomment %}
-        <div class="col-6 alltoright">
+        <div class="col-auto alltoright">
              {% comment %} Team name (link to view team) {% endcomment %}
             <h2><a href="{% url 'view_team' team2.pk %}">{{team2}}</a></td></h2>
             {% comment %} loops through all lineups for this matchup week {% endcomment %}
