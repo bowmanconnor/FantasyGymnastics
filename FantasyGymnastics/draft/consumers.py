@@ -14,7 +14,7 @@ class DraftConsumer(WebsocketConsumer):
 
         # Check if user is in the league
         user = self.scope['user']
-        team = FantasyTeam.objects.filter(league=self.league_pk, user=user).first()
+        team = FantasyTeam.objects.get(league=self.league_pk, user=user)
         is_in_league = not team is None
 
         # Only accept websocket connection if user is in league
@@ -32,7 +32,7 @@ class DraftConsumer(WebsocketConsumer):
             async_to_sync(self.channel_layer.group_send)(self.draft_group, {
                 'type': 'team_connect',
                 'team_pk': team.pk,
-                'team_name': team.name
+                'team_name': team.name,
             })
 
 
@@ -73,7 +73,7 @@ class DraftConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_send)(self.draft_group, {
             'type': 'team_disconnect',
             'team_pk': team.pk,
-            'team_name': team.name
+            'team_name': team.name,
         })
     
     # Receive message from websocket
@@ -118,7 +118,7 @@ class DraftConsumer(WebsocketConsumer):
                     'team_pk': team.pk,
                     'team_name': team.name,
                     'ncaa_team_name': gymnast.team,
-                    'position_currently_drafting': league.currently_drafting
+                    'position_currently_drafting': league.currently_drafting,
                 })
             else:
                 print("DRAFTING ERROR")
@@ -138,7 +138,7 @@ class DraftConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             'event': 'TEAM_CONNECT',
             'team_pk': team_pk,
-            'team_name': team_name
+            'team_name': team_name,
         }))
 
     def team_disconnect(self, event):
@@ -147,7 +147,7 @@ class DraftConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             'event': 'TEAM_DISCONNECT',
             'team_pk': team_pk,
-            'team_name': team_name
+            'team_name': team_name,
         }))
 
     def gymnast_drafted(self, event):
