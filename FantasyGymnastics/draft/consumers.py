@@ -4,6 +4,11 @@ from asgiref.sync import async_to_sync
 from core.models import FantasyTeam, League, Gymnast
 from django.shortcuts import get_object_or_404
 from django.core import serializers
+from scraper.Scraper import Scraper, ScraperConstants
+from django.core.management import call_command
+from .matchups import round_robin_matchups
+import datetime
+from weekly_gameplay.models import Matchup
 
 class DraftConsumer(WebsocketConsumer):
     def connect(self):
@@ -97,13 +102,27 @@ class DraftConsumer(WebsocketConsumer):
                 league.currently_drafting = (league.currently_drafting + 1) % num_teams
 
                 if len(league.drafted.all()) == league.roster_size * num_teams:
+                    # Drafting is done
+                    scraper = Scraper()
+                    year = datetime.date.today().year
+                    num_weeks = int(scraper.get_current_and_max_week(ScraperConstants.Men, year)['max'])
+                    matchups = round_robin_matchups(num_teams, num_weeks)
+                    team_pks = [x.pk for x in list(FantasyTeam.objects.filter(league__pk=self.league_pk))]
+                    for week in matchups:
+                        for matchup in matchups[week]:
+                            team1_pk = team_pks[matchup[0] - 1]
+                            team2_pk = team_pks[matchup[1] - 1]
+                            team1 = FantasyTeam.objects.filter(pk=team1_pk).first()
+                            team2 = FantasyTeam.objects.filter(pk=team2_pk).first()
+                            m = Matchup(team1=team1, team2=team2, league=league, week=week)
+                            m.save()
+
                     league.draft_complete = True
                     async_to_sync(self.channel_layer.group_send)(self.draft_group, {
                         'type': 'draft_complete',
                     })
 
                 # PERFORM CHECK AND AUTO DRAFT HERE
-
                 league.save()
 
                 # Send message to rest of draft group
