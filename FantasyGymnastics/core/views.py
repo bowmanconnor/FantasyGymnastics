@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import League, FantasyTeam, Gymnast, LineUp, Score
+from .models import League, FantasyTeam, Gymnast, LineUp, Score, ContactUs
 from django.views.generic import UpdateView, DetailView, DeleteView, ListView
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
@@ -10,7 +10,8 @@ from scraper.Scraper import Scraper
 from datetime import datetime
 from weekly_gameplay.models import Average, Matchup
 from django.db.models import Q
-from .forms import NewLeagueForm, NewFantasyTeamForm, NewGymnastForm
+from .forms import NewLeagueForm, NewFantasyTeamForm, NewGymnastForm, ContactUsForm
+from django.contrib.admin.views.decorators import staff_member_required
 
 #Helper Function
 def create_team_with_lineups(user, league):
@@ -241,4 +242,31 @@ def how_to_play(request):
 @login_required
 def cutter(request):
     return render(request, 'core/cutter.html')
+  
+@login_required
+def contact_us(request):
+    if request.method == 'POST':
+        form = ContactUsForm(request.POST)
+        if form.is_valid():
+            contact_us = form.save(commit=False)
+            contact_us.user = request.user
+            contact_us.save()
+            return redirect('contact_us_done')
+    else:
+        form = ContactUsForm()
+    return render(request, 'core/contact_us.html', {'form': form})
 
+def contact_us_done(request):
+    return render(request, 'core/contact_us_done.html')
+
+@staff_member_required
+def view_contact_us(request):
+    context = {}
+    context['feedback'] = ContactUs.objects.all()
+    return render(request, 'core/view_contact_us.html', context)
+
+@staff_member_required
+def delete_contact_us(request, pk):
+    responce = get_object_or_404(ContactUs, pk=pk)
+    responce.delete()
+    return redirect('view_contact_us')

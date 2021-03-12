@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Contact Us{% endblock title %}
+
+{% block content %}
+<div class='container'>
+    <div class="d-flex align-items-center justify-content-center mb-4">
+        <h1>Give us feedback!</h1>
+    </div>
+    <div>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {% include 'includes/forms.html' %}
+            <button type="submit" class="btn btn-success mb-4">Submit</button>
+        </form>
+        {% comment %} <a href="{% url 'data' %}" class="btn btn-success" role="button">data</a> {% endcomment %}
+    </div>
+</div>
+{% endblock %}
