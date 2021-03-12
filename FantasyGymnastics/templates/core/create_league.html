@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load custom_tags widget_tweaks %}
+{% load static custom_tags widget_tweaks %}
 
 {% block title %}New League{% endblock title %}
 
@@ -7,6 +7,7 @@
 <div class="d-flex align-items-center justify-content-center mb-4">
         <h1>New League</h1>
 </div>
+
    <form method="post" novalidate>
     {% csrf_token %}
     <div class="row">
@@ -83,7 +84,8 @@
           {% endif %}
       </div>
     </div>
-    <button type="submit" class="btn btn-success mb-4">Submit</button>
+    <button type="submit" class="btn btn-primary mb-4">Submit</button>
   </form>
+</div>
   {% comment %} <a href="{% url 'data' %}" class="btn btn-success" role="button">data</a> {% endcomment %}
 {% endblock %}
