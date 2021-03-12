@@ -14,7 +14,7 @@ class DraftConsumer(WebsocketConsumer):
 
         # Check if user is in the league
         user = self.scope['user']
-        team = FantasyTeam.objects.get(league=self.league_pk, user=user).first()
+        team = FantasyTeam.objects.filter(league=self.league_pk, user=user).first()
         is_in_league = not team is None
 
         # Only accept websocket connection if user is in league
