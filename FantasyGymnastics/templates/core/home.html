@@ -14,7 +14,7 @@
 
   <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-indicators">
-      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" aria-label="Slide 1"></button>
       <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
       <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
     </div>
@@ -25,7 +25,7 @@
           <div class="carousel-caption text-start">
             <h1>Learn how to play!</h1>
             <p>What is Fantasy Gymnastics</p>
-            <p><a class="btn btn-lg btn-primary" href="#">Learn more</a></p>
+            <p><a class="btn btn-lg btn-primary" href="{% url 'how_to_play' %}">Learn more</a></p>
           </div>
         </div>
       </div>
