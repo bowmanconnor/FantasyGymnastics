@@ -78,6 +78,11 @@
     </a>
     {% endif %}
 </div>
+<div class='d-flex align-items-center justify-content-center'>
+    {% if not user|has_team_in_league:league and user|waiting_to_join:league and not league.draft_started%}
+    <p>Wainting to join league</p>
+    {% endif %}
+</div>
 
 <div class="container-lg">
     <div class="row">
