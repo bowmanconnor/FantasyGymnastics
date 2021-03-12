@@ -274,10 +274,6 @@
         <div class="col-lg-4">
             <div class="row">
                 <h2 >Schedule</h2>
-                {% if league.manager == user %}
-                <a  href="{% url 'create_matchup' league.pk %}"> <button class="btn btn-primary"
-                        type="button">Create Matchup</button></a>
-                {% endif %}
             </div>
             <table class="table">
                 {% comment %} Creates rows for each week in the season {% endcomment %}
