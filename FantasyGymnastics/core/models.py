@@ -88,3 +88,8 @@ class Score(models.Model):
 
     def __str__(self):
         return str(round(self.score,2))
+
+class ContactUs(models.Model):
+    message = models.CharField(max_length=500)
+    user = models.ForeignKey(User, related_name='contactus', on_delete=models.CASCADE)
+    sumbitted_at = models.DateTimeField(auto_now_add=True)
