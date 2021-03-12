@@ -85,57 +85,59 @@
 </div>
 
 <div class="container-lg">
-    <div class="row" id="outer_tables">
-        <h2 class="col-auto">Rank</h2>
-        <table class="table table-hover">
-            {% for team in teams %}
-            <tr>
-                <td><a href="{% url 'view_team' team.pk %}">{{team.name}}</a></td>
-                <td>({{team.wins}}-{{team.losses}})</td>
-                {% if user == league.manager and not league.draft_started %}
-                <td>
-                    <div data-bs-toggle="modal" data-bs-target="#team{{team.id}}"><i class="far fa-times-circle"></i>
-                    </div>
-                </td>
-                {% endif %}
-                {% comment %} Pop up to remove team {% endcomment %}
-                <div class="modal fade" id="team{{team.id}}" tabindex="-1" aria-labelledby="team{{team.id}}Label"
-                    aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
+    <div class="row d-flex justify-content-center" id="outer_tables">
+        <div class='col-12 col-lg-9'>
+            <h2 >Rank</h2>
+            <table class="table table-hover">
+                {% for team in teams %}
+                <tr>
+                    <td><a href="{% url 'view_team' team.pk %}">{{team.name}}</a></td>
+                    <td>({{team.wins}}-{{team.losses}})</td>
+                    {% if user == league.manager and not league.draft_started %}
+                    <td>
+                        <div data-bs-toggle="modal" data-bs-target="#team{{team.id}}"><i class="far fa-times-circle"></i>
+                        </div>
+                    </td>
+                    {% endif %}
+                    {% comment %} Pop up to remove team {% endcomment %}
+                    <div class="modal fade" id="team{{team.id}}" tabindex="-1" aria-labelledby="team{{team.id}}Label"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
                             <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="team{{team.id}}Label">Remove team from league
-                                    </h5>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="container-fluid">
-                                        <div class="row">
-                                            <div class="col-12 col-sm-6">
-                                                <p>Are you sure you want to remove {{ team.name }}?</p>
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="team{{team.id}}Label">Remove team from league
+                                        </h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-6">
+                                                    <p>Are you sure you want to remove {{ team.name }}?</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <form action="{% url 'remove_team_from_league' league.pk team.pk %}" method="POST">
-                                        {% csrf_token %}
-                                        <button class="btn btn-outline-danger">Remove</button>
-                                    </form>
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Close</button>
+                                    <div class="modal-footer">
+                                        <form action="{% url 'remove_team_from_league' league.pk team.pk %}" method="POST">
+                                            {% csrf_token %}
+                                            <button class="btn btn-outline-danger">Remove</button>
+                                        </form>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </tr>
-            {% endfor %}
-        </table>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
 
     <div class="row d-flex justify-content-center">
-        <div class="col-auto" id="outer_tables">
+        <div class="col-10 col-lg-4" id="outer_tables">
             <h2 class="col-auto">Current Week</h2>
             <div id="currentMatchups" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
                 <div class="carousel-inner">
@@ -236,7 +238,7 @@
 
         </div>
 
-        <div class="col-auto" id="outer_tables">
+        <div class="col-10 col-lg-4" id="outer_tables">
             <div class="row">
                 <h2 class="col-auto">Schedule</h2>
                 {% if league.manager == user %}
