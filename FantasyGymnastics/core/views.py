@@ -235,6 +235,9 @@ def delete_league(request, pk):
         league.delete()
     return redirect('myleagues')
 
+def how_to_play(request):
+    return render(request, 'core/how_to_play.html')
+
 @login_required
 def cutter(request):
     return render(request, 'core/cutter.html')
