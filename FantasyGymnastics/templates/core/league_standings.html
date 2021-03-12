@@ -138,7 +138,7 @@
 
     <div class="row d-flex justify-content-center">
         <div class="col-lg-4" id="outer_tables">
-            <h2 class="col-auto">Current Week</h2>
+            <h2 >Current Week</h2>
             <div id="currentMatchups" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
                 <div class="carousel-inner">
                     {% for matchup in matchups %}
@@ -152,7 +152,7 @@
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
-                                    <td class="col-auto">
+                                    <td >
                                         <p>FX:
                                             {{matchup.team1.LineUp.all|current_week:matchup.week|event:'FX'|actual_lineup_score}}
                                             vs.
@@ -161,7 +161,7 @@
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
-                                    <td class="col-auto">
+                                    <td >
                                         <p>PH:
                                             {{matchup.team1.LineUp.all|current_week:matchup.week|event:'PH'|actual_lineup_score}}
                                             vs.
@@ -170,7 +170,7 @@
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
-                                    <td class="col-auto">
+                                    <td >
                                         <p>SR:
                                             {{matchup.team1.LineUp.all|current_week:matchup.week|event:'SR'|actual_lineup_score}}
                                             vs.
@@ -179,7 +179,7 @@
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
-                                    <td class="col-auto">
+                                    <td >
                                         <p>VT:
                                             {{matchup.team1.LineUp.all|current_week:matchup.week|event:'VT'|actual_lineup_score}}
                                             vs.
@@ -188,7 +188,7 @@
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
-                                    <td class="col-auto">
+                                    <td >
                                         <p>PB:
                                             {{matchup.team1.LineUp.all|current_week:matchup.week|event:'PB'|actual_lineup_score}}
                                             vs.
@@ -197,7 +197,7 @@
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
-                                    <td class="col-auto">
+                                    <td >
                                         <p>HB:
                                             {{matchup.team1.LineUp.all|current_week:matchup.week|event:'HB'|actual_lineup_score}}
                                             vs.
@@ -206,7 +206,7 @@
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
-                                    <td class="col-auto">
+                                    <td >
                                         <p>Total:
                                             {{matchup.team1.LineUp.all|current_week:matchup.week|actual_team_score}}
                                             vs.
@@ -240,9 +240,9 @@
 
         <div class="col-lg-4" id="outer_tables">
             <div class="row">
-                <h2 class="col-auto">Schedule</h2>
+                <h2 >Schedule</h2>
                 {% if league.manager == user %}
-                <a class="col-auto" href="{% url 'create_matchup' league.pk %}"> <button class="btn btn-primary"
+                <a  href="{% url 'create_matchup' league.pk %}"> <button class="btn btn-primary"
                         type="button">Create Matchup</button></a>
                 {% endif %}
             </div>
