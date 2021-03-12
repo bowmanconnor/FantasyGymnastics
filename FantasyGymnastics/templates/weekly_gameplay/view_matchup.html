@@ -21,7 +21,7 @@
     </a>
     <div class="row">
         {% comment %} Team 1 {% endcomment %}
-        <div class="col-md-5">
+        <div class="col-6">
             {% comment %} Team name (link to view team) {% endcomment %}
             <h2><a href="{% url 'view_team' team1.pk %}">{{team1}}</a></td></h2>
             {% comment %} loops through all lineups for this matchup week {% endcomment %}
@@ -147,7 +147,7 @@
 
 
         {% comment %} Team 2 {% endcomment %}
-        <div class="col-md-6 alltoright">
+        <div class="col-6 alltoright">
              {% comment %} Team name (link to view team) {% endcomment %}
             <h2><a href="{% url 'view_team' team2.pk %}">{{team2}}</a></td></h2>
             {% comment %} loops through all lineups for this matchup week {% endcomment %}
