@@ -33,7 +33,7 @@
                 <a class="nav-link" href="{% url 'myleagues' %}">MyLeagues</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="https://roadtonationals.com/results/scheduleM/">Schedule</a>
+                <a class="nav-link" href="https://roadtonationals.com/results/scheduleM/" target="_blank">Schedule</a>
             </li>
           {% if user.is_staff %}
             <li class="nav-item">
@@ -69,6 +69,7 @@
     {% comment %} <script src="{% static 'js/bootstrap.min.js' %}"></script> {% endcomment %}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
     <script src="{% static 'js/font-awesome.js'%}"></script>
+    {% block javascript %}{% endblock %}
 </body>
 </html>
 

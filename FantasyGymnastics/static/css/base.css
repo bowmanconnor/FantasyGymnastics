@@ -28,26 +28,30 @@ a {
 
 h1 {
   color: #03012C;
-  font-size: 2.5rem;
+  font-size: 3rem;
 }
 
 h2 {
   color: #03012C;
-  font-size: 1rem;
+  font-size: 1.5rem;
 }
 
-@media (min-width: 576px) {
-  h1 {
-    font-size: 3rem;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-  }
+h3 {
+  color: #03012C;
+  font-size: 1.25rem;
 }
+
 @media (min-width: 768px) {
   h1 {
     font-size: 3.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
   }
 
   h2 {
@@ -61,6 +65,10 @@ h2 {
 
   h2 {
     font-size: 2.5rem;
+  }
+
+  h3 {
+    font-size: 2rem;
   }
 }
 table {

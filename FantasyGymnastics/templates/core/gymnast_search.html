@@ -6,9 +6,104 @@
 {% endblock stylesheet %}
 {% block content %}
     <a href="{% url 'view_team' team.pk %}">
-        <button class="btn btn-outline-primary algin-right" type="button">Back to team</button>
+        <button class="btn btn-outline-primary algin-right mt-4" type="button">Back to team</button>
     </a>
     {% if gymnasts %}
-        {% include 'includes/gymnast_search.html' %}
+  <div class="d-flex align-items-center justify-content-center mb-4">
+        <h1>Draftable Gymnast Search</h1>
+    </div>
+    <div class="d-flex align-items-center justify-content-center mb-4">
+        <form>
+            <input class="search form-control" type="search" data-column="all" placeholder="Name, Team, or Score">
+        </form>
+    </div>
+    <div style="overflow-x: auto">
+        <table id="myTable" class="table tablesorter">
+            <thead>
+                {% if team.roster.all.count < team.league.roster_size and team.league.draft_complete%}
+                    <th></th>
+                {% endif %}
+                <th>Name</th>
+                <th>Team</th>
+                <th>Year</th>
+                <th>FX</th>
+                <th>PH</th>
+                <th>SR</th>
+                <th>VT</th>
+                <th>PB</th>
+                <th>HB</th> 
+                <th>Meet week</th>  
+            </thead>
+            <tbody>
+                {% for gymnast in gymnasts %}
+                    <tr>
+                        {% if team.roster.all.count < team.league.roster_size and team.league.draft_complete %}
+                            <td><a class="btn btn-outline-primary" role="button" href="{% url 'add_gymnast_to_roster' team.pk gymnast.pk %}">Add</a></td>
+                        {% endif %}                         
+                        <td><a href="{% url 'view_gymnast' gymnast.pk %}">{{gymnast.name}}</a></td>
+                        <td>{{gymnast.team}}</td>
+                        <td>{{gymnast.year}}</td>
+                        {% for average in gymnast|all_averages %}
+                            {% if average.score == 0 %}
+                                <td></td>
+                            {% else %}
+                                <td>{{ average.score }}</td>
+                            {% endif %}
+                        {% endfor %}
+                        <td>
+                            {% if gymnast|competes_this_week:teams_competing %}
+                                <i class="fas fa-check"></i> Yes
+                            {% else %}
+                                <i class="far fa-times-circle"></i> No
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.29.0/js/jquery.tablesorter.combined.js" integrity="sha256-AQTn9CwiNvZG2zsoT0gswugjZp0alCQySLyt9brT9Cg="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.29.0/js/jquery.tablesorter.js" integrity="sha256-serXvhbeEKdQIfTFSD3wpNCGNx2+/9py7VXfwLhYTfk="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.29.0/js/jquery.tablesorter.widgets.js" integrity="sha256-U+0DXO4scYcNVpt7pnud6Fx3KZqK2I5mI6KOeAjSqOE="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.29.0/css/theme.bootstrap.min.css"
+        integrity="sha256-dXZ9g5NdsPlD0182JqLz9UFael+Ug5AYo63RfujWPu8=" crossorigin="anonymous" />
+    <style>
+    </style>
+    <script>
+
+        $(document).ready(function () {
+            $("#myTable").tablesorter({
+                headerTemplate: '{content} {icon}',
+                widgets: ["uitheme", "filter"],
+                cssIcon: 'fas',
+                cssIconNone: 'fa-sort',
+                cssIconAsc: 'fa-sort-up',
+                cssIconDesc: 'fa-sort-down',
+                sortList: [[1, 0]],
+                headers : {
+                    3 : { sortInitialOrder: 'desc' },
+                    4 : { sortInitialOrder: 'desc' },
+                    5 : { sortInitialOrder: 'desc' },
+                    6 : { sortInitialOrder: 'desc' },
+                    7 : { sortInitialOrder: 'desc' },
+                    8 : { sortInitialOrder: 'desc' },
+                    9 : { sortInitialOrder: 'desc' },
+                    10 : { sortInitialOrder: 'desc' },
+                },
+                widgetOptions : {
+                    filter_external : '.search',
+                    filter_defaultFilter: { 1 : '~{query}' },
+                    filter_columnFilters: false,
+                    filter_saveFilters : true,
+                },                
+
+            });
+        });
+    </script>
     {% endif %}
 {% endblock content %}

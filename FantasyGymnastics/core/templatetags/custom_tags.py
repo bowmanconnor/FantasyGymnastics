@@ -202,6 +202,11 @@ def has_team_in_league(user, league):
         return True
     return False
 
+@register.filter
+def waiting_to_join(user, league):
+    if user in league.requested_to_join.all():
+        return True
+    return False
 
 @register.filter
 def competes_this_week(gymnast, teams):

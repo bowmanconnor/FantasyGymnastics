@@ -21,11 +21,11 @@ def index(request, league_pk):
 @login_required
 def start_draft(request, league_pk):
     league = League.objects.filter(pk=league_pk).first()
-
-    if league.manager == request.user:
-        league.draft_started = True
-        league.generate_drafting_order()
-        league.save()
-        return redirect('/draft/%s' % league_pk)
-    else:
-        return redirect('/league/%s/standings' % league_pk)
+    teams = FantasyTeam.objects.filter(league=league_pk)
+    if len(teams)%2 == 0:
+        if league.manager == request.user:
+            league.draft_started = True
+            league.generate_drafting_order()
+            league.save()
+            return redirect('/draft/%s' % league_pk)
+    return redirect('/league/%s/standings' % league_pk)
