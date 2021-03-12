@@ -35,6 +35,8 @@ class DraftConsumer(WebsocketConsumer):
                 'team_name': team.name,
             })
 
+
+
             # Get teams in league
             teams_qset = FantasyTeam.objects.filter(league=self.league_pk)
             teams = []
