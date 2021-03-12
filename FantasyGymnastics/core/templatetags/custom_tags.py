@@ -64,7 +64,8 @@ def current_week(lineup, week):
 
 @register.filter
 def event(lineup, event):
-    return lineup.get(event=event)
+    if lineup.filter(event=event).exists():
+        return lineup.get(event=event)
 
 @register.filter
 def actual_lineup_score(lineup):
@@ -175,7 +176,7 @@ def has_users_team(matchup, user):
         return "active"
     else:
          return ""
-         
+        
 @register.filter
 def meets(scores):
     meets = []
@@ -201,6 +202,11 @@ def has_team_in_league(user, league):
         return True
     return False
 
+@register.filter
+def waiting_to_join(user, league):
+    if user in league.requested_to_join.all():
+        return True
+    return False
 
 @register.filter
 def competes_this_week(gymnast, teams):

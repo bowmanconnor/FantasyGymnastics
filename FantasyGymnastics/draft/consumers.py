@@ -37,7 +37,10 @@ class DraftConsumer(WebsocketConsumer):
             async_to_sync(self.channel_layer.group_send)(self.draft_group, {
                 'type': 'team_connect',
                 'team_pk': team.pk,
+                'team_name': team.name,
             })
+
+
 
             # Get teams in league
             teams_qset = FantasyTeam.objects.filter(league=self.league_pk)
@@ -56,7 +59,7 @@ class DraftConsumer(WebsocketConsumer):
                 'event': 'SYNC',
                 'user_team_pk': team.pk,
                 'position_currently_drafting': position_currently_drafting,
-                'teams': teams
+                'teams': teams,
             }))
         else:
             # Reject the connection
@@ -75,6 +78,7 @@ class DraftConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_send)(self.draft_group, {
             'type': 'team_disconnect',
             'team_pk': team.pk,
+            'team_name': team.name,
         })
     
     # Receive message from websocket
@@ -146,8 +150,9 @@ class DraftConsumer(WebsocketConsumer):
                     'gymnast_pk': gymnast_pk,
                     'gymnast_name': gymnast.name,
                     'team_pk': team.pk,
+                    'team_name': team.name,
                     'ncaa_team_name': gymnast.team,
-                    'position_currently_drafting': league.currently_drafting
+                    'position_currently_drafting': league.currently_drafting,
                 })
             else:
                 print("DRAFTING ERROR")
@@ -163,16 +168,20 @@ class DraftConsumer(WebsocketConsumer):
     
     def team_connect(self, event):
         team_pk = event['team_pk']
+        team_name = event['team_name']
         self.send(text_data=json.dumps({
             'event': 'TEAM_CONNECT',
-            'team_pk': team_pk
+            'team_pk': team_pk,
+            'team_name': team_name,
         }))
 
     def team_disconnect(self, event):
         team_pk = event['team_pk']
+        team_name = event['team_name']
         self.send(text_data=json.dumps({
             'event': 'TEAM_DISCONNECT',
-            'team_pk': team_pk
+            'team_pk': team_pk,
+            'team_name': team_name,
         }))
 
     def gymnast_drafted(self, event):
@@ -181,6 +190,7 @@ class DraftConsumer(WebsocketConsumer):
             'event': 'GYMNAST_DRAFTED',
             'ncaa_team_name': event['ncaa_team_name'],
             'team_pk': event['team_pk'],
+            'team_name': event['team_name'],
             'gymnast_pk': event['gymnast_pk'],
             'gymnast_name': event['gymnast_name'],
             'position_currently_drafting': event['position_currently_drafting'],
