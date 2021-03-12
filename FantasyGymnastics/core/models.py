@@ -28,6 +28,7 @@ class League(models.Model):
     currently_drafting = models.PositiveIntegerField(default=0, blank=True)
     draft_started = models.BooleanField(default=False)
     draft_complete = models.BooleanField(default=False)
+    going_down = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
