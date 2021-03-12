@@ -184,62 +184,62 @@
                                 </tr>
                                 <tr class="d-flex justify-content-center">
                                     <td class="col-auto">
-                                        <b>FX: {{matchup.team1.LineUp.all|current_week:matchup.week|event:'FX'|actual_lineup_score}} vs. {{matchup.team2.LineUp.all|current_week:matchup.week|event:'FX'|actual_lineup_score}}</b>
-
+                                        FX: <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'FX'|predicted_lineup_score}}</em>
+                                        vs. <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'FX'|predicted_lineup_score}}</em>
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
                                     <td >
-                                        <p>PH:
-                                            {{matchup.team1.LineUp.all|current_week:matchup.week|event:'PH'|actual_lineup_score}}
+                                        PH:
+                                            <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'PH'|predicted_lineup_score}}</em>
                                             vs.
-                                            {{matchup.team2.LineUp.all|current_week:matchup.week|event:'PH'|actual_lineup_score}}
-                                        </p>
+                                            <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'PH'|predicted_lineup_score}}</em>
+                                        
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
                                     <td >
-                                        <p>SR:
-                                            {{matchup.team1.LineUp.all|current_week:matchup.week|event:'SR'|actual_lineup_score}}
+                                        SR:
+                                            <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'SR'|predicted_lineup_score}}</em>
                                             vs.
-                                            {{matchup.team2.LineUp.all|current_week:matchup.week|event:'SR'|actual_lineup_score}}
-                                        </p>
+                                            <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'SR'|predicted_lineup_score}}</em>
+                                        
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
                                     <td >
-                                        <p>VT:
-                                            {{matchup.team1.LineUp.all|current_week:matchup.week|event:'VT'|actual_lineup_score}}
+                                        VT:
+                                            <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'VT'|predicted_lineup_score}}</em>
                                             vs.
-                                            {{matchup.team2.LineUp.all|current_week:matchup.week|event:'VT'|actual_lineup_score}}
-                                        </p>
+                                            <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'VT'|predicted_lineup_score}}</em>
+                                        
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
                                     <td >
-                                        <p>PB:
-                                            {{matchup.team1.LineUp.all|current_week:matchup.week|event:'PB'|actual_lineup_score}}
+                                        PB:
+                                            <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'PB'|predicted_lineup_score}}</em>
                                             vs.
-                                            {{matchup.team2.LineUp.all|current_week:matchup.week|event:'PB'|actual_lineup_score}}
-                                        </p>
+                                            <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'PB'|predicted_lineup_score}}</em>
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
                                     <td >
-                                        <p>HB:
-                                            {{matchup.team1.LineUp.all|current_week:matchup.week|event:'HB'|actual_lineup_score}}
+                                        HB:
+                                            <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'HB'|predicted_lineup_score}}</em>
                                             vs.
-                                            {{matchup.team2.LineUp.all|current_week:matchup.week|event:'HB'|actual_lineup_score}}
-                                        </p>
+                                            <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'HB'|predicted_lineup_score}}</em>
+                                        
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
                                     <td >
-                                        <p>Total:
-                                            {{matchup.team1.LineUp.all|current_week:matchup.week|actual_team_score}}
+                                    <b>
+                                        Total:
+                                            <em>{{matchup.team1.LineUp.all|current_week:matchup.week|predicted_team_score}}</em>
                                             vs.
-                                            {{matchup.team2.LineUp.all|current_week:matchup.week|actual_team_score}}
-                                        </p>
+                                            <em>{{matchup.team2.LineUp.all|current_week:matchup.week|predicted_team_score}}</em>
+                                    </b>
                                     </td>
                                 </tr>
                             </table>
