@@ -8,6 +8,9 @@
     <script>
         teams = []
         user_team_pk = -1;
+        online = "ONLINE";
+        offline = 'OFFLINE';
+
         // Code that runs when a DRAFT_COMPLETE message is received
         function draft_complete(data) {
             document.getElementById("header").innerText = "Draft complete"
@@ -15,12 +18,17 @@
 
         // Code that runs when a TEAM_CONNECT message is received
         function team_connected(data) {
-            console.log("team_connect", data)
+            console.log("team_connect", data);
+            team_name = document.getElementById('team_table_header_' + data['team_pk']);
+            set_online_status(team_name, true, data['team_name']);
+
         }
 
         // Code that runs when a TEAM_DISCONNECT message is received
         function team_disconnected(data) {
             console.log("team_disconnect", data)
+            team_name = document.getElementById('team_table_header_' + data['team_pk']);
+            set_online_status(team_name, false, data['team_name']);
         }
 
         // Code that runs when a GYMNAST_DRAFTED message is received
@@ -73,6 +81,10 @@
             } else {
                 document.getElementById('teamName').innerText = get_team_currently_up(data['position_currently_drafting'])['name'];
             }
+            for (var j = 0; j < data['teams'].length; j++){
+                team_name = document.getElementById('team_table_header_' + data['teams'][j]['pk']);
+                set_online_status(team_name, data['teams'][j]['fields']['currently_in_draft'], data['teams'][j]['fields']['name']); 
+            }
         }
 
         function store_teams(data) {
@@ -86,7 +98,19 @@
                 });
             });
         }
-
+        function set_online_status(element, status, name) {
+            element.innerText = name + " ";
+            icon = document.createElement('i');
+            icon.classList.add('fas');
+            icon.classList.add('fa-circle');
+                
+            if (status){
+                icon.style.color = "green";  
+            } else {
+                icon.style.color = "red";  
+            } 
+            element.appendChild(icon);
+        }
         function get_team_currently_up(currently_up_position) {
             return teams.find(team => team.draft_position == currently_up_position);
         }
@@ -142,7 +166,7 @@
         <div class="col-md-4" id="outer_tables">
             <table class='table'>
                 <thead>
-                    <th>{{team.name}}</th>
+                    <th id="team_table_header_{{team.pk}}"></th>
                     <th></th>
                 </thead>
                 <tbody id="team_table_body_{{team.pk}}">
