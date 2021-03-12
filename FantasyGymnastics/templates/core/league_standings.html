@@ -8,6 +8,7 @@
 {% endblock stylesheet %}
 {% block content %}
 
+
 <div class='d-flex align-items-center justify-content-center mb-2'>
     <h1>{{league.name}}</h1>
 </div>
@@ -16,20 +17,29 @@
             <a class="btn btn-outline-primary col-auto" href="sms:?&body=Hey, join my Fantasy Gymnastics League!!! https://www.myfgl.com/league/{{league.pk}}/standings">Invite your friends</a>
     </div>
 {% endif %}
-
-<div class='d-flex align-items-center justify-content-center mb-4'>
-    {% if user == league.manager %}
-    <a class="btn btn-outline-primary col-auto" href="{% url 'edit_league' league.pk %}" role="button">Edit League</a>
-    {% endif %}
+{% if not league.draft_started and user == league.manager %}
+    <div class='d-flex align-items-center justify-content-center mb-2'>
+        <a class="btn btn-outline-primary col-auto" href="{% url 'start_draft' league.pk %}">Start draft</a>
+    </div>
+{% endif %}
+{% if league.draft_started and not league.draft_complete and user|has_team_in_league:league%}
+    <div class='d-flex align-items-center justify-content-center mb-2'>
+        <a class="btn btn-outline-primary col-auto" href="{% url 'index' league.pk %}">Join draft</a>
+    </div>
+{% endif %}
+{% if user == league.manager %}
+    <div class='d-flex align-items-center justify-content-center mb-4'>
+        <a class="btn btn-outline-primary col-auto" href="{% url 'edit_league' league.pk %}" role="button">Edit League</a>
+    </div>
+{% endif %}
 </div>
 
 </div>
-
 
 <div class='d-flex align-items-center justify-content-center'>
     {% if not user|has_team_in_league:league %}
     <a href="{% url 'request_to_join_league' league.pk %}">
-        <button class="btn btn-primary" type="button">Request to join league</button>
+        <button class="btn btn-outline-primary" type="button">Request to join league</button>
     </a>
     {% endif %}
 </div>
@@ -63,6 +73,7 @@
                                 <tr class="d-flex justify-content-center">
                                     <td class="col-auto ps-2 ps-3">
                                         <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a>
+
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
@@ -107,6 +118,7 @@
                     {% endfor %}
                 </div>
             </div>
+            {% if matchups %}
             <div class="d-flex justify-content-center">
                 <div>
                     <i class="fas fa-angle-left fa-5x" data-bs-target="#currentMatchups" data-bs-slide="prev"></i>
@@ -117,6 +129,10 @@
                     <span class="visually-hidden">Next</span>
                 </div>
             </div>
+            {% else %}
+            No matchups
+            {% endif %}
+
         </div>
 
         <div class="col-auto" id="outer_tables">
@@ -158,21 +174,22 @@
             </table>
         </div>
     </div>
+    {% if league.manager == user %}
+    <h2>Requested to Join</h2>
+    <table class="table table-hover">
+        <tbody>
+            {% for requested_user in league.requested_to_join.all %}
+            <tr>
+                <td><a style="color:inherit; text-decoration: none;" href="{% url 'approve_player_into_league' league.pk requested_user.pk %}">{{requested_user}}</a> </td>
+                <td><a href="{% url 'reject_player_from_league' league.pk requested_user.pk %}">X</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
 </div>
 
-    {% if league.manager == user %}
-<h2>Requested to Join</h2>
-<table class="table table-hover">
-    <tbody>
-        {% for requested_user in league.requested_to_join.all %}
-        <tr>
-            <td><a style="color:inherit; text-decoration: none;" href="{% url 'approve_player_into_league' league.pk requested_user.pk %}">{{requested_user}}</a> </td>
-            <td><a href="{% url 'reject_player_from_league' league.pk requested_user.pk %}">X</a></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-    {% endif %}
+
 
     {% endblock %}
 

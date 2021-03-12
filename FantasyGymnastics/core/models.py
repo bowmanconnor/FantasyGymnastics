@@ -26,6 +26,8 @@ class League(models.Model):
     requested_to_join = models.ManyToManyField(User, related_name="RequestedLeague", blank=True)
     drafted = models.ManyToManyField(Gymnast, related_name="DraftedGymnasts", blank=True)
     currently_drafting = models.PositiveIntegerField(default=0, blank=True)
+    draft_started = models.BooleanField(default=False)
+    draft_complete = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -50,6 +52,7 @@ class FantasyTeam(models.Model):
     wins = models.PositiveIntegerField(default=0)
     losses = models.PositiveIntegerField(default=0)
     draft_position = models.PositiveIntegerField(default=0)
+    currently_in_draft = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('user', 'league')
