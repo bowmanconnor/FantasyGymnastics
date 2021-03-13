@@ -12,6 +12,7 @@ from weekly_gameplay.models import Average, Matchup
 from django.db.models import Q
 from .forms import NewLeagueForm, NewFantasyTeamForm, NewGymnastForm, ContactUsForm
 from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.decorators import method_decorator
 
 #Helper Function
 def create_team_with_lineups(user, league):
@@ -43,6 +44,7 @@ def create_league(request):
         form = NewLeagueForm()
     return render(request, 'core/create_league.html', {'form': form})
 
+@method_decorator(login_required, name='dispatch')
 class LeagueStandings(DetailView):
     model = League
     template_name = 'core/league_standings.html'
