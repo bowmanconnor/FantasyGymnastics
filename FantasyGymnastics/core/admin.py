@@ -12,7 +12,7 @@ class ScoreAdmin(admin.ModelAdmin):
     list_filter = ('meet', 'event')
 
 class LeagueAdmin(admin.ModelAdmin):
-    list_display = ('name', 'manager')
+    list_display = ('name', 'manager', 'draft_complete')
 
 class FantasyTeamAdmin(admin.ModelAdmin):
     list_display = ('league', 'name')
