@@ -46,10 +46,17 @@
             </ul>
             <span class="navbar-text">
                 {% if user.is_authenticated %}
-                    {{user.first_name}}
-                    <a href="{% url 'logout' %}">
-                        <button id ="navButton" class="btn btn-primary me-2 ml-4" type="button">Logout</button>
-                    </a>
+                <div class="dropdown dropstart">
+                  <a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ user.username }}
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="{% url 'my_account' %}">Edit account</a></li>
+                    <li><a class="dropdown-item" href="{% url 'password_change' %}">Change password</a></li>
+                     <div class="dropdown-divider"></div>
+                    <li><a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
+                  </ul>
+                </div>
                 {% else %}
                     <a id="navButton" class="btn btn-outline-primary me-2" href="{% url 'login' %}" role="button">Login</a>
                     <a id="navButton" class="btn btn-outline-primary me-2" href="{% url 'register' %}" role="button">Register</a>
