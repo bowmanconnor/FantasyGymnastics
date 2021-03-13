@@ -97,13 +97,28 @@ class DraftConsumer(WebsocketConsumer):
         if team.draft_position == currently_drafting and not league.draft_complete and league.draft_started:
             # Do something here with the gymnast_pk and the team
             gymnast = get_object_or_404(Gymnast, pk=gymnast_pk)
-            if gymnast not in league.drafted.all():
+            if gymnast not in league.drafted.all() and len(team.roster.all()) < league.roster_size:
                 team.roster.add(gymnast)
                 league = team.league
                 league.drafted.add(gymnast)
-                # Increment currently drafting (change to rollover or go backwards eventually)
+
+                # Snake draft, initially going down
                 num_teams = len(FantasyTeam.objects.filter(league=self.league_pk))
-                league.currently_drafting = (league.currently_drafting + 1) % num_teams
+                if league.going_down:
+                    # If last person is drafting
+                    if league.currently_drafting == (num_teams - 1):
+                        # Give them another turn and start going up
+                        league.going_down = False
+                    else:
+                        league.currently_drafting = league.currently_drafting + 1
+                else:
+                    # If first person is drafting on way back up
+                    if league.currently_drafting == 0:
+                        # Give first person another chance and start going down
+                        league.going_down = True
+                    else:
+                        league.currently_drafting = league.currently_drafting - 1
+                league.save()
 
                 if len(league.drafted.all()) == league.roster_size * num_teams:
                     # Drafting is done

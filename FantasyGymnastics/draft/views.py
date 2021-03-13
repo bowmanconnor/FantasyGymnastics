@@ -22,9 +22,11 @@ def index(request, league_pk):
 def start_draft(request, league_pk):
     league = League.objects.filter(pk=league_pk).first()
     teams = FantasyTeam.objects.filter(league=league_pk)
-    if len(teams)%2 == 0:
+    
+    if len(teams) % 2 == 0:
         if league.manager == request.user:
             league.draft_started = True
+            league.going_down = True
             league.generate_drafting_order()
             league.save()
             return redirect('/draft/%s' % league_pk)

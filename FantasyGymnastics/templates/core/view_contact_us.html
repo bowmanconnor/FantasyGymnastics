@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}View Feedback{% endblock title %}
+
+{% block content %}
+<div class='container'>
+    <div class="d-flex align-items-center justify-content-center mb-4">
+        <h1>Feedback recieved</h1>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <th>Username</th>
+            <th>Message</th>
+            <th>Submitted at</th>
+            <th></th>
+        </thead>
+        <tbody>
+            {% for responce in feedback %}
+            <tr>
+                <td>{{responce.user.username}} </td>
+                <td>{{responce.message}} </td>
+                <td>{{responce.sumbitted_at}} </td>
+                <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#feedback{{responce.pk}}">Delete</button></td>
+            </tr>
+                    <!-- Button trigger modal -->
+
+            <!-- Modal -->
+            <div class="modal fade" id="feedback{{responce.pk}}" tabindex="-1" aria-labelledby="feedback{{responce.pk}}Label" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="feedback{{responce.pk}}Label">Delete Feedback</h5>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6">
+                                            <p>Are you sure you want to delete {{ responce.user.username }}'s feedback?</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <form action="{% url 'delete_contact_us' responce.pk %}" method="POST">
+                                    {% csrf_token %}
+                                    <button class="btn btn-outline-danger">Delete</button>
+                                </form>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
