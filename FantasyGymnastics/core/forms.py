@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import League, FantasyTeam, Gymnast, Score
+from .models import League, FantasyTeam, Gymnast, Score, ContactUs
 
 class NewLeagueForm(forms.ModelForm):
     class Meta:
@@ -33,3 +33,8 @@ class NewScoreForm(forms.ModelForm):
     class Meta:
         model = Score
         fields = '__all__'
+
+class ContactUsForm(forms.ModelForm):
+    class Meta:
+        model = ContactUs
+        fields = ['message',]

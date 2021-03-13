@@ -13,178 +13,112 @@
 
 
 
-  <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-    </div>
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-      <img src="{% static "images/black.jpg" %}" class="d-block w-100" alt="...">
-        <div class="container">
-          <div class="carousel-caption text-start">
-            <h1>Learn how to play!</h1>
-            <p>What is Fantasy Gymnastics</p>
-            <p><a class="btn btn-lg btn-primary" href="#">Learn more</a></p>
-          </div>
-        </div>
-      </div>
-      <div class="carousel-item">
-        <img src="{% static "images/black.jpg" %}" class="d-block w-100" alt="...">
-        <div class="container">
-          <div class="carousel-caption">
-            <h1>Join a League!</h1>
-            <p>Join an existing league or create a new one!</p>
-            <p><a class="btn btn-lg btn-primary" href="{% url 'myleagues' %}">Play now</a></p>
-          </div>
-        </div>
-      </div>
-      <div class="carousel-item">
-        <img src="{% static "images/black.jpg" %}" class="d-block w-100" alt="...">
-        <div class="container">
-          <div class="carousel-caption text-end">
-            <h1>Contact Us</h1>
-            <p>Give us feedback!</p>
-            <p><a class="btn btn-lg btn-primary" href="#">Contact us</a></p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
+<div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true"
+      aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
   </div>
-
-{% comment %} <div class='container'>
-    <div class="row">
-        <div class='col'>
-            <img src="{% static "images/grippy.png" %}" alt="" height='400' width='400' class="d-inline-block align-top">
-            <p>"Hi!" - Grippy</p>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{% static "images/black.jpg" %}" class="d-block w-100" alt="...">
+      <div class="container">
+        <div class="carousel-caption text-start">
+          <h1>Learn how to play!</h1>
+          <p>What is Fantasy Gymnastics</p>
+          <p><a class="btn btn-lg btn-primary" href="{% url 'how_to_play' %}">Learn more</a></p>
         </div>
-        <div class='col'>
-            <h2>Welcome</h2>
-            <p>To get started, click the login button in the top right, and then the register button on the next page and make an account!</p>
-            <p> Note: This is your real account, so use your real email address and username as they can’t be changed later (for now at least)</p>
-            <p>Once you’re logged in, navigate to the My Leagues link in the top left.</p>
-            <p>Once you’ve created a league, figure out with your league how you want to go through the drafting process. Our suggestion is that you call each other and follow a snake draft (there’ll be a ‘draft’ feature coming soon, but for now you’ll need to draft gymnasts yourself).</p>
-            <p>The manager of the league will also need to set matchups for each week (again, automated matchups are coming soon – for now, we recommend you have an even number of players in the league so that everyone gets to play each week).</p>
-            <p>Once you have all your players, go ahead and set your lineups for this weekend and play!</p>
-            
-        </div>
+      </div>
     </div>
-</div> {% endcomment %}
-
-
-
-
+    <div class="carousel-item">
+      <img src="{% static "images/black.jpg" %}" class="d-block w-100" alt="...">
+      <div class="container">
+        <div class="carousel-caption">
+          <h1>Join a League!</h1>
+          <p>Join an existing league or create a new one!</p>
+          <p><a class="btn btn-lg btn-primary" href="{% url 'myleagues' %}">Play now</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="{% static "images/black.jpg" %}" class="d-block w-100" alt="...">
+      <div class="container">
+        <div class="carousel-caption text-end">
+          <h1>Contact Us</h1>
+          <p>Give us feedback!</p>
+          <p><a class="btn btn-lg btn-primary" href="{% url 'contact_us'%}">Contact us</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
 
 <!-- Profile cards -->
-    <div class="pricing-header px-3 py-3 pt-md-1 pb-md-4 mx-auto text-center">
-      <h1 class="display-4 mt-4">About Us</h1>
-      <p class="lead">We are all Strongsville High School graduates and are currently sophmores in college. We love being active and spending time outdoors. Passionate about our new business, we look forward to transforming your yard. </p>
-     <a href="#" class="btn btn-lg btn-outline-primary">Contact Us</a>
-    </div>
+<div class="pricing-header px-3 py-3 pt-md-1 pb-md-4 mx-auto text-center">
+  <h1 class="display-4 mt-4">About Us</h1>
+  <p class="lead">Please play
+  </p>
+  <a href="{% url 'contact_us'%}" class="btn btn-lg btn-outline-primary">Contact Us</a>
+</div>
 
-
-      <div class="container marketing">
-        <div class="row d-flex justify-content-center">
-          <div class="col-lg-4">
-            <img class="rounded-circle mb-2" src="{% static 'images/connor.jpeg'%}" alt="Generic placeholder image" width="140" height="140">
-            <h2>Connor Bowman</h2>
-            <p>Connor is a student-athlete at William and Mary majoring in Computer Science and Business Analytics.</p>
-              <div class='d-flex align-items-center justify-content-center mb-4'>
-                <a href='https://www.linkedin.com/in/bowmanconnor/' target="_blank" class='me-1'><i class="fab fa-linkedin-in fa-2x"></i></a>
-                {% comment %} <a href='#' class='me-1'><i class="fab fa-instagram fa-2x"></i></a> {% endcomment %}
-            </div>
-            
-          </div>
-          <div class="col-lg-4">
-            <img class="rounded-circle mb-2" src="{% static 'images/jack.png'%}" alt="Generic placeholder image" width="140" height="140">
-            <h2>Chris Cosma</h2>
-            <p>Jack is at The Ohio State University majoring in Finance and minoring in Computer Information Systems.</p>
-            <div class='d-flex align-items-center justify-content-center mb-4'>
-                <a href='https://www.linkedin.com/in/christopher-cosma-1351061aa/' target="_blank" class='me-1'><i class="fab fa-linkedin-in fa-2x"></i></a>
-                {% comment %} <a href='#' class='me-1'><i class="fab fa-instagram fa-2x"></i></a> {% endcomment %}
-            </div>
-          </div>
-          <div class="col-lg-4">
-            <img class="rounded-circle mb-2" src="{% static 'images/jordan.jpeg'%}" alt="Generic placeholder image" width="140" height="140">
-            <h2>Jordan Kula</h2>
-            <p>Andrew is at The University of Cincinnati majoring in Computer Science Engineering.</p>
-            <div class='d-flex align-items-center justify-content-center mb-4'>
-                <a href='https://www.linkedin.com/in/jordan-kula/' target="_blank" class='me-1'><i class="fab fa-linkedin-in fa-2x"></i></a>
-                {% comment %} <a href='#' class='me-1'><i class="fab fa-instagram fa-2x"></i></a> {% endcomment %}
-            </div>
-          </div>
-          <div class="col-lg-4">
-            <img class="rounded-circle mb-2" src="{% static 'images/zane.jpeg'%}" alt="Generic placeholder image" width="140" height="140">
-            <h2>Zane Petras</h2>
-            <p>Andrew is at The University of Cincinnati majoring in Computer Science Engineering.</p>
-            <div class='d-flex align-items-center justify-content-center mb-4'>
-                <a href='https://www.linkedin.com/in/zapetras/' target="_blank" class='me-1'><i class="fab fa-linkedin-in fa-2x"></i></a>
-                {% comment %} <a href='#' class='me-1'><i class="fab fa-instagram fa-2x"></i></a> {% endcomment %}
-            </div>
-          </div
-        </div><!-- /.row -->
-      </div>
-
-
-
-  <!-- Marketing messaging and featurettes
-  ================================================== -->
-  <!-- Wrap the rest of the page in another container to center all the content. -->
-
-  <div class="container marketing">
-
-
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-      <div class="col-md-7">
-        <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It’ll blow your mind.</span></h2>
-        <p class="lead">Some great placeholder content for the first featurette here. Imagine some exciting prose here.</p>
-      </div>
-      <div class="col-md-5">
-        
+<div class="container marketing">
+  <div class="row d-flex justify-content-center">
+    <div class="col-lg-4">
+      <img class="rounded-circle mb-2" src="{% static 'images/connor.jpeg'%}" alt="Generic placeholder image"
+        width="140" height="140">
+      <h2>Connor Bowman</h2>
+      <p>Connor is a student-athlete at William and Mary majoring in Computer Science and Business Analytics.</p>
+      <div class='d-flex align-items-center justify-content-center mb-4'>
+        <a href='https://www.linkedin.com/in/bowmanconnor/' target="_blank" class='me-1'><i
+            class="fab fa-linkedin-in fa-2x"></i></a>
+        {% comment %} <a href='#' class='me-1'><i class="fab fa-instagram fa-2x"></i></a> {% endcomment %}
       </div>
     </div>
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-      <div class="col-md-7 order-md-2">
-        <h2 class="featurette-heading">Oh yeah, it’s that good. <span class="text-muted">See for yourself.</span></h2>
-        <p class="lead">Another featurette? Of course. More placeholder content here to give you an idea of how this layout would work with some actual real-world content in place.</p>
-      </div>
-      <div class="col-md-5 order-md-1">
-        
-      </div>
-    </div>
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-      <div class="col-md-7">
-        <h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2>
-        <p class="lead">And yes, this is the last block of representative placeholder content. Again, not really intended to be actually read, simply here to give you a better view of what this would look like with some actual content. Your content.</p>
-      </div>
-      <div class="col-md-5">
-        
+    <div class="col-lg-4">
+      <img class="rounded-circle mb-2" src="{% static 'images/chris.png'%}" alt="Generic placeholder image" width="140"
+        height="140">
+      <h2>Chris Cosma</h2>
+      <p>Chris is at The Ohio State University majoring in Computer Science.</p>
+      <div class='d-flex align-items-center justify-content-center mb-4'>
+        <a href='https://www.linkedin.com/in/christopher-cosma-1351061aa/' target="_blank" class='me-1'><i
+            class="fab fa-linkedin-in fa-2x"></i></a>
+        {% comment %} <a href='#' class='me-1'><i class="fab fa-instagram fa-2x"></i></a> {% endcomment %}
       </div>
     </div>
-
-    <hr class="featurette-divider">
-
-    <!-- /END THE FEATURETTES -->
-
-  </div><!-- /.container -->
+    <div class="col-lg-4">
+      <img class="rounded-circle mb-2" src="{% static 'images/jordan.jpeg'%}" alt="Generic placeholder image"
+        width="140" height="140">
+      <h2>Jordan Kula</h2>
+      <p>Jordan is a student-athlete at William and Mary majoring in Computer Science and Mathematics.</p>
+      <div class='d-flex align-items-center justify-content-center mb-4'>
+        <a href='https://www.linkedin.com/in/jordan-kula/' target="_blank" class='me-1'><i
+            class="fab fa-linkedin-in fa-2x"></i></a>
+        {% comment %} <a href='#' class='me-1'><i class="fab fa-instagram fa-2x"></i></a> {% endcomment %}
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <img class="rounded-circle mb-2" src="{% static 'images/zane.jpeg'%}" alt="Generic placeholder image" width="140"
+        height="140">
+      <h2>Zane Petras</h2>
+      <p>Zane is a William and Mary graduate student-athlete. He was an Applied Statistics and Philosophy undergrad major
+        and is currently in the MSBA program.</p>
+      <div class='d-flex align-items-center justify-content-center mb-4'>
+        <a href='https://www.linkedin.com/in/zapetras/' target="_blank" class='me-1'><i
+            class="fab fa-linkedin-in fa-2x"></i></a>
+        {% comment %} <a href='#' class='me-1'><i class="fab fa-instagram fa-2x"></i></a> {% endcomment %}
+      </div>
+    </div>
+  </div> 
+</div>
 
 
 

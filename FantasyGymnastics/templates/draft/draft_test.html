@@ -8,12 +8,12 @@
     <script>
         teams = []
         user_team_pk = -1;
-        online = "ONLINE";
-        offline = 'OFFLINE';
+        const leaguePk = JSON.parse(document.getElementById('league_pk').textContent)
 
         // Code that runs when a DRAFT_COMPLETE message is received
         function draft_complete(data) {
-            document.getElementById("header").innerText = "Draft complete"
+            document.getElementById("header").innerText = "Draft complete";
+            window.location = (window.location.origin) + "/league/" + leaguePk + "/standings";
         }
 
         // Code that runs when a TEAM_CONNECT message is received
@@ -117,8 +117,6 @@
         function get_team_currently_up(currently_up_position) {
             return teams.find(team => team.draft_position == currently_up_position);
         }
-
-        const leaguePk = JSON.parse(document.getElementById('league_pk').textContent)
 
         console.log("Connecting to draft WebSocket for league pk " + leaguePk)
         const draftSocket = new WebSocket(

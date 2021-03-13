@@ -4,6 +4,11 @@ from asgiref.sync import async_to_sync
 from core.models import FantasyTeam, League, Gymnast
 from django.shortcuts import get_object_or_404
 from django.core import serializers
+from scraper.Scraper import Scraper, ScraperConstants
+from django.core.management import call_command
+from .matchups import round_robin_matchups
+import datetime
+from weekly_gameplay.models import Matchup
 
 class DraftConsumer(WebsocketConsumer):
     def connect(self):
@@ -92,22 +97,51 @@ class DraftConsumer(WebsocketConsumer):
         if team.draft_position == currently_drafting and not league.draft_complete and league.draft_started:
             # Do something here with the gymnast_pk and the team
             gymnast = get_object_or_404(Gymnast, pk=gymnast_pk)
-            if gymnast not in league.drafted.all():
+            if gymnast not in league.drafted.all() and len(team.roster.all()) < league.roster_size:
                 team.roster.add(gymnast)
                 league = team.league
                 league.drafted.add(gymnast)
-                # Increment currently drafting (change to rollover or go backwards eventually)
+
+                # Snake draft, initially going down
                 num_teams = len(FantasyTeam.objects.filter(league=self.league_pk))
-                league.currently_drafting = (league.currently_drafting + 1) % num_teams
+                if league.going_down:
+                    # If last person is drafting
+                    if league.currently_drafting == (num_teams - 1):
+                        # Give them another turn and start going up
+                        league.going_down = False
+                    else:
+                        league.currently_drafting = league.currently_drafting + 1
+                else:
+                    # If first person is drafting on way back up
+                    if league.currently_drafting == 0:
+                        # Give first person another chance and start going down
+                        league.going_down = True
+                    else:
+                        league.currently_drafting = league.currently_drafting - 1
+                league.save()
 
                 if len(league.drafted.all()) == league.roster_size * num_teams:
+                    # Drafting is done
+                    scraper = Scraper()
+                    year = datetime.date.today().year
+                    num_weeks = int(scraper.get_current_and_max_week(ScraperConstants.Men, year)['max'])
+                    matchups = round_robin_matchups(num_teams, num_weeks)
+                    team_pks = [x.pk for x in list(FantasyTeam.objects.filter(league__pk=self.league_pk))]
+                    for week in matchups:
+                        for matchup in matchups[week]:
+                            team1_pk = team_pks[matchup[0] - 1]
+                            team2_pk = team_pks[matchup[1] - 1]
+                            team1 = FantasyTeam.objects.filter(pk=team1_pk).first()
+                            team2 = FantasyTeam.objects.filter(pk=team2_pk).first()
+                            m = Matchup(team1=team1, team2=team2, league=league, week=week)
+                            m.save()
+
                     league.draft_complete = True
                     async_to_sync(self.channel_layer.group_send)(self.draft_group, {
                         'type': 'draft_complete',
                     })
 
                 # PERFORM CHECK AND AUTO DRAFT HERE
-
                 league.save()
 
                 # Send message to rest of draft group

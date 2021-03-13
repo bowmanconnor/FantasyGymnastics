@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% load static %}
+{% block title %}How To Play{% endblock title %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock stylesheet %}
+{% block content_no_container %}
+
+<style>  
+  p {
+    line-height: 2;
+  }
+
+  ul {
+    line-height: 2;
+    list-style-position: inside;
+  }
+</style>
+
+<div class='d-flex align-items-center justify-content-center mb-4'>
+    <h1>How To Play</h1>
+</div>
+
+<div class='container marketing'>
+
+  <a href="{% url 'home' %}">
+    <button class="btn btn-outline-primary algin-right mb-2" type="button">Back to home</button>
+  </a>
+
+    <div class="row">
+
+      <h2 class="featurette-heading">Welcome!</h2>
+      <p class="lead">This tutorial will teach you all you need to know to get started with Fantasy Gymnastics and get you playing right away!</p>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <h2 class="featurette-heading">Index</h2>
+      <ul class="lead">
+        <li><a href="#signup">Sign Up for an Account/Login</a></li>
+        <li><a href="#leagues">Create/Join a League</a></li>
+        <li><a href="#draft">The Draft</a></li>
+        <li><a href="#roster">Add/Drop from Roster</a></li>
+        <li><a href="#lineups">Set Lineups</a></li>
+        <li><a href="#rules">The Rules of the Game</a></li>
+      </ul>
+
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <h2 class="featurette-heading" id="signup"><u>Sign Up for an Account/Login</u></h2>
+      <h3>If you are a New User:</h3>
+      <ul class="lead">
+        <li>From the home page, click on the “Register” button in the top right corner</li>
+        
+        <img src="{% static "images/how_to_play/register_button.png" %}" alt="register button" height=200 width=500 class="d-inline-block align-top">
+
+        <li>Next, create an account by filling in the required information in the Register form, then click the “Register” button to finish registering your account</li>
+        <ul>
+          <li>You may also choose to create an account using your preexisting Facebook or Google account</li>
+        </ul>
+      </ul>
+        
+      <h3>If you already have an Account:</h3>
+      <ul class="lead">
+        <li>From the home page, click on the “Login” button in the top right corner</li>
+        
+        <img src="{% static "images/how_to_play/login_button.png" %}" alt="login button" height=200 width=500 class="d-inline-block align-top">
+        
+        <li>Next, enter your login username and password in the Login form, and click the “Sign In” button to login</li>
+        <ul>
+          <li>You may also choose to login using your preexisting Facebook or Google account</li>
+        </ul>
+      </ul>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <h2 class="featurette-heading" id="leagues"><u>Create/Join a League</u></h2>
+      <h3>Creating a League:</h3>
+      <ul class="lead">
+        <li>From the home page, click the “MyLeagues” tab at the top left of the navigation bar</li>
+        <ul>
+          <li>You must be logged into your account to access the MyLeagues page</li>
+        </ul>
+
+        <img src="{% static "images/how_to_play/myleagues_tab.png" %}" alt="myleagues tab" height=200 width=500 class="d-inline-block align-top">
+
+        <li>Next, click the “Create New League” button</li>
+
+        <img src="{% static "images/how_to_play/create_new_league_button.png" %}" alt="create new league button" height=200 width=500 class="d-inline-block align-top">
+
+        <li>To create a league, you must fill out the required fields:</li>
+        <ul>
+          <li><b>Name</b> – The name of your league</li>
+          <li><b>Roster size</b> – The total number of gymnasts that can be on a user’s team at one time</li>
+          <li><b>Lineup size</b> – The total number of gymnasts from a team’s roster allowed to compete during a matchup at the same time</li>
+          <li><b>Event lineup size</b> – How many gymnasts will be put up to compete on each event</li>
+          <li><b>Event count size</b> – How many gymnasts’ scores will count on each event towards your final team score</li>
+        </ul>
+
+        <li>Finally, click the “Submit” button to create your league</li>
+
+        <img src="{% static "images/how_to_play/league_submit_button.png" %}" alt="league submit button" height=200 width=650 class="d-inline-block align-top">
+
+      </ul>
+
+      <h3>Joining a League:</h3>
+      <ul class="lead">
+        <li>From the home page, click the “MyLeagues” tab at the top left of the navigation bar</li>
+        <ul>
+          <li>You must be logged into your account to access the MyLeagues page</li>
+        </ul>
+
+        <img src="{% static "images/how_to_play/myleagues_tab.png" %}" alt="myleagues tab 2" height=200 width=500 class="d-inline-block align-top">
+        
+        <li>Next, click on the “Join Existing League” button to see all the current leagues</li>
+        
+        <img src="{% static "images/how_to_play/join_existing_league_button.png" %}" alt="join existing league button" height=200 width=500 class="d-inline-block align-top">
+        
+        <li>From the league search page, you can search for a league or click on a league from the list</li>
+        <li>After selecting a league, you may request to join that league by clicking the “Request to join league” button</li>
+
+        <img src="{% static "images/how_to_play/request_to_join_league_button.png" %}" alt="request to join league button" height=100 width=400 class="d-inline-block align-top">
+
+        <li>Once you have requested to join a league, the league owner must approve your request to allow you to join by clicking the request at the bottom of the league page, below the “Requested to Join” section</li>
+        <ul>
+          <li>To accept a request, simply click the request</li>
+          <li>To decline a request, click the “X” on the far-right side of the request</li>
+        </ul>
+
+        <img src="{% static "images/how_to_play/requested_to_join.png" %}" alt="requested to join" height=50 width=500 class="d-inline-block align-top">
+
+        <li>After accepting the request, both users’ teams should now show up at the top of the league page, below the “Rank” section</li>
+      </ul>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <h2 class="featurette-heading" id="draft"><u>The Draft</u></h2>
+      <ul class="lead">
+        <li>Once all users have joined your league and are ready to begin the draft, the league owner can click the “Start draft” button at the top of the league page</li>
+        
+        <ul>
+          <li>Note: You must have an even number of users in your league to begin the draft</li>
+        </ul>
+
+        <img src="{% static "images/how_to_play/start_draft_button.png" %}" alt="start draft button" height=200 width=500 class="d-inline-block align-top">
+
+        <li>During the draft, all users will take turns drafting gymnasts to their teams</li>
+        <ul>
+          <li>In the top left of the page, you can see whose turn it is to draft</li>
+        </ul>
+
+        <li>To draft a gymnast, simply click the “Add” button next to the gymnast’s name</li>
+        <ul>
+          <li>You may search for gymnasts in the search bar by their name, team name, or scores</li>
+          <li>The table shows all the gymnast’s averages on the events that they have competed on throughout the season</li>
+          <li>You may filter the table based on any of the columns</li>
+        </ul>
+
+        <img src="{% static "images/how_to_play/add_draft.png" %}" alt="add draft" height=250 width=600 class="d-inline-block align-top">
+
+        <li>Once every user has filled their roster with gymnasts, the draft is completed!</li>
+
+      </ul>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <h2 class="featurette-heading" id="roster"><u>Add/Drop from Roster</u></h2>
+      <h3>Adding to your roster:</h3>
+      <ul class="lead">
+        <li>From your league page, click on your team in the “Rank” section</li>
+        <li>Then, to pick up a new gymnast from the available gymnasts, click plus icon below your roster</li>
+
+        <ul>
+          <li>You must have an empty spot on your roster to pick up a new gymnast, otherwise, you can only view the available gymnasts</li>
+        </ul>
+
+        <li>Finally, click the “Add” button next to the gymnast you want to pick up to successfully add the gymnast to your roster</li>
+
+        <img src="{% static "images/how_to_play/add_gymnast.png" %}" alt="add gymnast" height=250 width=600 class="d-inline-block align-top">
+
+      </ul>
+
+      <h3>Dropping from your roster:</h3>
+      <ul class="lead">
+        <li>From your league page, click on your team in the “Rank” section</li>
+        <li>Then, to drop a gymnast from your roster, simply click on the “X” button next to the gymnast you wish to drop</li>
+
+        <img src="{% static "images/how_to_play/drop_gymnast.png" %}" alt="drop gymnast" height=250 width=600 class="d-inline-block align-top">
+
+      </ul>
+
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <h2 class="featurette-heading" id="lineups"><u>Set Lineups</u></h2>
+      <ul class="lead">
+        <li>From your league page, click on your team in the “Rank” section</li>
+        <li>Then, from your team page, set your lineups by selecting the event you wish to set the lineup for in the “Lineups” section</li>
+        <li>To add a gymnast from your roster to the selected event lineup, click on the plus icon below the lineup and click on the name of the gymnast you wish to add</li>
+
+        <ul>
+          <li>To remove a gymnast from an event lineup, simply click on the event and click on the “X” next to the gymnast you wish to remove</li>
+        </ul>
+
+        <img src="{% static "images/how_to_play/lineups.png" %}" alt="lineups" height=200 width=500 class="d-inline-block align-top">
+
+      </ul>
+
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <h2 class="featurette-heading" id="rules"><u>The Rules of the Game</u></h2>
+      <ul class="lead">
+        <li>Once you have joined a league and drafted your gymnasts, you are ready to begin playing the game!</li>
+        <li>Each week you will be automatically matched up against another user in your league and compete in a head-to-head matchup</li>
+        <li>Every week you need to set your lineups for each event based on which gymnasts from your roster you think will score the highest during their meets</li>
+        <li>When setting your event lineups, you will put up multiple gymnasts that will accrue scores for your team, increasing your overall team score</li>
+
+        <ul>
+          <li>The number of gymnasts to put up on each lineup is decided by the event lineup size in the league’s settings</li>
+        </ul>
+
+        <li>Only the top scores of your gymnasts on each event lineup will be counted towards your overall team score</li>
+
+        <ul>
+          <li>The number of counting scores per event is decided by the event count size in the league’s settings</li>
+        </ul>
+
+        <li>Once the week is over and all scores have been inputted for the week, the user with the highest team score will win their head-to-head matchup</li>
+        
+        <ul>
+          <li>All the gymnasts' scores and final team scores will be automatically updated after every meet</li>
+        </ul>
+
+        <li>Throughout the season, as you win and lose your head-to-head matchups against other users in your league, your season win-to-loss record will be updated accordingly</li>
+        <li>The final rankings will be determined by the teams’ win-to-loss records at the end of the season, and whoever has the best record, wins their league!</li>
+
+      </ul>
+
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <h2 class="featurette-heading">You are now ready to start playing Fantasy Gymnastics!</h2>
+
+      <a href="{% url 'home' %}">
+        <button class="btn btn-outline-primary algin-right mb-2" type="button">Back to home</button>
+      </a>
+
+    </div>
+
+  </div>
+</div>
+
+
+{% endblock %}

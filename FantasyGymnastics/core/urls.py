@@ -4,6 +4,10 @@ from core import views as views
 urlpatterns = [
     path('', views.home, name="home"),
 
+    path('how_to_play/', views.how_to_play, name="how_to_play"),
+
+    path('league/create/', views.create_league, name="create_league"),
+    path('league/edit/<int:pk>/', views.UpdateLeague.as_view(), name="edit_league"),
     path('myleagues/', views.myleagues, name='myleagues'),
 
     path('league/create/', views.create_league, name="create_league"),
@@ -23,4 +27,9 @@ urlpatterns = [
     path('gymnast/<int:gymnast_pk>/view/', views.view_gymnast, name='view_gymnast'),
 
     path('cutter/', views.cutter, name='cutter'),
+
+    path('contact_us/', views.contact_us, name='contact_us'),
+    path('contact_us_done/', views.contact_us_done, name='contact_us_done'),
+    path('view_contact_us/', views.view_contact_us, name='view_contact_us'),
+    path('delete_contact_us/<int:pk>/', views.delete_contact_us, name='delete_contact_us'),
 ]
