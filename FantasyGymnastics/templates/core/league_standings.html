@@ -39,7 +39,8 @@
                         <div class="row d-flex align-items-center justify-content-center">
                             <div class="col">
                                 <p>Are you sure you want to start the draft?</p>
-                                <p>Once the draft begins, you will not be able to remove or add teams to this league.</p>
+                                <p>Once the draft begins, you will not be able to remove or add teams to this league.
+                                </p>
                                 <p>You must have an even number of teams to start the draft.</p>
                             </div>
                         </div>
@@ -97,7 +98,8 @@
                     <td>({{team.wins}}-{{team.losses}})</td>
                     {% if user == league.manager and not league.draft_started %}
                     <td>
-                        <div data-bs-toggle="modal" data-bs-target="#team{{team.id}}"><i class="far fa-times-circle"></i>
+                        <div data-bs-toggle="modal" data-bs-target="#team{{team.id}}"><i
+                                class="far fa-times-circle"></i>
                         </div>
                     </td>
                     {% endif %}
@@ -121,7 +123,8 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <form action="{% url 'remove_team_from_league' league.pk team.pk %}" method="POST">
+                                        <form action="{% url 'remove_team_from_league' league.pk team.pk %}"
+                                            method="POST">
                                             {% csrf_token %}
                                             <button class="btn btn-outline-danger">Remove</button>
                                         </form>
@@ -143,13 +146,15 @@
                     {% for requested_user in league.requested_to_join.all %}
                     <tr>
                         <td>
-                        {% if not league.draft_started %}
-                            <a href="{% url 'approve_player_into_league' league.pk requested_user.pk %}">{{requested_user}}</a> 
-                        {% else %}
+                            {% if not league.draft_started %}
+                            <a
+                                href="{% url 'approve_player_into_league' league.pk requested_user.pk %}">{{requested_user}}</a>
+                            {% else %}
                             {{requested_user}}
-                        {% endif %} 
+                            {% endif %}
                         </td>
-                        <td><a href="{% url 'reject_player_from_league' league.pk requested_user.pk %}"><i class="far fa-times-circle"></i></a></td>
+                        <td><a href="{% url 'reject_player_from_league' league.pk requested_user.pk %}"><i
+                                    class="far fa-times-circle"></i></a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -165,98 +170,103 @@
                     <td><a href="{% url 'view_team' team.pk %}">{{team.name}}</a></td>
                     <td>({{team.wins}}-{{team.losses}})</td>
                     {% if user == league.manager and not league.draft_started %}
-                    <td><a href="{% url 'remove_team_from_league' league.pk team.pk %}"><i class="far fa-times-circle"></i></a></td>
+                    <td><a href="{% url 'remove_team_from_league' league.pk team.pk %}"><i
+                                class="far fa-times-circle"></i></a></td>
                     {% endif %}
                 </tr>
                 {% endfor %}
             </table>
         </div>
         {% endif %}
-
-
-
     </div>
 
     <div class="row d-flex justify-content-center">
         <div class="col-12 col-lg-4">
-            <h2 >Current Week</h2>
+            <h2>Current Week</h2>
             <div id="currentMatchups" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
                 <div class="carousel-inner">
-                    {% for matchup in matchups %}
-                    {% if matchup.week == current_week %}
-                    <div class="carousel-item {{matchup|has_users_team:user}}">
-                        <a  href="{% url 'view_matchup' matchup.pk %}">
+                    {% for matchup in matchups|get_current_matchups:current_week %}
+
+                    {% if user|has_team_in_league:league %}
+                        <div class="carousel-item {{matchup|has_users_team:user}}">
+                    {% elif forloop.counter == 1 %}
+                        <div class="carousel-item active">
+                    {% else %}
+                        <div class="carousel-item">
+                    {% endif %}
+                        <a href="{% url 'view_matchup' matchup.pk %}">
                             <table class="table" id="matchup_tables">
                                 <tr class="d-flex justify-content-center">
                                     <td class="col-auto ps-3 pe-3">
-
-                                        <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs {{matchup.team2}}</a>
+                                        <a href="{% url 'view_matchup' matchup.pk %}">{{matchup.team1}} vs
+                                            {{matchup.team2}}</a>
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
                                     <td class="col-auto">
-                                        FX: <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'FX'|predicted_lineup_score}}</em>
-                                        vs. <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'FX'|predicted_lineup_score}}</em>
+                                        FX:
+                                        <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'FX'|predicted_lineup_score}}</em>
+                                        vs.
+                                        <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'FX'|predicted_lineup_score}}</em>
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
-                                    <td >
+                                    <td>
                                         PH:
-                                            <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'PH'|predicted_lineup_score}}</em>
-                                            vs.
-                                            <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'PH'|predicted_lineup_score}}</em>
-                                        
+                                        <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'PH'|predicted_lineup_score}}</em>
+                                        vs.
+                                        <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'PH'|predicted_lineup_score}}</em>
+
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
-                                    <td >
+                                    <td>
                                         SR:
-                                            <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'SR'|predicted_lineup_score}}</em>
-                                            vs.
-                                            <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'SR'|predicted_lineup_score}}</em>
-                                        
+                                        <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'SR'|predicted_lineup_score}}</em>
+                                        vs.
+                                        <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'SR'|predicted_lineup_score}}</em>
+
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
-                                    <td >
+                                    <td>
                                         VT:
-                                            <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'VT'|predicted_lineup_score}}</em>
-                                            vs.
-                                            <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'VT'|predicted_lineup_score}}</em>
-                                        
+                                        <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'VT'|predicted_lineup_score}}</em>
+                                        vs.
+                                        <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'VT'|predicted_lineup_score}}</em>
+
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
-                                    <td >
+                                    <td>
                                         PB:
-                                            <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'PB'|predicted_lineup_score}}</em>
-                                            vs.
-                                            <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'PB'|predicted_lineup_score}}</em>
+                                        <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'PB'|predicted_lineup_score}}</em>
+                                        vs.
+                                        <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'PB'|predicted_lineup_score}}</em>
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
-                                    <td >
+                                    <td>
                                         HB:
-                                            <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'HB'|predicted_lineup_score}}</em>
-                                            vs.
-                                            <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'HB'|predicted_lineup_score}}</em>
-                                        
+                                        <em>{{matchup.team1.LineUp.all|current_week:matchup.week|event:'HB'|predicted_lineup_score}}</em>
+                                        vs.
+                                        <em>{{matchup.team2.LineUp.all|current_week:matchup.week|event:'HB'|predicted_lineup_score}}</em>
+
                                     </td>
                                 </tr>
                                 <tr class="d-flex justify-content-center">
-                                    <td >
-                                    <b>
-                                        Total:
+                                    <td>
+                                        <b>
+                                            Total:
                                             <em>{{matchup.team1.LineUp.all|current_week:matchup.week|predicted_team_score}}</em>
                                             vs.
                                             <em>{{matchup.team2.LineUp.all|current_week:matchup.week|predicted_team_score}}</em>
-                                    </b>
+                                        </b>
                                     </td>
                                 </tr>
                             </table>
                         </a>
                     </div>
-                    {% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -279,7 +289,7 @@
 
         <div class="col-lg-4">
             <div class="row">
-                <h2 >Schedule</h2>
+                <h2>Schedule</h2>
             </div>
             <table class="table">
                 {% comment %} Creates rows for each week in the season {% endcomment %}

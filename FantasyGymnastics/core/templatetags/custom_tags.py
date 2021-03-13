@@ -214,4 +214,6 @@ def competes_this_week(gymnast, teams):
         return True
     return False
 
-
+@register.filter
+def get_current_matchups(matchups, current_week):
+    return matchups.filter(week=current_week)
