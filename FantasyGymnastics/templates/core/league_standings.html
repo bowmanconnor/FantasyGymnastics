@@ -142,7 +142,13 @@
                 <tbody>
                     {% for requested_user in league.requested_to_join.all %}
                     <tr>
-                        <td><a href="{% url 'approve_player_into_league' league.pk requested_user.pk %}">{{requested_user}}</a> </td>
+                        <td>
+                        {% if not league.draft_started %}
+                            <a href="{% url 'approve_player_into_league' league.pk requested_user.pk %}">{{requested_user}}</a> 
+                        {% else %}
+                            {{requested_user}}
+                        {% endif %} 
+                        </td>
                         <td><a href="{% url 'reject_player_from_league' league.pk requested_user.pk %}"><i class="far fa-times-circle"></i></a></td>
                     </tr>
                     {% endfor %}

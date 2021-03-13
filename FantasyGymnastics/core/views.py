@@ -83,9 +83,9 @@ class SearchLeagues(ListView):
         context = super().get_context_data()
         query = self.request.GET.get('query')
         if query:
-            context['leagues'] = League.objects.filter(name__icontains=query).exclude(draft_started=True)
+            context['leagues'] = League.objects.filter(name__icontains=query)
         else:
-            context['leagues'] = League.objects.all().exclude(draft_started=True)
+            context['leagues'] = League.objects.all()
         return context
         
 @login_required
@@ -96,14 +96,14 @@ def request_to_join_league(request, pk):
         league=league
     )
     if len(team) == 0:
-        if request.user not in league.requested_to_join.all():
+        if request.user not in league.requested_to_join.all() and not league.draft_started:
             league.requested_to_join.add(request.user)
     return redirect('league_standings', pk=league.pk)
 
 @login_required
 def approve_player_into_league(request, league_pk, user_pk):
     league = get_object_or_404(League, pk=league_pk)
-    if request.user == league.manager:
+    if request.user == league.manager and not league.draft_started:
         user = get_object_or_404(User, pk=user_pk)
         create_team_with_lineups(user, league)
         league.requested_to_join.remove(user)
@@ -120,7 +120,7 @@ def reject_player_from_league(request, league_pk, user_pk):
 @login_required
 def remove_team_from_league(request, league_pk, team_pk):
     league = get_object_or_404(League, pk=league_pk)
-    if request.user == league.manager:
+    if request.user == league.manager and not league.draft_started:
         team = get_object_or_404(FantasyTeam, pk=team_pk)
         gymnasts = team.roster.all()
         for gymnast in gymnasts:
