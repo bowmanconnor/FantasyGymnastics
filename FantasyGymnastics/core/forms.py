@@ -8,8 +8,8 @@ class NewLeagueForm(forms.ModelForm):
         exclude = ['manager', 'requested_to_join', 'drafted', 'currently_drafting', 'draft_started', 'draft_complete']
         help_texts = {
             'name': 'League name must be unique',
-            'roster_size': 'Our recommendation: 17 man roster',
-            'lineup_size': 'Our recommendation: 15 man competition roster',
+            'roster_size': 'Our recommendation: 15 man roster',
+            'lineup_size': 'Our recommendation: 13 man competition roster',
             'event_lineup_size': 'Our recommendation: 5 up',
             'event_count_size': 'Our recommendation: 3 count',
         }
