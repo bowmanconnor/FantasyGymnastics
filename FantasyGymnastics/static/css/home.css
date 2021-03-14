@@ -13,7 +13,13 @@ body {
 }
 
 #navButton:hover {
-  color: #C8CFD0;
+  background-color: #6E60B3;
+  outline-color: #03012C;
+  color: #03012C;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
 }
 
 a {
@@ -22,13 +28,49 @@ a {
 
 h1 {
   color: #03012C;
-  font-size: 72px;
+  font-size: 3rem;
 }
 
 h2 {
   color: #03012C;
+  font-size: 1.5rem;
 }
 
+h3 {
+  color: #03012C;
+  font-size: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  h1 {
+    font-size: 3.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+}
+@media (min-width: 992px) {
+  h1 {
+    font-size: 4rem;
+  }
+
+  h2 {
+    font-size: 2.5rem;
+  }
+
+  h3 {
+    font-size: 2rem;
+  }
+}
 table {
   background-color: #C8CFD0;
   color: #03012C;
@@ -53,15 +95,32 @@ table {
 }
 
 .btn-primary:hover {
+  background-color: #F0EDEE;
+  border-color: #03012C;
+  color: #03012C;
+}
+
+i {
+  color: #6E60B3;
+}
+
+.nav-pills .nav-link.active {
   background-color: #6E60B3;
-  border-color: #6E60B3;
-  color: #C8CFD0;
 }
 
 #myCarousel h1 {
   color: #C8CFD0;
 }
 
+.circle-icon {
+  background: #C8CFD0;
+  padding: 30px;
+  border-radius: 50%;
+}
 
-/*#sourceMappingURL=home.css.map */
+#venmo_pic {
+  height: 20%;
+  width: 20%;
+}
 
+/*# sourceMappingURL=home.css.map */
