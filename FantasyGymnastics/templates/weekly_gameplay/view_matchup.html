@@ -27,7 +27,7 @@
             {% comment %} loops through all lineups for this matchup week {% endcomment %}
             {% for lineup in team1.LineUp.all|current_week:matchup.week %}
                 <table class="table tablesorter table-hover" data-sortlist="[[2, 1]]">
-                    <tr>
+                    <thead>
                         {% comment %} Lineup event name and capacity {% endcomment %}
                         <th></th>
                         <th>{{lineup.event}} {{ lineup.gymnasts.all.count }}/{{ team1.league.event_lineup_size }}</th>
@@ -37,7 +37,7 @@
                             {% endif %}
                             <b>{{lineup|actual_lineup_score}}</b>
                         </td>
-                    </tr>
+                    </thead>
                     <tbody>
                         {% comment %} Loops through gymnasts in lineup {% endcomment %}
                         {% for gymnast in lineup.gymnasts.all %}
