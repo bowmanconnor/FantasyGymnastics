@@ -51,7 +51,7 @@
                                 {% comment %} Gymnast name and score for event {% endcomment %}
                                 <td>
                                     <a href="{% url 'view_gymnast' gymnast.pk %}">
-                                        <div class='ellipsis'>{{gymnast.name|truncatechars:10}}</div>
+                                        <div class='ellipsis'>{{gymnast.name}}</div>
                                     </a>
                                 </td>
                                     
@@ -185,7 +185,7 @@
                                 </td>
                                 <td class='ellipsis'>
                                     <a href="{% url 'view_gymnast' gymnast.pk %}">
-                                        <div class='ellipsis'>{{gymnast.name|truncatechars:10}}</div>
+                                        <div class='ellipsis'>{{gymnast.name}}</div>
                                     </a>
                                 </td>
                                 <td></td>
