@@ -6,7 +6,7 @@
 
 {% block top_card %}
 <div class='form-signin mb-4'>
-    <a class='btn btn-block btn-facebook mb-2' href="{% url 'social:begin' 'facebook' %}"><i class="fa fa-facebook"></i> Continue with Facebook</a>
+    {% comment %} <a class='btn btn-block btn-facebook mb-2' href="{% url 'social:begin' 'facebook' %}"><i class="fa fa-facebook"></i> Continue with Facebook</a> {% endcomment %}
     <a class='btn btn-block btn-google' href="{% url 'social:begin' 'google-oauth2' %}"><i class="fa fa-google"></i> Continue with Google</a>
 </div>
 <hr>
@@ -21,6 +21,6 @@
     </div>
     <hr class="mt-3 mb-4">
     <form class="form-signin" novalidate>
-        <a href="{% url 'register' %}" class="btn btn-success btn-block text-uppercase mb-2" role="button">Register</a>
+        <a href="{% url 'register' %}" class="btn btn-success btn-block mb-2" role="button">Register</a>
     </form>
 {% endblock bottom_card %}

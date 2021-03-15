@@ -27,7 +27,7 @@ class Gymnast(models.Model):
 
 class League(models.Model):
     manager = models.ForeignKey(User, related_name='League', on_delete=models.CASCADE, null=True, blank=True) #how do these look, cutie?
-    name = models.CharField(max_length=50, blank=False)
+    name = models.CharField(max_length=50, blank=False, unique=True)
     roster_size = models.PositiveIntegerField(blank=False)
     lineup_size = models.PositiveIntegerField(blank=False)
     event_lineup_size = models.PositiveIntegerField(blank=False)
@@ -35,6 +35,9 @@ class League(models.Model):
     requested_to_join = models.ManyToManyField(User, related_name="RequestedLeague", blank=True)
     drafted = models.ManyToManyField(Gymnast, related_name="DraftedGymnasts", blank=True)
     currently_drafting = models.PositiveIntegerField(default=0, blank=True)
+    draft_started = models.BooleanField(default=False)
+    draft_complete = models.BooleanField(default=False)
+    going_down = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -59,6 +62,7 @@ class FantasyTeam(models.Model):
     wins = models.PositiveIntegerField(default=0)
     losses = models.PositiveIntegerField(default=0)
     draft_position = models.PositiveIntegerField(default=0)
+    currently_in_draft = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('user', 'league')
@@ -93,3 +97,8 @@ class Score(models.Model):
 
     def __str__(self):
         return str(round(self.score,2))
+
+class ContactUs(models.Model):
+    message = models.CharField(max_length=500)
+    user = models.ForeignKey(User, related_name='contactus', on_delete=models.CASCADE)
+    sumbitted_at = models.DateTimeField(auto_now_add=True)

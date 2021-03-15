@@ -5,22 +5,22 @@
 <link rel="stylesheet" href="{% static 'css/clickable_row.css' %}">
 {% endblock stylesheet %}
 {% block content %}
-<div class="d-flex align-items-center justify-content-center mb-4">
-        <h1>Gymnast Search</h1>
+    <a href="{% url 'view_team' team.pk %}">
+        <button class="btn btn-outline-primary algin-right mt-4" type="button">Back to team</button>
+    </a>
+    {% if gymnasts %}
+  <div class="d-flex align-items-center justify-content-center mb-4">
+        <h1>Draftable Gymnast Search</h1>
     </div>
     <div class="d-flex align-items-center justify-content-center mb-4">
         <form>
             <input class="search form-control" type="search" data-column="all" placeholder="Name, Team, or Score">
         </form>
     </div>
-    <a href="{% url 'view_team' team.pk %}">
-        <button class="btn btn-outline-primary algin-right" type="button">Back to team</button>
-    </a>
-    {% if gymnasts %}
     <div style="overflow-x: auto">
         <table id="myTable" class="table tablesorter">
             <thead>
-                {% if team.roster.all.count < team.league.roster_size %}
+                {% if team.roster.all.count < team.league.roster_size and team.league.draft_complete%}
                     <th></th>
                 {% endif %}
                 <th>Name</th>
@@ -32,12 +32,12 @@
                 <th>VT</th>
                 <th>PB</th>
                 <th>HB</th> 
-                <th></th>  
+                <th>Meet week</th>  
             </thead>
             <tbody>
                 {% for gymnast in gymnasts %}
                     <tr>
-                        {% if team.roster.all.count < team.league.roster_size %}
+                        {% if team.roster.all.count < team.league.roster_size and team.league.draft_complete %}
                             <td><a class="btn btn-outline-primary" role="button" href="{% url 'add_gymnast_to_roster' team.pk gymnast.pk %}">Add</a></td>
                         {% endif %}                         
                         <td><a href="{% url 'view_gymnast' gymnast.pk %}">{{gymnast.name}}</a></td>
@@ -61,7 +61,6 @@
                 {% endfor %}
             </table>
         </div>
-    {% endif %}
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
 
@@ -106,4 +105,5 @@
             });
         });
     </script>
+    {% endif %}
 {% endblock content %}

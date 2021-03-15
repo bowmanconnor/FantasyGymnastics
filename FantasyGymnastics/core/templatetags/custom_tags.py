@@ -63,6 +63,11 @@ def current_week(lineup, week):
     return lineup.filter(week=week)
 
 @register.filter
+def event(lineup, event):
+    if lineup.filter(event=event).exists():
+        return lineup.get(event=event)
+
+@register.filter
 def actual_lineup_score(lineup):
     total = decimal.Decimal(0.00)
     scores = []
@@ -166,6 +171,13 @@ def team_has_competed(gymnast, week):
     return False
 
 @register.filter
+def has_users_team(matchup, user):
+    if matchup.team1.user == user or matchup.team2.user == user:
+        return "active"
+    else:
+         return ""
+        
+@register.filter
 def meets(scores):
     meets = []
     for meet in scores.values('meet').order_by('-date').distinct():
@@ -190,6 +202,11 @@ def has_team_in_league(user, league):
         return True
     return False
 
+@register.filter
+def waiting_to_join(user, league):
+    if user in league.requested_to_join.all():
+        return True
+    return False
 
 @register.filter
 def competes_this_week(gymnast, teams):
@@ -197,4 +214,6 @@ def competes_this_week(gymnast, teams):
         return True
     return False
 
-
+@register.filter
+def get_current_matchups(matchups, current_week):
+    return matchups.filter(week=current_week)

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}My account{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active">My account</li>
+{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-center mb-4">
+        <h1>Edit Account</h1>
+    </div>
+  <div class="row d-flex align-items-center justify-content-center mb-4">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% include 'includes/forms_titles.html' %}
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

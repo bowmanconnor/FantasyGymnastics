@@ -6,20 +6,20 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href="{% static 'css/login.css' %}" rel="stylesheet">
-    <link href="{% static 'css/bootstrap-social.css' %}" rel="stylesheet">
-
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link href="{% static 'css/login.css' %}" rel="stylesheet">
+        <link href="{% static 'css/bootstrap-social.css' %}" rel="stylesheet">
     </head>
-
     <body>
         <div class="container">
-            <div class="mt-4 mb-4">
+            <div class="mt-5 mb-4">
                 <div class="container login-container">
                     <div class="row">
                         <div class="col-md-6 mb-5 d-flex justify-content-center align-items-center">
                             {% comment %} <img src="{% static "images/logo.png" %}" alt="" height='200' width='200' class="d-inline-block align-top"> {% endcomment %}
-                            MyFGL Logo
+                            <a class='navbar-brand' href="{% url 'home' %}">
+                                <img src="{% static "images/logo.png" %}" alt="" height="50" class="d-inline-block align-top">
+                            </a>
                         </div>
                         <div class="col-md-6 mx-auto">
                             <div class="card card-signin">
@@ -55,7 +55,7 @@
                                             {% endif %}
                                         </div>
                                         {% endfor %}
-                                        <button type="submit" class="btn btn-primary btn-block text-uppercase">{% block submit_text %}Replace{% endblock submit_text %}</button>
+                                        {% block no_button %}<button type="submit" class="btn btn-primary btn-block">{% block submit_text %}Replace{% endblock submit_text %}{% endblock no_button %}</button>
                                     </form>
                                     {% block bottom_card %}
                                     {% endblock bottom_card %}

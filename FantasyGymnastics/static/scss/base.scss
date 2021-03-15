@@ -1,0 +1,101 @@
+$light-base: #F0EDEE;
+$dark-blue: #03012C;
+$dark-grey: #535965;
+$light-purple: #6E60B3;
+$light-grey: #C8CFD0;
+    
+body {
+    background-color: $light-base;
+    color: $dark-grey;
+
+}
+
+#navbar {
+    background-color: $light-purple;
+    color: $light-grey;
+}
+
+#navbar a {
+    color: $dark-blue;
+}
+
+#navButton:hover {
+    background-color: $light-purple;
+    outline-color: $dark-blue;
+    color: $dark-blue;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+}
+
+
+a {
+    color: $light-purple;
+}
+
+
+h1 {
+    color: $dark-blue;
+    font-size: 3rem;
+}
+
+h2 {
+    color: $dark-blue;
+    font-size: 1.5rem;
+}
+
+h3 {
+    color: $dark-blue;
+    font-size: 1.25rem;
+}
+
+@media (min-width: 768px) {
+    h1 {font-size: 3.5rem;}
+    h2 {font-size: 2rem;}
+    h3 {font-size: 1.5rem;}
+    h2 {font-size: 2rem;}
+}
+
+@media (min-width: 992px) { 
+    h1 {font-size:4rem;}
+    h2 {font-size:2.5rem;}
+    h3 {font-size: 2rem;}
+}
+
+table {
+    background-color: $light-grey;
+    color: $dark-blue;
+    border-radius: 12px;
+}
+
+.btn-outline-primary {
+    border-color: $dark-blue;
+    color: $dark-blue;
+}
+
+.btn-outline-primary:hover {
+    border-color: $dark-blue;
+    background-color: $dark-blue;
+    color: $light-grey;
+}
+
+.btn-primary {
+    background-color: $dark-blue;
+    border-color: $dark-blue;
+    color: $light-grey;
+}
+
+.btn-primary:hover {
+    background-color: $light-base;
+    border-color: $dark-blue;
+    color: $dark-blue;
+}
+
+i {
+    color: $light-purple;
+}
+
+.nav-pills .nav-link.active {
+    background-color: $light-purple;
+}
