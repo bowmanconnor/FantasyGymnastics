@@ -139,18 +139,11 @@ class DraftConsumer(WebsocketConsumer):
                             # Creates lineups for entire season
                             events = ['FX', 'PH', 'SR', 'VT', 'PB', 'HB']
                             for i in range(6):
-                                lineup1 = LineUp(
-                                    team=team1,
-                                    event=events[i],
-                                    week=week
-                                )
-                                lineup2 = LineUp(
-                                    team=team2,
-                                    event=events[i],
-                                    week=week
-                                )
-                                lineup1.save()
-                                lineup2.save()
+                                if not LineUp.objects.filter(team=team1, event=events[i], week=week).exists():
+                                    LineUp.objects.create(team=team1, event=events[i], week=week)
+                                if not LineUp.objects.filter(team=team2, event=events[i], week=week).exists():
+                                    LineUp.objects.create(team=team2, event=events[i], week=week)
+  
 
                     league.draft_complete = True
                     async_to_sync(self.channel_layer.group_send)(self.draft_group, {
