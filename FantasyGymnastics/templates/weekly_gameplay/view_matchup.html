@@ -56,15 +56,18 @@
                                 </td>
                                     
                                 <td class='alltoright'>
-                                    {% comment %} Gymnast score if their team has competed {% endcomment %}
+                                    {% comment %} Gymnast score if they have a score this matchup week {% endcomment %}
                                     {% if gymnast|scores_from_week:lineup.week|has_event_score:lineup.event %}
                                         <b>{{ gymnast|scores_from_week:lineup.week|get_highest_event_score:lineup.event }}</b>
-                                    {% elif  gymnast|team_has_competed:lineup.week %}
+                                    {% comment %} If gymansts team has competed this matchup week or this is an old mathup show 0.00{% endcomment %}
+                                    {% elif gymnast|team_has_competed:lineup.week or matchup.week != current_week %}
                                         <b>0.00</b>
-                                    {% comment %} Gymnast average if their team hasnt competed  {% endcomment %}
+                                    {% comment %} Gymnast average if their team hasn't competed and this is the current week {% endcomment %}
                                     {% else %}
+                                        {% comment %} Gymnast average if they have one {% endcomment %}
                                         {% if gymnast|event_average:lineup.event%}
                                             <em>{{gymnast|event_average:lineup.event}}</em>
+                                        {% comment %} 0.00 {% endcomment %}
                                         {% else %}
                                             <em>0.00</em>
                                         {% endif %} 
@@ -169,12 +172,13 @@
                             <tr>
                                 {% comment %} Gymnast name and score for event {% endcomment %}
                                 <td class='alltoleft'>
-                                    {% comment %} Gymnast score if theyve competed {% endcomment %}
+                                    {% comment %} Gymnast score if they have a score this matchup week {% endcomment %}
                                     {% if gymnast|scores_from_week:lineup.week|has_event_score:lineup.event %}
                                         <b>{{ gymnast|scores_from_week:lineup.week|get_highest_event_score:lineup.event }}</b>
-                                    {% elif  gymnast|team_has_competed:lineup.week %}
+                                    {% comment %} 0.00 if a gymansts team competed this matchup week or this is an old matchup {% endcomment %}
+                                    {% elif gymnast|team_has_competed:lineup.week or matchup.week != current_week %}
                                         <b>0.00</b>
-                                    {% comment %} Gymnast event average if they havent competed  {% endcomment %}
+                                    {% comment %} Gymnast event average if their team hasnt competed and its the current week {% endcomment %}
                                     {% else %}
                                         {% if gymnast|event_average:lineup.event%}
                                             <em>{{gymnast|event_average:lineup.event}}</em>
