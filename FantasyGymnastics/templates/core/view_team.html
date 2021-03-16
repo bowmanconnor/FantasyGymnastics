@@ -10,10 +10,10 @@
         <h1>{{team.name}}</h1>
     </div>
     {% if user == team.user %}
-    <div class='d-flex align-items-center justify-content-center mb-4'>
-        <a class="btn btn-outline-primary col-auto" href="{% url 'edit_team' team.pk %}"role="button">Edit
-            Team</a>
-    </div>
+        <div class='d-flex align-items-center justify-content-center mb-4'>
+            <a class="btn btn-outline-primary col-auto" href="{% url 'edit_team' team.pk %}"role="button">Edit
+                Team</a>
+        </div>
     {% endif %}
 
    <a href="{% url 'league_standings' team.league.pk %}">
@@ -47,11 +47,11 @@
                                 <td>{{gymnast.team}}</td>
                                 <td>{{gymnast.year}}</td>
                                 {% for average in gymnast|all_averages %}
-                                    {% if average.score == 0 %}
-                                        <td></td>
-                                    {% else %}
-                                        <td>{{ average.score }}</td>
-                                    {% endif %} 
+                                    <td>
+                                        {% if average.score != 0 %}
+                                            {{ average.score }}
+                                        {% endif %} 
+                                    </td>
                                 {% endfor %}
                                 <td>
                                     {% if gymnast|competes_this_week:teams_competing %}
@@ -60,38 +60,44 @@
                                         <i class="far fa-times-circle"></i> No
                                     {% endif %}
                                 </td>
-                                {% if user == team.user and not gymnast|team_has_competed:current_week and team.league.draft_complete %}
-                                    <td>
-                                        <div data-bs-toggle="modal" data-bs-target="#dropGymnast{{gymnast.pk}}">
-                                            <a data-bs-toggle="modal" data-bs-target="#dropGymnast{{gymnast.pk}}"><i class="far fa-times-circle"></i></a>
-                                        </div>
-                                        <div class="modal fade" id="dropGymnast{{gymnast.pk}}" tabindex="-1" aria-labelledby="dropGymnast{{gymnast.pk}}Label" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
+                                {% if user == team.user and team.league.draft_complete %}
+                                    {% comment %} Allows removal of gymnast from roster if a gymnasts team hasnt competed. Also if a gymnasts team has competed but the gymnast isnt in any of your current lineups  {% endcomment %}
+                                    {% if gymnast|team_has_competed:current_week and gymnast|in_lineup_current_week:team %}
+                                        <td></td>
+                                    {% else %}
+                                        <td>
+                                            <div data-bs-toggle="modal" data-bs-target="#dropGymnast{{gymnast.pk}}">
+                                                <a data-bs-toggle="modal" data-bs-target="#dropGymnast{{gymnast.pk}}"><i class="far fa-times-circle"></i></a>
+                                            </div>
+                                            <div class="modal fade" id="dropGymnast{{gymnast.pk}}" tabindex="-1" aria-labelledby="dropGymnast{{gymnast.pk}}Label" aria-hidden="true">
+                                                <div class="modal-dialog">
                                                     <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="dropGymnast{{gymnast.pk}}Label">Drop gymnast</h5>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="container-fluid">
-                                                                <div class="row d-flex align-items-center justify-content-center">
-                                                                    <div class="col">
-                                                                        <p>Are you sure you want to drop {{gymnast.name}}?</p>
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="dropGymnast{{gymnast.pk}}Label">Drop gymnast</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="container-fluid">
+                                                                    <div class="row d-flex align-items-center justify-content-center">
+                                                                        <div class="col">
+                                                                            <p>Are you sure you want to drop {{gymnast.name}}?</p>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <form action="{% url 'remove_gymnast_to_roster' team.pk gymnast.pk %}" method="POST">
-                                                                {% csrf_token %}
-                                                                <button class="btn btn-outline-primary">Drop</button>
-                                                            </form>
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <div class="modal-footer">
+                                                                <form action="{% url 'remove_gymnast_to_roster' team.pk gymnast.pk %}" method="POST">
+                                                                    {% csrf_token %}
+                                                                    <button class="btn btn-outline-primary">Drop</button>
+                                                                </form>
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
+                                            </div> 
+                                        </td>
+                                    {% endif %}
                                 {% endif %}
                             </tr>
                         {% endfor %}
@@ -99,118 +105,116 @@
                 </table>
             </div>
 
-
-
-
-
-            {% comment %} Add to roster button {% endcomment %}
+            {% comment %} Roster size vs limit {% endcomment %}
             <p>{{ team.roster.all.count }}/{{ team.league.roster_size}}</p>
+            {% comment %} Add to roster button if the team belongs to user, the roster size is less than the limit, and the draft is over {% endcomment %}
             <a class="mb-4" href="{% url 'gymnast_search' team.pk %}">
-                {% if user == team.user %}
-                    {% if team.roster.all.count < team.league.roster_size and team.league.draft_complete %} 
-                        <i class="fas fa-user-plus ms-2"> Add to roster</i>
-                    {% else %}
-                        <i class="fas fa-users ms-2"> View draftable gymnasts</i>
-                    {% endif %}
+                {% if user == team.user and team.roster.all.count < team.league.roster_size and team.league.draft_complete %} 
+                    <i class="fas fa-user-plus ms-2"> Add to roster</i>
+                {% else %}
+                    <i class="fas fa-users ms-2"> View draftable gymnasts</i>
                 {% endif %}
             </a>
             
         </div>
-        {% comment %} <div class="col-md-2"></div> {% endcomment %}
         {% comment %} Lineups {% endcomment %}
         <div class="col-sm">
             <h2>Lineups</h2>
-            {% comment %} Tab Headers {% endcomment %}
+            {% comment %} Lineup Headers {% endcomment %}
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                 {% for lineup in lineups %}
-                <li class="nav-item active" role="presentation">
-                    <button class="nav-link" id="{{lineup.event}}-tab" data-bs-toggle="pill"
-                        data-bs-target="#{{lineup.event}}" type="button" role="tab" aria-controls="pills-contact"
-                        aria-selected="false">{{lineup.event}}</button>
-                </li>
+                    <li class="nav-item active" role="presentation">
+                        <button class="nav-link" id="{{lineup.event}}-tab" data-bs-toggle="pill" data-bs-target="#{{lineup.event}}" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                            {{lineup.event}}
+                        </button>
+                    </li>
                 {% endfor %}
             </ul>
-            {% comment %} Tab content {% endcomment %}
+            {% comment %} Lineup content {% endcomment %}
             <div class="tab-content" id="pills-tabContent">
                 {% for lineup in lineups %}
                     <div class="tab-pane fade" id="{{lineup.event}}" role="tabpanel" aria-labelledby="{{lineup.event}}-tab">
                         <table class="table table-hover">
                             {% for gymnast in lineup.gymnasts.all %}
                                 <tr>
-                                    {% comment %} Remove gymnast from lineup {% endcomment %}
                                     <td>{{gymnast.name}}</td>
                                     <td>{{gymnast.team}}</td>
                                     <td>
+                                        {% comment %} Gymnast score if they have one this week {% endcomment %}
                                         {% if gymnast|scores_from_week:lineup.week|has_event_score:lineup.event %}
                                             <b>{{ gymnast|scores_from_week:lineup.week|get_highest_event_score:lineup.event }}</b>
-                                        {% elif  gymnast|team_has_competed:lineup.week %}
+                                        {% comment %} 0 if their team has already competed and they dont have a score {% endcomment %}
+                                        {% elif gymnast|team_has_competed:lineup.week %}
                                             <b>0.00</b>
-                                        {% comment %} Gymnast event average if they havent competed  {% endcomment %}
+                                        {% comment %} Gymnast event average if their team hasnt competed {% endcomment %}
                                         {% else %}
+                                            {% comment %} Average if it exists {% endcomment %}
                                             {% if gymnast|event_average:lineup.event%}
                                                 <em>{{gymnast|event_average:lineup.event}}</em>
+                                            {% comment %} 0 if they dont have an average {% endcomment %}
                                             {% else %}
                                                 <em>0.00</em>
                                             {% endif %} 
                                         {% endif %}
                                     </td>
                                     <td>
+                                        {% comment %} Remove gymnast from lineup bitton if team is users and gymnasts team has not competed {% endcomment %}
                                         {% if user == team.user and not gymnast|team_has_competed:lineup.week %}
-                                            <a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}"><i class="far fa-times-circle"></i></a>
-                                        {% else %}
-                                            
+                                            <a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}"><i class="far fa-times-circle"></i></a>                                    
                                         {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
-                        {% comment %} Add to lineup button {% endcomment %}
                         </table>
-                        {% if user == team.user %}
-                            {% if lineup.gymnasts.all.count < lineup.team.league.event_lineup_size %} 
+                        {% comment %} Add to lineup button if team is users and lineup size is less than limit {% endcomment %}
+                        {% if user == team.user and lineup.gymnasts.all.count < lineup.team.league.event_lineup_size %} 
                                 <p><a data-bs-toggle="collapse" href="#multiCollapse{{lineup.event}}" aria-expanded="false" aria-controls="multiCollapse{{lineup.event}}"><i class="fas fa-user-plus"></i></a></p>
-                            {% endif %}
                         {% endif %}
+                        {% comment %} Lineup size vs limit {% endcomment %}
                         <p>{{ lineup.gymnasts.all.count }}/{{ team.league.event_lineup_size }}</p>
-                        {% comment %} Add to lineup dropdown {% endcomment %}
+                        {% comment %} Add to lineup dropdown of gymnasts not already in lineup {% endcomment %}
                         <div class="row">
                             <div class="col">
                                 <div class="collapse multi-collapse" id="multiCollapse{{lineup.event}}">
                                     <table class="table table-hover">
                                         {% for gymnast in roster %}
                                             {% if gymnast not in lineup.gymnasts.all %}
-                                                {% if user == team.user %}
-                                                    <tr>
-                                                        <td>
-                                                            {% if gymnast|team_has_competed:lineup.week %}
-                                                                {{gymnast.name}}
+                                                <tr>
+                                                    <td>
+                                                        {% comment %} Gymn can be added if their team hasnt competed this week {% endcomment %}
+                                                        {% if gymnast|team_has_competed:lineup.week %}
+                                                            {{gymnast.name}}
+                                                        {% else %}
+                                                            <a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}}</a> 
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>{{gymnast.team}}</td>
+                                                    <td>
+                                                        {% comment %} Gymnast score if they have one this week {% endcomment %}
+                                                        {% if gymnast|scores_from_week:lineup.week|has_event_score:lineup.event %}
+                                                            <b>{{ gymnast|scores_from_week:lineup.week|get_highest_event_score:lineup.event }}</b>
+                                                        {% comment %} 0 if their team has already competed and they dont have a score {% endcomment %}
+                                                        {% elif  gymnast|team_has_competed:lineup.week %}
+                                                            <b>0.00</b>
+                                                        {% comment %} Gymnast event average if their team hasnt competed {% endcomment %}
+                                                        {% else %}
+                                                            {% comment %} Average if it exists {% endcomment %}
+                                                            {% if gymnast|event_average:lineup.event%}
+                                                                <em>{{gymnast|event_average:lineup.event}}</em>
+                                                            {% comment %} 0 if they dont have an average {% endcomment %}
                                                             {% else %}
-                                                                <a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}}</a> 
-                                                            {% endif %}
-                                                        </td>
-                                                        <td>{{gymnast.team}}</td>
-                                                        <td>
-                                                            {% if gymnast|scores_from_week:lineup.week|has_event_score:lineup.event %}
-                                                                <b>{{ gymnast|scores_from_week:lineup.week|get_highest_event_score:lineup.event }}</b>
-                                                            {% elif  gymnast|team_has_competed:lineup.week %}
-                                                                <b>0.00</b>
-                                                            {% comment %} Gymnast event average if they havent competed  {% endcomment %}
-                                                            {% else %}
-                                                                {% if gymnast|event_average:lineup.event%}
-                                                                    <em>{{gymnast|event_average:lineup.event}}</em>
-                                                                {% else %}
-                                                                    <em>0.00</em>
-                                                                {% endif %} 
-                                                            {% endif %}
-                                                        </td>
-                                                        <td>
-                                                            {% if gymnast|competes_this_week:teams_competing %}
-                                                                <i class="fas fa-check"></i> Yes
-                                                            {% else %}
-                                                                <i class="far fa-times-circle"></i> No
-                                                            {% endif %}
-                                                        </td>
-                                                    </tr>
-                                                {% endif %}
+                                                                <em>0.00</em>
+                                                            {% endif %} 
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if gymnast|competes_this_week:teams_competing %}
+                                                            <i class="fas fa-check"></i> Yes
+                                                        {% else %}
+                                                            <i class="far fa-times-circle"></i> No
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
                                             {% endif %}
                                         {% endfor %}
                                     </table>

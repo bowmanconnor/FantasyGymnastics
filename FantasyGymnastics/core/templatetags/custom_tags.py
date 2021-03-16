@@ -1,5 +1,5 @@
 from django import template
-from core.models import Gymnast, Score, League, FantasyTeam
+from core.models import Gymnast, Score, League, FantasyTeam, LineUp
 from weekly_gameplay.models import Average
 from scraper.Scraper import Scraper, ScraperConstants
 from datetime import datetime
@@ -217,3 +217,9 @@ def competes_this_week(gymnast, teams):
 @register.filter
 def get_current_matchups(matchups, current_week):
     return matchups.filter(week=current_week)
+
+@register.filter
+def in_lineup_current_week(gymnast, team):
+    scraper = Scraper()
+    current_week = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
+    return gymnast.LineUp.filter(week=current_week, team=team).exists()
