@@ -15,20 +15,12 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
 
 #Helper Function
-def create_team_with_lineups(user, league):
+def create_team(user, league):
     scraper = Scraper()
     team = FantasyTeam.objects.create(
         user=user,
         league=league,
         name=str(user.username)+"'s Team")
-    events = ['FX', 'PH', 'SR', 'VT', 'PB', 'HB']
-    for i in range(6):
-        lineup = LineUp.objects.create(
-            team=team,
-            event=events[i],
-            week=int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
-        )
-        lineup.save()
         
 @login_required
 def create_league(request):
@@ -38,7 +30,7 @@ def create_league(request):
             league = form.save(commit=False)
             league.manager = request.user
             league.save()
-            create_team_with_lineups(request.user, league)
+            create_team(request.user, league)
             return redirect('league_standings', pk=league.pk)
     else:
         form = NewLeagueForm()
@@ -107,7 +99,7 @@ def approve_player_into_league(request, league_pk, user_pk):
     league = get_object_or_404(League, pk=league_pk)
     if request.user == league.manager and not league.draft_started:
         user = get_object_or_404(User, pk=user_pk)
-        create_team_with_lineups(user, league)
+        create_team(user, league)
         league.requested_to_join.remove(user)
     return redirect('league_standings', pk=league.pk)
 
