@@ -19,50 +19,56 @@
 </head>
 
 <body>
-    <nav id ="navbar" class="navbar sticky-top navbar-expand-lg">
+    <nav id ="navbar" class="navbar sticky-top navbar-expand-sm">
       <div class="container-fluid">
         <a class='navbar-brand' href="{% url 'home' %}">
           <img src="{% static "images/logo.png" %}" alt="" height="25" class="d-inline-block align-top">
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target = ".dual-collapse2" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarText">
+        <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'myleagues' %}">MyLeagues</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://roadtonationals.com/results/scheduleM/" target="_blank">Schedule</a>
-            </li>
-          {% if user.is_staff %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'view_contact_us' %}">Feedback</a>
-            </li>
-          {% endif %}
-            </ul>
-            <span class="navbar-text">
-                {% if user.is_authenticated %}
-                <div class="dropdown">
-                  <a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ user.username }}
-                  </a>
-                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item" href="{% url 'my_account' %}">Edit account</a></li>
-                    <li><a class="dropdown-item" href="{% url 'password_change' %}">Change password</a></li>
-                     <div class="dropdown-divider"></div>
-                    <li><a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
-                  </ul>
-                </div>
-                {% else %}
-                    <a id="navButton" class="btn btn-outline-primary me-2" href="{% url 'login' %}" role="button">Login</a>
-                    <a id="navButton" class="btn btn-outline-primary me-2" href="{% url 'register' %}" role="button">Register</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'myleagues' %}">MyLeagues</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://roadtonationals.com/results/scheduleM/" target="_blank">Schedule</a>
+                </li>
+                {% if user.is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'view_contact_us' %}">Feedback</a>
+                </li>
                 {% endif %}
-          </span>
+            </ul>
         </div>
+
+        <div class="navbar-collapse collapse w-100 order-3 dual-collapse2 dropstart">
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ user.username }}
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item" href="{% url 'my_account' %}">Edit account</a></li>
+                        <li><a class="dropdown-item" href="{% url 'password_change' %}">Change password</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li><a id="navButton" class="btn btn-outline-primary me-2" href="{% url 'login' %}" role="button">Login</a></li>
+                <li><a id="navButton" class="btn btn-outline-primary me-2" href="{% url 'register' %}" role="button">Register</a></li>
+                {% endif %}
+            </ul>
+
+        </div>
+            
+        
       </div>
     </nav>
 
