@@ -1,7 +1,7 @@
 import json
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
-from core.models import FantasyTeam, League, Gymnast
+from core.models import FantasyTeam, League, Gymnast, LineUp
 from django.shortcuts import get_object_or_404
 from django.core import serializers
 from scraper.Scraper import Scraper, ScraperConstants
@@ -127,6 +127,7 @@ class DraftConsumer(WebsocketConsumer):
                     num_weeks = int(scraper.get_current_and_max_week(ScraperConstants.Men, year)['max'])
                     matchups = round_robin_matchups(num_teams, num_weeks)
                     team_pks = [x.pk for x in list(FantasyTeam.objects.filter(league__pk=self.league_pk))]
+                    # Creates matchups for entire season
                     for week in matchups:
                         for matchup in matchups[week]:
                             team1_pk = team_pks[matchup[0] - 1]
@@ -135,6 +136,21 @@ class DraftConsumer(WebsocketConsumer):
                             team2 = FantasyTeam.objects.filter(pk=team2_pk).first()
                             m = Matchup(team1=team1, team2=team2, league=league, week=week)
                             m.save()
+                            # Creates lineups for entire season
+                            events = ['FX', 'PH', 'SR', 'VT', 'PB', 'HB']
+                            for i in range(6):
+                                lineup1 = LineUp(
+                                    team=team1,
+                                    event=events[i],
+                                    week=week
+                                )
+                                lineup2 = LineUp(
+                                    team=team2,
+                                    event=events[i],
+                                    week=week
+                                )
+                                lineup1.save()
+                                lineup2.save()
 
                     league.draft_complete = True
                     async_to_sync(self.channel_layer.group_send)(self.draft_group, {
