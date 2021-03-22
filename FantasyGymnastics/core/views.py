@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import League, FantasyTeam, Gymnast, LineUp, Score, ContactUs
+from .models import League, FantasyTeam, Gymnast, LineUp, Score, ContactUs, Post
 from django.views.generic import UpdateView, DetailView, DeleteView, ListView
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
@@ -250,6 +250,26 @@ def contact_us(request):
 
 def contact_us_done(request):
     return render(request, 'core/contact_us_done.html')
+
+class PostList(ListView):
+    queryset = Post.objects.filter(status=1).order_by('-posted_at')
+    template_name = 'news/news.html'
+    def get_context_data(self, **kwargs):
+        scraper = Scraper()
+        context = super().get_context_data(**kwargs)
+        context['current_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
+
+        return context
+
+class PostDetail(DetailView):
+    model = Post
+    template_name = 'news/post_detail.html'
+
+def all_news(request):
+    queryset = Post.objects.filter(status=1).order_by('-posted_at')
+    template_name = 'news/news.html'
+    paginate_by = 5
+    return render(request, 'news/all_news.html')
 
 @staff_member_required
 def view_contact_us(request):

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Gymnast, Score, League, FantasyTeam
+from .models import Gymnast, Score, League, FantasyTeam, Post
 
 # Register your models here.
 
@@ -17,7 +17,14 @@ class LeagueAdmin(admin.ModelAdmin):
 class FantasyTeamAdmin(admin.ModelAdmin):
     list_display = ('league', 'name')
 
+class PostAdmin(admin.ModelAdmin):
+    list_display = ('title', 'slug', 'status', 'news_about', 'week', 'posted_at')
+    list_filter = ('status', 'week')
+    search_fields = ['title', 'content']
+    prepopulated_fields = {'slug': ('title',)}
+
 admin.site.register(Gymnast, GymnastAdmin)
 admin.site.register(Score, ScoreAdmin)
 admin.site.register(League, LeagueAdmin)
 admin.site.register(FantasyTeam, FantasyTeamAdmin)
+admin.site.register(Post, PostAdmin)
