@@ -254,22 +254,22 @@ def contact_us_done(request):
 class PostList(ListView):
     queryset = Post.objects.filter(status=1).order_by('-posted_at')
     template_name = 'news/news.html'
+    paginate_by = 10
     def get_context_data(self, **kwargs):
-        scraper = Scraper()
         context = super().get_context_data(**kwargs)
-        context['current_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
-
         return context
 
 class PostDetail(DetailView):
     model = Post
     template_name = 'news/post_detail.html'
 
-def all_news(request):
-    queryset = Post.objects.filter(status=1).order_by('-posted_at')
-    template_name = 'news/news.html'
-    paginate_by = 5
-    return render(request, 'news/all_news.html')
+def weekly_news(request):
+    context = {}
+    context['posts'] = Post.objects.filter(status=1).order_by('-posted_at')
+    scraper = Scraper()
+    context['current_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
+    template_name = 'news/weekly_news.html'
+    return render(request, 'news/weekly_news.html', context)
 
 @staff_member_required
 def view_contact_us(request):

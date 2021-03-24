@@ -35,5 +35,5 @@ urlpatterns = [
    
     path('news/', views.PostList.as_view(), name='news'),
     path('news/<slug:slug>/', views.PostDetail.as_view(), name='post_detail'),
-    path('all_news/', views.all_news, name='all_news')
+    path('weekly_news/', views.weekly_news, name='weekly_news')
 ]
