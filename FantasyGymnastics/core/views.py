@@ -265,9 +265,11 @@ class PostDetail(DetailView):
 
 def weekly_news(request):
     context = {}
-    context['posts'] = Post.objects.filter(status=1).order_by('-posted_at')
     scraper = Scraper()
     context['current_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
+    context['posts'] = Post.objects.filter(status=1, week=context['current_week']).order_by('-posted_at')
+    context['lineup'] = 0
+    context['platform'] = 1
     template_name = 'news/weekly_news.html'
     return render(request, 'news/weekly_news.html', context)
 

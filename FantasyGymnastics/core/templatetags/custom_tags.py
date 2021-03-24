@@ -223,3 +223,7 @@ def in_lineup_current_week(gymnast, team):
     scraper = Scraper()
     current_week = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
     return gymnast.LineUp.filter(week=current_week, team=team).exists()
+
+@register.filter
+def about(posts, news_about):
+    return(posts.filter(news_about=news_about).count())
