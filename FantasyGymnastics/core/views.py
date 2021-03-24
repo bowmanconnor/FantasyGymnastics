@@ -211,6 +211,7 @@ def myleagues(request):
     return render(request, 'core/myleagues.html', context)
 
 def home(request):
+    posts = Post.objects.all()
     gymnasts = Gymnast.objects.all()
     if request.method == 'POST':
             form = NewGymnastForm(request.POST)
@@ -220,7 +221,7 @@ def home(request):
                 return redirect('home')
     else:
         form = NewGymnastForm()
-    return render(request, 'core/home.html', {'form': form, 'gymnasts' : gymnasts})
+    return render(request, 'core/home.html', {'form': form, 'gymnasts' : gymnasts, 'posts' : posts})
 
 def delete_league(request, pk):
     league = get_object_or_404(League, pk=pk)

@@ -108,6 +108,9 @@ class Post(models.Model):
     week = models.PositiveIntegerField(blank=False)
     status = models.IntegerField(choices=STATUS, default=0)
     news_about = models.IntegerField(choices=LINEUP_NEWS_CHOICES, default=1)
+    doc_description = models.CharField(max_length=200, blank=True)
+    document = models.FileField(upload_to='static/documents/', blank=True)
+
 
     class Meta:
         ordering = ['-posted_at']
