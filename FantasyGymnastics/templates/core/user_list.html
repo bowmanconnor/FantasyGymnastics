@@ -4,27 +4,191 @@
 {% block title %}Users{% endblock title %}
 
 {% block content %}
-    <script>
-        var socket = new ReconnectingWebSocket('ws://' + window.location.host + '/ws/users/');
+    <!-- <script>
+        teams = []
+        user_team_pk = -1;
+        const leaguePk = JSON.parse(document.getElementById('league_pk').textContent)
 
-        socket.onopen = function(e) {
+        // Code that runs when a CHANGE_STATUS message is received
+        function change_status(data) {
+            console.log("user_update", data);
+            users_table = document.getElementById('users_online_status');
+            console.log("element", users_table);
+            // console.log("connected", data['user']);
+            set_online_status(team_name, data['status']);
+
+        }
+
+        // Code that runs when a TEAM_DISCONNECT message is received
+        function team_disconnected(data) {
+            console.log("team_disconnect", data)
+            team_name = document.getElementById('team_table_header_' + data['team_pk']);           
+            console.log("disconnected", data['team_name']);
+            set_online_status(team_name, false, data['team_name']);
+        }
+
+        // Code that runs when a SYNC message is received
+        function sync(data) {
+            console.log("sync", data)
+            user_team_pk = data['user_team_pk'];
+            store_teams(data);
+            if(user_team_pk == get_team_currently_up(data['position_currently_drafting'])['pk']) {
+                document.getElementById('teamName').innerText = "Your team";
+                buttons = document.getElementsByClassName('btn');
+                for(var i = 0; i < buttons.length; i++) {
+                    buttons[i].classList.remove('disabled');
+                }
+            } else {
+                document.getElementById('teamName').innerText = get_team_currently_up(data['position_currently_drafting'])['name'];
+            }
+            for (var j = 0; j < data['teams'].length; j++){
+                team_name = document.getElementById('team_table_header_' + data['teams'][j]['pk']);
+                set_online_status(team_name, data['teams'][j]['fields']['currently_in_draft'], data['teams'][j]['fields']['name']); 
+            }
+        }
+
+        function store_teams(data) {
+            data['teams'].forEach(team => {
+                teams.push({
+                    'pk': team['pk'],
+                    'draft_position': team['fields']['draft_position'],
+                    'name': team['fields']['name'],
+                    'roster': team['fields']['roster'],
+                    'currently_in_draft': team['fields']['currently_in_draft']
+                });
+            });
+        }
+
+        function set_online_status(element, status) {
+            // element.innerText = name + " ";
+            icon = document.createElement('i');
+            icon.classList.add('fas');
+            icon.classList.add('fa-circle');
+                
+            if (status == 'online'){
+                icon.style.color = "green";  
+            } else {
+                icon.style.color = "red";  
+            } 
+            element.appendChild(icon);
+        }
+
+        console.log("Connecting to WebSocket for league pk " + leaguePk)
+        // var userSocket = new ReconnectingWebSocket('ws://' + window.location.host + '/ws/users/');
+        const userSocket = new WebSocket(
+            ((window.location.protocol == "https:") ? "wss" : "ws") + '://' + window.location.host + '/ws/users/'
+        );
+
+        userSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+
+            switch(data['event']) {
+                case 'CHANGE_STATUS':
+                    change_status(data);
+                    break;
+                case 'TEAM_DISCONNECT':
+                    team_disconnected(data);
+                    break;
+                case 'SYNC':
+                    sync(data);
+                    break;
+                default:
+                    console.log("Unknown websocket message received", data);
+            }
+        }
+
+        userSocket.onopen = function(e) {
+            console.log("Connected to WebSocket");
+        }
+
+        function submit(gymnast_pk) {
+            console.log(gymnast_pk);
+            userSocket.send(JSON.stringify({'gymnast_pk': gymnast_pk}))
+        }
+
+    </script> -->
+    <script>
+        const userSocket = new WebSocket(
+            ((window.location.protocol == "https:") ? "wss" : "ws") + '://' + window.location.host + '/ws/users/'
+        );
+
+        userSocket.onopen = function(e) {
             console.log("open", e); 
         }
-        socket.onmessage = function(e) {
+
+        userSocket.onmessage = function(e) {
             console.log("message", e)
-            var userData = JSON.parse(e.data)
-            $('# new_user').html(userData.html_users)
+            // var userData = JSON.parse(e.data)
+            // $('# new_user').html(userData.html_users)
+
+            const data = JSON.parse(e.data);
+
+            switch(data['event']) {
+                case 'USER_CONNECT':
+                    user_connected(data);
+                    break;
+                case 'USER_DISCONNECT':
+                    user_disconnected(data);
+                    break;
+                // case 'USER_ERROR':
+                //     console.log("User error", data['error']);
+                // case 'SYNC':
+                //     sync(data);
+                //     break;
+                default:
+                    console.log("Unknown websocket message received", data);
+            }
+
         }
-        socket.onerror = function(e) {
+        userSocket.onerror = function(e) {
             console.log("error", e)
         }
-        socket.onclose = function(e) {
+        userSocket.onclose = function(e) {
             console.log("close", e)
         }
+
+        function set_online_status(element, status) {
+            icon = document.createElement('i');
+            icon.classList.add('fas');
+            icon.classList.add('fa-circle');
+                
+            if (status){
+                icon.style.color = "green";  
+            } else {
+                icon.style.color = "red";  
+            } 
+            element.appendChild(icon);
+        }
+
+        // Code that runs when a USER_CONNECT message is received
+        function user_connected(data) {
+            console.log("user_connect", data);
+            user_online_status_cell = document.getElementById('user_online_status_' + data['user_pk']);
+            console.log("element", user_online_status_cell);
+            console.log("connected", data['username']);
+            set_online_status(user_online_status_cell, true);
+            userSocket.send(JSON.stringify({
+                'user_pk': user_pk,
+                'status': true
+            }))
+        }
+
+        // Code that runs when a USER_DISCONNECT message is received
+        function user_disconnected(data) {
+            console.log("user_disconnect", data);
+            user_online_status_cell = document.getElementById('user_online_status_' + data['user_pk']);
+            console.log("disconnected", data['username']);
+            set_online_status(user_online_status_cell, false);
+            userSocket.send(JSON.stringify({
+                'user_pk': user_pk,
+                'status': false
+            }))
+        }
+
     </script>
 
     <h2> USERS </h2>
-    <p> Automatically update user information when users edit information or subscribe. </p>            
+    <p> Automatically update user online status when users are connected or disconnected from the site. </p>            
     <table class = "table">
     <thead>
         <tr>
@@ -35,8 +199,17 @@
         <th> Online Status</th>
         </tr>
     </thead>
-    <tbody id = "new_user">
-        {% include "includes/users.html"%}
+    <tbody>
+        {% for user in users%}
+        <tr>
+            <td> {{user.username}} </td>
+            <td> {{user.first_name}} </td>
+            <td> {{user.last_name}} </td>
+            <td> {{user.email}} </td>
+            <td id="user_online_status_{{user.pk}}"></td>
+            <!-- <td id="user_online_status_{{user.pk}}"> {{user.profile.status}} </td> -->
+        </tr>
+        {% endfor%}
     </tbody>
     </table>
 {% endblock content %}

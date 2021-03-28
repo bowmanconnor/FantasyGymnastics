@@ -30,7 +30,7 @@
         function team_disconnected(data) {
             console.log("team_disconnect", data)
             team_name = document.getElementById('team_table_header_' + data['team_pk']);           
-            console.log("disconneocted", data['team_name']);
+            console.log("disconnected", data['team_name']);
             set_online_status(team_name, false, data['team_name']);
         }
 

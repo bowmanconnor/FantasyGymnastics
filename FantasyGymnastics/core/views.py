@@ -44,7 +44,7 @@ def create_league(request):
         form = NewLeagueForm()
     return render(request, 'core/create_league.html', {'form': form})
 
-@login_required
+@staff_member_required
 def user_list(request):
     users = User.objects.all()
     return render(request, 'core/user_list.html', {'users': users})

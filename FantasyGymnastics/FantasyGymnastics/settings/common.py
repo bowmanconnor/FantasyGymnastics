@@ -187,6 +187,7 @@ CELERY_BEAT_SCHEDULE = {
 
 # Channels
 ASGI_APPLICATION = 'FantasyGymnastics.asgi.application'
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',

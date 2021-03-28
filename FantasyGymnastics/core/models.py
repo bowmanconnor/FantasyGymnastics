@@ -3,14 +3,6 @@ from django.contrib.auth.models import User
 from django.conf import settings 
 import random
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')           
-    status = models.BooleanField(default = False)
-    status_text = models.TextField(default = "Offline")
-
-    def __str__(self):
-        return str(self.user.username)
-
 class Gymnast(models.Model):
     YEAR_CHOICES = [('FR' , 'Freshman'), ('SO' , 'Sophomore'), ('JR' , 'Junior'), ('SR' , 'Senior')]
     rtn_id = models.CharField(max_length=10, blank=False)
