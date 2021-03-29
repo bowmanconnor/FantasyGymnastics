@@ -9,9 +9,11 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from .forms import NewMatchupForm
 from .models import Matchup, Average
 from scraper.Scraper import Scraper, ScraperConstants
-from datetime import datetime
+import datetime 
 import random 
 from core.views import teams_competing_this_week
+from pytz import timezone
+
 # Create your views here.
 
 def add_gymnast_to_roster(request, team_pk, gymnast_pk):
@@ -27,7 +29,7 @@ def add_gymnast_to_roster(request, team_pk, gymnast_pk):
 
 def remove_gymnast_from_roster(request, team_pk, gymnast_pk):
     scraper = Scraper()
-    current_week = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
+    current_week = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.datetime.now().year)['week'])
 
     gymnast = get_object_or_404(Gymnast, pk=gymnast_pk)
     team = get_object_or_404(FantasyTeam, pk=team_pk)
@@ -86,13 +88,39 @@ class ViewMatchup(DetailView):
             context['team1'] = context['object'].team1
             context['team2'] = context['object'].team2
         gymnasts = (Gymnast.objects.filter(LineUp__in=(LineUp.objects.filter(team=context['team1'], week=context['object'].week).all() | LineUp.objects.filter(team=context['team2'], week=context['object'].week).all())) | Gymnast.objects.filter(id__in=(context['team1'].roster.all() | context['team2'].roster.all()))).distinct()
-        print(gymnasts)
-        # context['scores'] = Score.objects.filter(gymnast__in=gymnasts, week=context['object'].week)
-        # context['averages'] = Average.objects.filter(gymnast__in=gymnasts)
-        # print(context['averages'])
-        context['current_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
-        context['teams_competing'] = teams_competing_this_week()
+        current_week = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.datetime.now().year)['week'])
 
+        context['current_week'] = current_week
+        context['teams_competing'] = teams_competing_this_week()
+        context['meet_started'] = {}
+        weeks = scraper.get_year_weeks(ScraperConstants.Men, datetime.datetime.now().year)
+        date = [week for week in weeks if int(week['wk']) == int(context['object'].week)][0]['date']
+        schedule = scraper.get_schedule(ScraperConstants.Men, date)
+        # Loops through every meet day this week
+        for day in schedule:
+            # Loops through every meet on day
+            for meet in schedule[day]['meets']:
+                # Loops through gymnasts 
+                for gymnast in gymnasts:
+                    # Checks if gymnasts team is in this meet
+                    if gymnast.team in str(meet['home_teams']) or gymnast.team in str(meet['away_teams']):
+                        # Checks if this is gymnasts first meet of week
+                        if gymnast.name not in context['meet_started']:
+                            # Meet start datetime
+                            meet_datetime = datetime.datetime.strptime(str(meet['d']) + " " + str(meet['time']), "%Y-%m-%d %H:%M:%S")
+                            # Current datetime (eastern because thats what RTN uses)
+                            now = datetime.datetime.now(timezone('US/Eastern'))
+                            if now.date() > meet_datetime.date():
+                                context['meet_started'][gymnast.name] = True
+                            elif now.date() == meet_datetime.date():
+                                if meet_datetime.time() != datetime.time(0, 0, 0):
+                                    if now.time() > meet_datetime.time():
+                                        context['meet_started'][gymnast.name] = True
+                                else:
+                                    if now.time() >= datetime.time(12, 0, 0):
+                                        context['meet_started'][gymnast.name] = True
+                            else:
+                                context['meet_started'][gymnast.name] = False
         return context      
 
 

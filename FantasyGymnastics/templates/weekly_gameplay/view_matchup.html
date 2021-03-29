@@ -96,7 +96,8 @@
                                         {% if user == team1.user %}
                                             <tr>
                                                 <td>
-                                                    {% if gymnast|team_has_competed:lineup.week %}
+                                                    {% comment %} Addable only if has score this week or past first meet of week starting time {% endcomment %}
+                                                    {% if gymnast|team_has_competed:lineup.week or meet_started|gymnasts_first_meet_passed:gymnast %}
                                                         {{gymnast.name}}
                                                     {% else %}
                                                         <a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}}</a> 
