@@ -92,7 +92,8 @@ class ViewMatchup(DetailView):
 
         context['current_week'] = current_week
         context['teams_competing'] = teams_competing_this_week()
-        context['meet_started'] = {}
+        
+        context['meet_started'] = {} #Could this be optimized?
         weeks = scraper.get_year_weeks(ScraperConstants.Men, datetime.datetime.now().year)
         date = [week for week in weeks if int(week['wk']) == int(context['object'].week)][0]['date']
         schedule = scraper.get_schedule(ScraperConstants.Men, date)
@@ -101,9 +102,9 @@ class ViewMatchup(DetailView):
             # Loops through every meet on day
             for meet in schedule[day]['meets']:
                 # Loops through gymnasts 
-                for gymnast in gymnasts:
+                for gymnast in gymnasts: #Could this be optimized?
                     # Checks if gymnasts team is in this meet
-                    if gymnast.team in str(meet['home_teams']) or gymnast.team in str(meet['away_teams']):
+                    if gymnast.team in str(meet['home_teams']) or gymnast.team in str(meet['away_teams']): #Could this be optimized?
                         # Checks if this is gymnasts first meet of week
                         if gymnast.name not in context['meet_started']:
                             # Meet start datetime
@@ -121,7 +122,7 @@ class ViewMatchup(DetailView):
                                         context['meet_started'][gymnast.name] = True
                             else:
                                 context['meet_started'][gymnast.name] = False
-        return context      
+        return context
 
 
 def delete_matchup(request, matchup_pk):
