@@ -97,6 +97,7 @@ class ViewMatchup(DetailView):
         weeks = scraper.get_year_weeks(ScraperConstants.Men, datetime.datetime.now().year)
         date = [week for week in weeks if int(week['wk']) == int(context['object'].week)][0]['date']
         schedule = scraper.get_schedule(ScraperConstants.Men, date)
+        
         # Loops through every meet day this week
         for day in schedule:
             # Loops through every meet on day
@@ -117,9 +118,13 @@ class ViewMatchup(DetailView):
                                 if meet_datetime.time() != datetime.time(0, 0, 0):
                                     if now.time() > meet_datetime.time():
                                         context['meet_started'][gymnast.name] = True
+                                    else:
+                                        context['meet_started'][gymnast.name] = False
                                 else:
                                     if now.time() >= datetime.time(12, 0, 0):
                                         context['meet_started'][gymnast.name] = True
+                                    else: 
+                                        context['meet_started'][gymnast.name] = False
                             else:
                                 context['meet_started'][gymnast.name] = False
         return context

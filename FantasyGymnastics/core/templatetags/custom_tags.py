@@ -227,5 +227,8 @@ def in_lineup_current_week(gymnast, team):
 
 @register.filter
 def gymnasts_first_meet_passed(meet_started, gymnast):
-    return meet_started[gymnast.name]
+    try:
+        return meet_started[gymnast.name]
+    except KeyError:
+        return False
 

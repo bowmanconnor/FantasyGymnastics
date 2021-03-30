@@ -44,7 +44,7 @@
                             <tr>
                                 {% comment %} Remove from lineup button {% endcomment %}
                                 <td>
-                                    {% if user == team1.user and matchup.week == current_week and not gymnast|team_has_competed:lineup.week%}
+                                    {% if user == team1.user and matchup.week == current_week and not meet_started|gymnasts_first_meet_passed:gymnast %}
                                         <a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}"><i class="far fa-times-circle"></i></a>                                
                                     {% endif %}
                                 </td>
@@ -96,8 +96,8 @@
                                         {% if user == team1.user %}
                                             <tr>
                                                 <td>
-                                                    {% comment %} Addable only if has score this week or past first meet of week starting time {% endcomment %}
-                                                    {% if gymnast|team_has_competed:lineup.week or meet_started|gymnasts_first_meet_passed:gymnast %}
+                                                    {% comment %} Addable only if first meet of week hasnt started {% endcomment %}
+                                                    {% if meet_started|gymnasts_first_meet_passed:gymnast %}
                                                         {{gymnast.name}}
                                                     {% else %}
                                                         <a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}}</a> 
