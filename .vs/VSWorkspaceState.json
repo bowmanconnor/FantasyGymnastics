@@ -2,10 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\FantasyGymnastics",
+    "\\FantasyGymnastics\\core",
+    "\\FantasyGymnastics\\core\\templatetags",
+    "\\FantasyGymnastics\\scraper\\migrations",
     "\\FantasyGymnastics\\static",
-    "\\FantasyGymnastics\\static\\images",
-    "\\FantasyGymnastics\\static\\scss"
+    "\\FantasyGymnastics\\static\\documents",
+    "\\FantasyGymnastics\\templates",
+    "\\FantasyGymnastics\\weekly_gameplay",
+    "\\FantasyGymnastics\\weekly_gameplay\\migrations"
   ],
-  "SelectedNode": "\\FantasyGymnastics\\static\\images\\zane.jpeg",
+  "SelectedNode": "\\FantasyGymnastics\\core\\views.py",
   "PreviewInSolutionExplorer": false
 }
