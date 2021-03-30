@@ -175,10 +175,10 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_BEAT_SCHEDULE = {
-    # "import_gymnasts": {
-    #     "task": "scraper.tasks.import_gymnasts",
-    #     "schedule": crontab(minute="*/1"),
-    # },
+    "import_gymnasts": {
+        "task": "scraper.tasks.import_gymnasts",
+        "schedule": crontab(minute=55, hour=23), # Import any new gymnasts daily at 11:55 PM
+    },
     "import_scores": {
         "task": "scraper.tasks.import_scores",
         "schedule": crontab(minute=0, hour=0), # Import scores daily at midnight
