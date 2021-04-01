@@ -41,9 +41,6 @@
     body {
         position: relative;
     }
-
-  
-
 </style>
 </head>
 <body>
@@ -63,8 +60,8 @@
 var dimension = [document.documentElement.clientWidth, document.documentElement.clientHeight];
 
 var canvas = document.getElementById("myCanvas");
-canvas.width = dimension[0] -100;
-canvas.height = dimension[1]-100;
+canvas.width = dimension[1] -100;
+canvas.height = dimension[1] - 100;
 var ctx = canvas.getContext("2d");
 ctx.strokeStyle = "#222222";
 ctx.lineWith = "9";
@@ -172,11 +169,10 @@ function clearCanvas() {
     canvas.width = canvas.width;
 }
 
-function to_image(){
-                
-                document.getElementById("theimage").src = canvas.toDataURL();
-                Canvas2Image.saveAsPNG(canvas);
-            }
+function to_image(){         
+    document.getElementById("theimage").src = canvas.toDataURL();
+    Canvas2Image.saveAsPNG(canvas);
+}
 
 </script>
 
