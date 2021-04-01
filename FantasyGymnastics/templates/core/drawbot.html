@@ -10,15 +10,19 @@
 </style>
 </head>
 <body>
-    <div class=wrap align="center">
-        <canvas id="myCanvas" width="500" height="500" style="border:2px solid black">
+    <div class=wrap >
+        <canvas id="myCanvas" style="border:2px solid black">
         Get a better browser, bro.
         </canvas>
     </div>
 </body>
 
 <script>
+var dimension = [document.documentElement.clientWidth, document.documentElement.clientHeight];
+
 var canvas = document.getElementById("myCanvas");
+canvas.width = dimension[0] -100;
+canvas.height = dimension[1]-100;
 var ctx = canvas.getContext("2d");
 ctx.strokeStyle = "#222222";
 ctx.lineWith = "9";
