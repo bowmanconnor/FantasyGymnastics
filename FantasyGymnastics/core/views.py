@@ -297,3 +297,7 @@ def delete_contact_us(request, pk):
     responce = get_object_or_404(ContactUs, pk=pk)
     responce.delete()
     return redirect('view_contact_us')
+
+
+def drawbot(request):
+    return render(request, 'core/drawbot.html')
