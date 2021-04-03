@@ -7,12 +7,13 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin
 from scraper.Scraper import ScraperConstants
 from scraper.Scraper import Scraper
-from datetime import datetime
+import datetime
 from weekly_gameplay.models import Average, Matchup
 from django.db.models import Q
 from .forms import NewLeagueForm, NewFantasyTeamForm, NewGymnastForm, ContactUsForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
+from pytz import timezone
 
 #Helper Function
 def create_team(user, league):
@@ -47,8 +48,8 @@ class LeagueStandings(DetailView):
         context = super().get_context_data(**kwargs)
         context['teams'] = FantasyTeam.objects.filter(league_id=context['object'].id).order_by('-wins', 'name')
         scraper = Scraper()
-        context['current_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
-        context['max_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['max'])
+        context['current_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.datetime.now().year)['week'])
+        context['max_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.datetime.now().year)['max'])
         context['matchups'] = Matchup.objects.filter(team1__in=context['teams'])
         return context
 
@@ -133,11 +134,45 @@ class ViewFantasyTeam(DetailView):
         scraper = Scraper()
         context = super().get_context_data(**kwargs)
         context["roster"] = context["object"].roster.all()
-        context['current_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
+        context['current_week'] = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.datetime.now().year)['week'])
         context["lineups"] = LineUp.objects.filter(team=context['object'], week=context['current_week']).order_by('pk')
         context['teams_competing'] = teams_competing_this_week()
 
-        # context['averages'] = Average.objects.filter(gymnast__in=context['roster'])
+        context['meet_started'] = {} #Could this be optimized?
+        weeks = scraper.get_year_weeks(ScraperConstants.Men, datetime.datetime.now().year)
+        date = [week for week in weeks if int(week['wk']) == context['current_week']][0]['date']
+        schedule = scraper.get_schedule(ScraperConstants.Men, date)
+        gymnasts = context["roster"]
+        # Loops through every meet day this week
+        for day in schedule:
+            # Loops through every meet on day
+            for meet in schedule[day]['meets']:
+                # Loops through gymnasts 
+                for gymnast in gymnasts: #Could this be optimized?
+                    # Checks if gymnasts team is in this meet
+                    if gymnast.team in str(meet['home_teams']) or gymnast.team in str(meet['away_teams']): #Could this be optimized?
+                        # Checks if this is gymnasts first meet of week
+                        if gymnast.name not in context['meet_started']:
+                            # Meet start datetime
+                            meet_datetime = datetime.datetime.strptime(str(meet['d']) + " " + str(meet['time']), "%Y-%m-%d %H:%M:%S")
+                            # Current datetime (eastern because thats what RTN uses)
+                            now = datetime.datetime.now(timezone('US/Eastern'))
+                            if now.date() > meet_datetime.date():
+                                context['meet_started'][gymnast.name] = True
+                            elif now.date() == meet_datetime.date():
+                                if meet_datetime.time() != datetime.time(0, 0, 0):
+                                    if now.time() > meet_datetime.time():
+                                        context['meet_started'][gymnast.name] = True
+                                    else:
+                                        context['meet_started'][gymnast.name] = False
+                                else:
+                                    if now.time() >= datetime.time(12, 0, 0):
+                                        context['meet_started'][gymnast.name] = True
+                                    else: 
+                                        context['meet_started'][gymnast.name] = False
+                            else:
+                                context['meet_started'][gymnast.name] = False
+                        
         return context      
 
 class UpdateFantasyTeam(UserPassesTestMixin, UpdateView):
@@ -159,7 +194,7 @@ class UpdateFantasyTeam(UserPassesTestMixin, UpdateView):
 def teams_competing_this_week():
     scraper = Scraper()
     # Get all weeks and their dates for the season
-    weeks = scraper.get_year_weeks(ScraperConstants.Men, datetime.now().year)
+    weeks = scraper.get_year_weeks(ScraperConstants.Men, datetime.datetime.now().year)
     # Get date to scrape this week
     date = [week for week in weeks if int(week['current']) == 1][0]['date']
     # Gets the schedule for this week

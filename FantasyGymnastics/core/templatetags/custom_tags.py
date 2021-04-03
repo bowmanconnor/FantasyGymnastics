@@ -4,6 +4,7 @@ from weekly_gameplay.models import Average
 from scraper.Scraper import Scraper, ScraperConstants
 from datetime import datetime
 import decimal
+from pytz import timezone
 
 register = template.Library()
 
@@ -223,3 +224,11 @@ def in_lineup_current_week(gymnast, team):
     scraper = Scraper()
     current_week = int(scraper.get_current_and_max_week(ScraperConstants.Men, datetime.now().year)['week'])
     return gymnast.LineUp.filter(week=current_week, team=team).exists()
+
+@register.filter
+def gymnasts_first_meet_passed(meet_started, gymnast):
+    try:
+        return meet_started[gymnast.name]
+    except KeyError:
+        return False
+

@@ -149,3 +149,96 @@ class TeamTests(TestCase):
     def test_edit_team_url_resolves_edit_team_view(self):
         view = resolve('/team/edit/1/')
         self.assertEquals(view.func.__name__, FantasyTeamUpdateView.as_view().__name__)
+
+# import datetime
+
+# tests = {}
+
+# # Meet in future; Meet time 0; Now before noon
+# meet_datetime = datetime.datetime(2021, 3, 28, 0, 0, 0)
+# now = datetime.datetime(2021, 3, 27, 11, 0, 0)
+# tests['Meet in future; Meet time 0; Now before noon'] = [meet_datetime, now]
+
+# # Meet in future; Meet time 0; Now after noon
+# meet_datetime = datetime.datetime(2021, 3, 28, 0, 0, 0)
+# now = datetime.datetime(2021, 3, 27, 13, 0, 0)
+# tests['Meet in future; Meet time 0; Now after noon'] = [meet_datetime, now]
+
+# # Meet today ; Meet time 0; Now before noon
+# meet_datetime = datetime.datetime(2021, 3, 28, 0, 0, 0)
+# now = datetime.datetime(2021, 3, 28, 11, 0, 0)
+# tests['Meet today ; Meet time 0; Now before noon'] = [meet_datetime, now]
+
+# # Meet today ; Meet time 0; Now past noon
+# meet_datetime = datetime.datetime(2021, 3, 28, 0, 0, 0)
+# now = datetime.datetime(2021, 3, 28, 13, 0, 0)
+# tests['Meet today ; Meet time 0; Now past noon'] = [meet_datetime, now]
+
+# # Meet in past ; Meet time 0; Now before noon
+# meet_datetime = datetime.datetime(2021, 3, 28, 0, 0, 0)
+# now = datetime.datetime(2021, 3, 29, 11, 0, 0)
+# tests['Meet in past ; Meet time 0; Now before noon'] = [meet_datetime, now]
+
+# # Meet in past ; Meet time 0; Now past noon
+# meet_datetime = datetime.datetime(2021, 3, 28, 0, 0, 0)
+# now = datetime.datetime(2021, 3, 29, 13, 0, 0)
+# tests['Meet in past ; Meet time 0; Now past noon'] = [meet_datetime, now]
+
+
+
+
+# # Meet in future; Meet time non 0; Now before start
+# meet_datetime = datetime.datetime(2021, 3, 28, 17, 0, 0)
+# now = datetime.datetime(2021, 3, 27, 16, 0, 0)
+# tests['Meet in future; Meet time non 0; Now before start'] = [meet_datetime, now]
+
+# # Meet in future; Meet time non 0; Now after start
+# meet_datetime = datetime.datetime(2021, 3, 28, 17, 0, 0)
+# now = datetime.datetime(2021, 3, 27, 18, 0, 0)
+# tests['Meet in future; Meet time non 0; Now after start'] = [meet_datetime, now]
+
+# # Meet today ; Meet time non 0; Now before start
+# meet_datetime = datetime.datetime(2021, 3, 28, 17, 0, 0)
+# now = datetime.datetime(2021, 3, 28, 12, 0, 0)
+# tests['Meet today ; Meet time non 0; Now before start'] = [meet_datetime, now]
+
+# # Meet today ; Meet time non 0; Now past start
+# meet_datetime = datetime.datetime(2021, 3, 28, 17, 0, 0)
+# now = datetime.datetime(2021, 3, 28, 21, 0, 0)
+# tests['Meet today ; Meet time non 0; Now past start'] = [meet_datetime, now]
+
+# # Meet in past ; Meet time non 0; Now before start
+# meet_datetime = datetime.datetime(2021, 3, 28, 17, 0, 0)
+# now = datetime.datetime(2021, 3, 29, 16, 0, 0)
+# tests['Meet in past ; Meet time non 0; Now before start'] = [meet_datetime, now]
+
+# # Meet in past ; Meet time non 0; Now past start
+# meet_datetime = datetime.datetime(2021, 3, 28, 17, 0, 0)
+# now = datetime.datetime(2021, 3, 29, 17, 0, 0)
+# tests['Meet in past ; Meet time non 0; Now past start'] = [meet_datetime, now]
+
+
+# for test, value in tests.items():
+#     print(test)
+#     meet_started = value[0]
+#     now = value[1]
+#     print("Meet start: %s" % meet_started)
+#     print("now: %s" % now)
+#     print("Should the gymnast be locked?")
+
+#     if now.date() > meet_started.date():
+#         print(True)
+#     elif now.date() == meet_started.date():
+#         if meet_started.time() != datetime.time(0, 0, 0):
+#             if now.time() > meet_started.time():
+#                 print(True)
+#             else: 
+#                 print(False)
+#         else:
+#             if now.time() >= datetime.time(12, 0, 0):
+#                 print(True)
+#             else: 
+#                 print(False)
+#     else:
+#         print(False)
+#     print("---------------------")
