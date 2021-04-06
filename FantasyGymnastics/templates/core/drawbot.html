@@ -1,166 +1,159 @@
-<!-- <html>
-    <head>
-        <script src="http://hongru.github.io/proj/canvas2image/canvas2image.js"></script>
-        <script>
-            function draw(){
-                var canvas = document.getElementById("thecanvas");
-                var ctx = canvas.getContext("2d");
-                ctx.fillStyle = "rgba(125, 46, 138, 0.5)";
-                ctx.fillRect(25,25,100,100); 
-                ctx.fillStyle = "rgba( 0, 146, 38, 0.5)";
-                ctx.fillRect(58, 74, 125, 100);
-            }
-
-            function to_image(){
-                var canvas = document.getElementById("thecanvas");
-                document.getElementById("theimage").src = canvas.toDataURL();
-                Canvas2Image.saveAsPNG(canvas);
-            }
-        </script>
-    </head>
-    <body onload="draw()">
-        <canvas width=200 height=200 id="thecanvas"></canvas>
-        <div><button onclick="to_image()">Draw to Image</button></div>
-        <image id="theimage"></image>
-    </body>
-</html>
- -->
-
 <!DOCTYPE html>
 <html>
-<head>
 
+<head>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 95vh;
+        }
+
+        .drawing-area {
+            box-shadow: 0 0 6px 0 #999;
+            touch-action: none;
+        }
+
+        .clear-button {
+            margin: 1em;
+            font-size: 16px;
+        }
+
+        .image-button {
+            margin: 1em;
+            font-size: 16px;
+        }
+    </style>
 </head>
+
 <body>
-    <div class=wrap align="center">
-        <canvas id="myCanvas" style="border:2px solid black; touch-action: none;">
-        Get a better browser, bro.
-        </canvas>
-        <div><button onclick="clearCanvas()">Clear</button></div>
-        <div><button onclick="to_image()">Draw to Image</button></div>
-        <image id="theimage"></image>
+    <div id="container" class="container">
+        <canvas id="drawing-area" class="drawing-area" height="500" width="500"></canvas>
+        <button id="clear-button" class="clear-button" type="button">Clear</button>
+        <button id="image-button" class="image-button" type="button">Draw to Image</button>
+        <image id="image" class="drawing-area" height="500" width="500"></image>
     </div>
-    
 </body>
 
-<script src="http://hongru.github.io/proj/canvas2image/canvas2image.js"></script>
+<!-- <script src="http://hongru.github.io/proj/canvas2image/canvas2image.js"></script> -->
 <script>
-var dimension = [document.documentElement.clientWidth, document.documentElement.clientHeight];
+    // =============
+    // == Globals ==
+    // =============
+    const canvas = document.getElementById('drawing-area');
+    const canvasContext = canvas.getContext('2d');
+    const clearButton = document.getElementById('clear-button');
+    const imageButton = document.getElementById('image-button');
+    const image = document.getElementById("image");
+    const state = {
+        mousedown: false
+    };
 
-var canvas = document.getElementById("myCanvas");
-canvas.width = dimension[0] -100;
-canvas.height = dimension[0]-100;
-var ctx = canvas.getContext("2d");
-ctx.strokeStyle = "#222222";
-ctx.lineWith = "9";
+    // ===================
+    // == Configuration ==
+    // ===================
+    const lineWidth = 9;
+    const halfLineWidth = lineWidth / 2;
+    const fillStyle = 'black';
+    const strokeStyle = 'black';
 
-// Set up mouse events for drawing
-var drawing = false;
-var mousePos = { x:0, y:0 };
-var lastPos = mousePos;
-canvas.addEventListener("mousedown", function (e) {
-        drawing = true;
-  lastPos = getMousePos(canvas, e);
-}, false);
-canvas.addEventListener("mouseup", function (e) {
-  drawing = false;
-}, false);
-canvas.addEventListener("mousemove", function (e) {
-  mousePos = getMousePos(canvas, e);
-}, false);
+    const shadowBlur = lineWidth / 4;
 
-// Get the position of the mouse relative to the canvas
-function getMousePos(canvasDom, mouseEvent) {
-  var rect = canvasDom.getBoundingClientRect();
-  return {
-    x: mouseEvent.clientX - rect.left,
-    y: mouseEvent.clientY - rect.top
-  };
-}
-// Get a regular interval for drawing to the screen
-window.requestAnimFrame = (function (callback) {
-        return window.requestAnimationFrame || 
-           window.webkitRequestAnimationFrame ||
-           window.mozRequestAnimationFrame ||
-           window.oRequestAnimationFrame ||
-           window.msRequestAnimaitonFrame ||
-           function (callback) {
-        window.setTimeout(callback, 1000/60);
-           };
-})();
+    // =====================
+    // == Event Listeners ==
+    // =====================
+    canvas.addEventListener('mousedown', handleWritingStart);
+    canvas.addEventListener('mousemove', handleWritingInProgress);
+    canvas.addEventListener('mouseup', handleDrawingEnd);
+    canvas.addEventListener('mouseout', handleDrawingEnd);
 
-// Draw to the canvas
-function renderCanvas() {
-  if (drawing) {
-    ctx.moveTo(lastPos.x, lastPos.y);
-    ctx.lineTo(mousePos.x, mousePos.y);
-    ctx.stroke();
-    lastPos = mousePos;
-  }
-}
+    canvas.addEventListener('touchstart', handleWritingStart);
+    canvas.addEventListener('touchmove', handleWritingInProgress);
+    canvas.addEventListener('touchend', handleDrawingEnd);
 
-// Allow for animation
-(function drawLoop () {
-  requestAnimFrame(drawLoop);
-  renderCanvas();
-})();
+    clearButton.addEventListener('click', handleClearButtonClick);
+    imageButton.addEventListener('click', handleToImageButtonClick);
 
-// Set up touch events for mobile, etc
-canvas.addEventListener("touchstart", function (e) {
-        mousePos = getTouchPos(canvas, e);
-  var touch = e.touches[0];
-  var mouseEvent = new MouseEvent("mousedown", {
-    clientX: touch.clientX,
-    clientY: touch.clientY
-  });
-  canvas.dispatchEvent(mouseEvent);
-}, false);
-canvas.addEventListener("touchend", function (e) {
-  var mouseEvent = new MouseEvent("mouseup", {});
-  canvas.dispatchEvent(mouseEvent);
-}, false);
-canvas.addEventListener("touchmove", function (e) {
-  var touch = e.touches[0];
-  var mouseEvent = new MouseEvent("mousemove", {
-    clientX: touch.clientX,
-    clientY: touch.clientY
-  });
-  canvas.dispatchEvent(mouseEvent);
-}, false);
+    // ====================
+    // == Event Handlers ==
+    // ====================
+    function handleWritingStart(event) {
+        event.preventDefault();
 
-// Get the position of a touch relative to the canvas
-function getTouchPos(canvasDom, touchEvent) {
-  var rect = canvasDom.getBoundingClientRect();
-  return {
-    x: touchEvent.touches[0].clientX - rect.left,
-    y: touchEvent.touches[0].clientY - rect.top
-  };
-}
-// Prevent scrolling when touching the canvas
-document.body.addEventListener("touchstart", function (e) {
-  if (e.target == canvas) {
-    e.preventDefault();
-  }
-}, false);
-document.body.addEventListener("touchend", function (e) {
-  if (e.target == canvas) {
-    e.preventDefault();
-  }
-}, false);
-document.body.addEventListener("touchmove", function (e) {
-  if (e.target == canvas) {
-    e.preventDefault();
-  }
-}, false);
+        const mousePos = getMosuePositionOnCanvas(event);
 
-function clearCanvas() {
-    canvas.width = canvas.width;
-}
+        canvasContext.beginPath();
 
-function to_image(){         
-    document.getElementById("theimage").src = canvas.toDataURL();
-    Canvas2Image.saveAsPNG(canvas);
-}
+        canvasContext.moveTo(mousePos.x, mousePos.y);
+
+        canvasContext.lineWidth = lineWidth;
+        canvasContext.strokeStyle = strokeStyle;
+
+        canvasContext.shadowBlur = null;
+
+        canvasContext.fill();
+
+        state.mousedown = true;
+    }
+
+    function handleWritingInProgress(event) {
+        event.preventDefault();
+
+        if (state.mousedown) {
+            const mousePos = getMosuePositionOnCanvas(event);
+
+            canvasContext.lineTo(mousePos.x, mousePos.y);
+            canvasContext.stroke();
+        }
+    }
+
+    function handleDrawingEnd(event) {
+        event.preventDefault();
+
+        if (state.mousedown) {
+
+            canvasContext.shadowBlur = shadowBlur;
+
+            canvasContext.stroke();
+        }
+
+        state.mousedown = false;
+    }
+
+    function handleClearButtonClick(event) {
+        event.preventDefault();
+
+        clearCanvas();
+    }
+
+    function handleToImageButtonClick(event) {
+        event.preventDefault();
+
+        to_image();
+    }
+    // ======================
+    // == Helper Functions ==
+    // ======================
+    function getMosuePositionOnCanvas(event) {
+        const clientX = event.clientX || event.touches[0].clientX;
+        const clientY = event.clientY || event.touches[0].clientY;
+        const { offsetLeft, offsetTop } = event.target;
+        const canvasX = clientX - offsetLeft;
+        const canvasY = clientY - offsetTop;
+
+        return { x: canvasX, y: canvasY };
+    }
+
+    function clearCanvas() {
+        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function to_image() {
+        image.src = canvas.toDataURL();
+        // Canvas2Image.saveAsPNG(canvas);
+    }
+
 
 </script>
-
