@@ -140,7 +140,13 @@ class ViewFantasyTeam(DetailView):
 
         context['meet_started'] = {} #Could this be optimized?
         weeks = scraper.get_year_weeks(ScraperConstants.Men, datetime.datetime.now().year)
-        date = [week for week in weeks if int(week['wk']) == context['current_week']][0]['date']
+
+        # Fixes index error once in post season
+        try:
+            date = [week for week in weeks if int(week['wk']) == context['current_week']][0]['date']
+        except IndexError:
+            return context
+            
         schedule = scraper.get_schedule(ScraperConstants.Men, date)
         gymnasts = context["roster"]
         # Loops through every meet day this week
@@ -192,16 +198,22 @@ class UpdateFantasyTeam(UserPassesTestMixin, UpdateView):
         return redirect('view_team', pk=team.pk)
 
 def teams_competing_this_week():
-    scraper = Scraper()
+    # Create a list of team names
+    teams = []
+
     # Get all weeks and their dates for the season
+    scraper = Scraper()
     weeks = scraper.get_year_weeks(ScraperConstants.Men, datetime.datetime.now().year)
     # Get date to scrape this week
-    date = [week for week in weeks if int(week['current']) == 1][0]['date']
+    # Fixes index error once in post season
+    try:
+        date = [week for week in weeks if int(week['current']) == 1][0]['date']
+    except IndexError:
+        return teams
     # Gets the schedule for this week
     schedule = scraper.get_schedule(ScraperConstants.Men, date)
 
-    # Create a list of team names
-    teams = []
+   
     # For each day in the schedule with a meet on it
     for day in schedule:
         # For each meet on that day
