@@ -25,13 +25,13 @@
     const strokeStyle = 'black';
 
     if (dimension[0] > dimension[1]){
-        canvas.width = dimension[1]*.7;
-        canvas.height = dimension[1]*.7;        
+        canvas.width = dimension[1]*.9;
+        canvas.height = dimension[1]*.9;        
         image.width = dimension[1]*.6;
         image.height = dimension[1]*.6;
     } else {
-        canvas.width = dimension[0]*.7;
-        canvas.height = dimension[0]*.7;        
+        canvas.width = dimension[0]*.9;
+        canvas.height = dimension[0]*.9;        
         image.width = dimension[0]*.6;
         image.height = dimension[0]*.6;        
     }
