@@ -13,7 +13,6 @@
 
         .drawing-area {
             box-shadow: 0 0 6px 0 #999;
-            /* touch-action: none; */
         }
 
         .clear-button {
@@ -30,10 +29,10 @@
 
 <body>
     <div id="container" class="container">
-        <canvas id="drawing-area" class="drawing-area" height="500" width="500"></canvas>
+        <canvas id="drawing-area" class="drawing-area"></canvas>
         <button id="clear-button" class="clear-button" type="button">Clear</button>
         <button id="image-button" class="image-button" type="button">Draw to Image</button>
-        <image id="image" class="drawing-area" height="500" width="500"></image>
+        <image id="image" class="drawing-area"></image>
     </div>
 </body>
 
@@ -42,6 +41,7 @@
     // =============
     // == Globals ==
     // =============
+    const dimension = [document.documentElement.clientWidth, document.documentElement.clientHeight];
     const canvas = document.getElementById('drawing-area');
     const canvasContext = canvas.getContext('2d');
     const clearButton = document.getElementById('clear-button');
@@ -55,12 +55,22 @@
     // == Configuration ==
     // ===================
     const lineWidth = 9;
-    const halfLineWidth = lineWidth / 2;
     const fillStyle = 'black';
     const strokeStyle = 'black';
 
-    const shadowBlur = lineWidth / 4;
+    if (dimension[0] > dimension[1]){
+        canvas.width = dimension[1]*.9;
+        canvas.height = dimension[1]*.9;        
+        image.width = dimension[1]*.9;
+        image.height = dimension[1]*.9;
+    } else {
+        canvas.width = dimension[0]*.9;
+        canvas.height = dimension[0]*.9;        
+        image.width = dimension[0]*.9;
+        image.height = dimension[0]*.9;        
+    }
 
+    
     // =====================
     // == Event Listeners ==
     // =====================
@@ -91,8 +101,8 @@
         canvasContext.lineWidth = lineWidth;
         canvasContext.strokeStyle = strokeStyle;
 
-        canvasContext.shadowBlur = null;
 
+        
         canvasContext.fill();
 
         state.mousedown = true;
@@ -113,8 +123,6 @@
         event.preventDefault();
 
         if (state.mousedown) {
-
-            canvasContext.shadowBlur = shadowBlur;
 
             canvasContext.stroke();
         }
