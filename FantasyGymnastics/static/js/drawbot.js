@@ -3,7 +3,7 @@
     // == Globals ==
     // =============
     const dimension = [document.documentElement.clientWidth, document.documentElement.clientHeight];
-    const canvas = document.getElementById('drawing-area');
+    const canvas = document.getElementById('canvas');
     const canvasContext = canvas.getContext('2d');
     const clearButton = document.getElementById('clear-button');
     const imageButton = document.getElementById('image-button');
@@ -162,3 +162,4 @@
         penButton.style.color = "gray";
         eraserButton.style.color = "black";
     }
+
