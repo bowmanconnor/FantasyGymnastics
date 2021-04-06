@@ -78,6 +78,7 @@
     // == Event Handlers ==
     // ====================
     function handleWritingStart(e) {
+        e.preventDefault();
         var m = getMouse(e, canvas);
         points.push({
             x: m.x,
@@ -88,6 +89,7 @@
     }
 
     function handleWritingInProgress(e) {
+        e.preventDefault();
         if (started) {
             var m = getMouse(e, canvas);
             if (mode=="pen"){
@@ -118,6 +120,7 @@
     }
 
     function handleDrawingEnd(e) {
+        e.preventDefault();
         if (started) {
             started = false;
             // When the pen is done, save the resulting context
