@@ -1,177 +1,65 @@
+{% load custom_tags %}
+{% load static %}
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <style>
-        .container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 95vh;
-        }
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-        .drawing-area {
-            box-shadow: 0 0 6px 0 #999;
-        }
+    <title>DrawBot</title>
 
-        .clear-button {
-            font-family: "Helvetica";
-            margin: 1em;
-            font-size: 16px;
-        }
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/drawbot.css' %}">
 
-        .image-button {
-            font-family: "Helvetica";
-            margin: 1em;
-            font-size: 16px;
-        }
-        .center {
-            font-family: "Helvetica";
-            font-size: 25px;
-            text-align: center;
-        }
-    </style>
 </head>
 
 <body>
-    <div class="center">
-        <h1>DrawBot</h1>
-    </div>
-    <div id="container" class="container">
+
+    <div class='container'>
+        <div class='d-flex align-items-center justify-content-center mt-4 mb-4'>
+            <h1>DrawBot</h1>
+        </div>
         <canvas id="drawing-area" class="drawing-area"></canvas>
-        <button id="clear-button" class="clear-button" type="button">Clear</button>
-        <button id="image-button" class="image-button" type="button">Draw to Image</button>
-        <image id="image" class="drawing-area"></image>
+        <div class='mt-2'>
+            <i id="pen" class="fas fa-pencil-alt fa-2x"></i>
+            <i id="eraser" class="fas fa-eraser fa-2x"></i>
+        </div>
+        <div class='mt-4'>
+            <a data-bs-toggle="modal" data-bs-target="#sendImage" id="image-button" class="btn btn-success">Finish</a>
+            <button id="clear-button" class="btn btn-dark" type="button">Clear</button>
+        </div>
+        <div class="modal fade" id="sendImage" tabindex="-1" aria-labelledby="sendImageLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="sendImageLabel">Done drawing?</h5>
+                        </div>
+                        <div class="modal-body d-flex align-items-center justify-content-center">
+                            <image id="image" class='drawing-area'></image>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-outline-success">Send</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
     </div>
+
+
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    {% comment %} <script src="{% static 'js/bootstrap.min.js' %}"></script> {% endcomment %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script src="{% static 'js/font-awesome.js'%}"></script>
+
+    <script src="http://hongru.github.io/proj/canvas2image/canvas2image.js"></script>
+    <script src="{% static 'js/drawbot.js'%}"></script>
+    {% block javascript %}{% endblock %}
 </body>
-
-<!-- <script src="http://hongru.github.io/proj/canvas2image/canvas2image.js"></script> -->
-<script>
-    // =============
-    // == Globals ==
-    // =============
-    const dimension = [document.documentElement.clientWidth, document.documentElement.clientHeight];
-    const canvas = document.getElementById('drawing-area');
-    const canvasContext = canvas.getContext('2d');
-    const clearButton = document.getElementById('clear-button');
-    const imageButton = document.getElementById('image-button');
-    const image = document.getElementById("image");
-    const state = {
-        mousedown: false
-    };
-
-    // ===================
-    // == Configuration ==
-    // ===================
-    const lineWidth = 9;
-    const fillStyle = 'black';
-    const strokeStyle = 'black';
-
-    if (dimension[0] > dimension[1]){
-        canvas.width = dimension[1]*.9;
-        canvas.height = dimension[1]*.9;        
-        image.width = dimension[1]*.9;
-        image.height = dimension[1]*.9;
-    } else {
-        canvas.width = dimension[0]*.9;
-        canvas.height = dimension[0]*.9;        
-        image.width = dimension[0]*.9;
-        image.height = dimension[0]*.9;        
-    }
-
-    
-    // =====================
-    // == Event Listeners ==
-    // =====================
-    canvas.addEventListener('mousedown', handleWritingStart);
-    canvas.addEventListener('mousemove', handleWritingInProgress);
-    canvas.addEventListener('mouseup', handleDrawingEnd);
-    canvas.addEventListener('mouseout', handleDrawingEnd);
-
-    canvas.addEventListener('touchstart', handleWritingStart);
-    canvas.addEventListener('touchmove', handleWritingInProgress);
-    canvas.addEventListener('touchend', handleDrawingEnd);
-
-    clearButton.addEventListener('click', handleClearButtonClick);
-    imageButton.addEventListener('click', handleToImageButtonClick);
-
-    // ====================
-    // == Event Handlers ==
-    // ====================
-    function handleWritingStart(event) {
-        event.preventDefault();
-
-        const mousePos = getMosuePositionOnCanvas(event);
-
-        canvasContext.beginPath();
-
-        canvasContext.moveTo(mousePos.x, mousePos.y);
-
-        canvasContext.lineWidth = lineWidth;
-        canvasContext.strokeStyle = strokeStyle;
-
-
-        
-        canvasContext.fill();
-
-        state.mousedown = true;
-    }
-
-    function handleWritingInProgress(event) {
-        event.preventDefault();
-
-        if (state.mousedown) {
-            const mousePos = getMosuePositionOnCanvas(event);
-
-            canvasContext.lineTo(mousePos.x, mousePos.y);
-            canvasContext.stroke();
-        }
-    }
-
-    function handleDrawingEnd(event) {
-        event.preventDefault();
-
-        if (state.mousedown) {
-
-            canvasContext.stroke();
-        }
-
-        state.mousedown = false;
-    }
-
-    function handleClearButtonClick(event) {
-        event.preventDefault();
-
-        clearCanvas();
-    }
-
-    function handleToImageButtonClick(event) {
-        event.preventDefault();
-
-        to_image();
-    }
-    // ======================
-    // == Helper Functions ==
-    // ======================
-    function getMosuePositionOnCanvas(event) {
-        const clientX = event.clientX || event.touches[0].clientX;
-        const clientY = event.clientY || event.touches[0].clientY;
-        const { offsetLeft, offsetTop } = event.target;
-        const canvasX = clientX - offsetLeft;
-        const canvasY = clientY - offsetTop;
-
-        return { x: canvasX, y: canvasY };
-    }
-
-    function clearCanvas() {
-        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    function to_image() {
-        image.src = canvas.toDataURL();
-        // Canvas2Image.saveAsPNG(canvas);
-    }
-
-
-</script>
+</html>
