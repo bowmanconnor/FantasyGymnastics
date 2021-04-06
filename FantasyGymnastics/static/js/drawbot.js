@@ -27,13 +27,13 @@
     if (dimension[0] > dimension[1]){
         canvas.width = dimension[1]*.9;
         canvas.height = dimension[1]*.9;        
-        image.width = dimension[1]*.6;
-        image.height = dimension[1]*.6;
+        image.width = dimension[1]*.8;
+        image.height = dimension[1]*.8;
     } else {
         canvas.width = dimension[0]*.9;
         canvas.height = dimension[0]*.9;        
-        image.width = dimension[0]*.6;
-        image.height = dimension[0]*.6;        
+        image.width = dimension[0]*.8;
+        image.height = dimension[0]*.8;        
     }
 
     penMode();
