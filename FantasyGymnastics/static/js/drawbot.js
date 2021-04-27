@@ -10,6 +10,7 @@
     const image = document.getElementById("image");
     const penButton = document.getElementById("pen");
     const eraserButton = document.getElementById("eraser");
+    const sendButton = document.getElementById("send");
 
     const state = {
         mousedown: false
@@ -55,6 +56,7 @@
 
     penButton.addEventListener('click', handlePenModeButtonClick);
     eraserButton.addEventListener('click', handleEraserModeButtonClick);
+    sendButton.addEventListener('click', handleSendModeButtonClick);
 
 
     // ====================
@@ -129,6 +131,12 @@
 
         eraserMode();
     }
+
+    function handleSendModeButtonClick(event) {
+        event.preventDefault();
+
+        sendImage();
+    }
     // ======================
     // == Helper Functions ==
     // ======================
@@ -148,8 +156,12 @@
 
     function toImage() {
         image.src = canvas.toDataURL();
-        // Canvas2Image.saveAsPNG(canvas);
     }
+    
+    function sendImage() {
+        Canvas2Image.saveAsPNG(canvas);
+    }
+    
 
     function penMode() {
         mode = "pen";
