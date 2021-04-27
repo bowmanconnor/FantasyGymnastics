@@ -2,6 +2,9 @@
     // =============
     // == Globals ==
     // =============
+
+    var URL = "send";
+
     const dimension = [document.documentElement.clientWidth, document.documentElement.clientHeight];
     const canvas = document.getElementById('canvas');
     const canvasContext = canvas.getContext('2d');
@@ -10,6 +13,7 @@
     const image = document.getElementById("image");
     const penButton = document.getElementById("pen");
     const eraserButton = document.getElementById("eraser");
+    const sendButton = document.getElementById("send");
 
     const state = {
         mousedown: false
@@ -55,6 +59,7 @@
 
     penButton.addEventListener('click', handlePenModeButtonClick);
     eraserButton.addEventListener('click', handleEraserModeButtonClick);
+    sendButton.addEventListener('click', handleSendModeButtonClick);
 
 
     // ====================
@@ -129,6 +134,12 @@
 
         eraserMode();
     }
+
+    function handleSendModeButtonClick(event) {
+        event.preventDefault();
+
+        sendImage();
+    }
     // ======================
     // == Helper Functions ==
     // ======================
@@ -148,8 +159,30 @@
 
     function toImage() {
         image.src = canvas.toDataURL();
-        // Canvas2Image.saveAsPNG(canvas);
     }
+    
+    function sendImage() {
+        // Canvas2Image.saveAsPNG(canvas);
+        var CSRToken = $('input[name=csrfmiddlewaretoken]').val();
+        var image_data = image.src;
+
+        var data = { 
+            image: image_data,
+            csrfmiddlewaretoken: CSRToken
+        }
+
+        $.post(URL, data ,function(response){
+                if(response === 'success'){
+                     alert('Image saved');
+                     location.href="/drawbot";
+            }
+                else{ alert('Error! :('); }
+            });
+    }
+
+    
+    
+    
 
     function penMode() {
         mode = "pen";

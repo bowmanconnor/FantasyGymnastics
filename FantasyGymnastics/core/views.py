@@ -14,6 +14,9 @@ from .forms import NewLeagueForm, NewFantasyTeamForm, NewGymnastForm, ContactUsF
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
 from pytz import timezone
+from django.http import HttpResponse
+import base64
+
 
 #Helper Function
 def create_team(user, league):
@@ -313,3 +316,14 @@ def delete_contact_us(request, pk):
 
 def drawbot(request):
     return render(request, 'core/drawbot.html')
+
+def drawbot_send(request):
+    if request.method == 'POST':
+        if 'image' in request.POST:
+            image = request.POST['image']
+            print("Received image")
+            with open('canvas_drawing.png', 'wb') as f:
+                f.write(base64.b64decode(image[22:]))
+            return HttpResponse('success') # if everything is OK
+    # nothing went well
+    return HttpResponse('FAIL!!!!!')
