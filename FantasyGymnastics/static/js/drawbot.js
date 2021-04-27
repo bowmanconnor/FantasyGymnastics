@@ -2,6 +2,9 @@
     // =============
     // == Globals ==
     // =============
+
+    var URL = "send";
+
     const dimension = [document.documentElement.clientWidth, document.documentElement.clientHeight];
     const canvas = document.getElementById('canvas');
     const canvasContext = canvas.getContext('2d');
@@ -159,8 +162,26 @@
     }
     
     function sendImage() {
-        Canvas2Image.saveAsPNG(canvas);
+        // Canvas2Image.saveAsPNG(canvas);
+        var CSRToken = $('input[name=csrfmiddlewaretoken]').val();
+        var image_data = image.src;
+
+        var data = { 
+            image: image_data,
+            csrfmiddlewaretoken: CSRToken
+        }
+
+        $.post(URL, data ,function(response){
+                if(response === 'success'){
+                     alert('Image saved');
+                     location.href="/drawbot";
+            }
+                else{ alert('Error! :('); }
+            });
     }
+
+    
+    
     
 
     function penMode() {

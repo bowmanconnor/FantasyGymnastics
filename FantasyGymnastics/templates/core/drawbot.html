@@ -45,21 +45,26 @@
                         <image id="image" class='drawing-area'></image>
                     </div>
                     <div class="modal-footer">
-                        <button id="send" class="btn btn-outline-success">Send</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <form>
+                            {% csrf_token %}
+                            <button id="send" class="btn btn-outline-success">Send</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>   
     <script src="{% static 'js/popper.min.js' %}"></script>
     {% comment %} <script src="{% static 'js/bootstrap.min.js' %}"></script> {% endcomment %}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
         crossorigin="anonymous"></script>
     <script src="{% static 'js/font-awesome.js'%}"></script>
+
+    <script>window.CSRF_TOKEN={{ csrf_token }}</script>`
 
     <script src="http://hongru.github.io/proj/canvas2image/canvas2image.js"></script>
     <script src="{% static 'js/drawbot.js'%}"></script>
