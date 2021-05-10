@@ -226,9 +226,12 @@ def in_lineup_current_week(gymnast, team):
     return gymnast.LineUp.filter(week=current_week, team=team).exists()
 
 @register.filter
+def about(posts, news_about):
+    return(posts.filter(news_about=news_about).count())
+
+@register.filter
 def gymnasts_first_meet_passed(meet_started, gymnast):
     try:
         return meet_started[gymnast.name]
     except KeyError:
         return False
-

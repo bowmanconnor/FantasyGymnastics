@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import League, FantasyTeam, Gymnast, Score, ContactUs
+from .models import League, FantasyTeam, Gymnast, Score, ContactUs, Post
 
 class NewLeagueForm(forms.ModelForm):
     class Meta:
@@ -38,3 +38,8 @@ class ContactUsForm(forms.ModelForm):
     class Meta:
         model = ContactUs
         fields = ['message',]
+
+class DocumentForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['doc_description', 'document', ]

@@ -2,15 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\FantasyGymnastics",
-    "\\FantasyGymnastics\\draft",
-    "\\FantasyGymnastics\\draft\\migrations",
+    "\\FantasyGymnastics\\core",
+    "\\FantasyGymnastics\\core\\templatetags",
+    "\\FantasyGymnastics\\scraper\\migrations",
     "\\FantasyGymnastics\\static",
-    "\\FantasyGymnastics\\static\\css",
-    "\\FantasyGymnastics\\static\\js",
-    "\\FantasyGymnastics\\static\\scss",
+    "\\FantasyGymnastics\\static\\documents",
     "\\FantasyGymnastics\\templates",
-    "\\FantasyGymnastics\\templates\\weekly_gameplay"
+    "\\FantasyGymnastics\\weekly_gameplay",
+    "\\FantasyGymnastics\\weekly_gameplay\\migrations"
   ],
-  "SelectedNode": "\\FantasyGymnastics\\static\\css\\base.css",
+  "SelectedNode": "\\FantasyGymnastics\\core\\views.py",
   "PreviewInSolutionExplorer": false
 }

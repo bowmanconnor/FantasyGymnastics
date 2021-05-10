@@ -32,6 +32,10 @@ urlpatterns = [
     path('contact_us_done/', views.contact_us_done, name='contact_us_done'),
     path('view_contact_us/', views.view_contact_us, name='view_contact_us'),
     path('delete_contact_us/<int:pk>/', views.delete_contact_us, name='delete_contact_us'),
+   
+    path('news/', views.PostList.as_view(), name='news'),
+    path('news/<slug:slug>/', views.PostDetail.as_view(), name='post_detail'),
+    path('weekly_news/', views.weekly_news, name='weekly_news')
     
     path('drawbot/', views.drawbot, name='drawbot'),
     path('drawbot/send', views.drawbot_send, name='drawbot_send'),

@@ -93,3 +93,27 @@ class ContactUs(models.Model):
     message = models.CharField(max_length=500)
     user = models.ForeignKey(User, related_name='contactus', on_delete=models.CASCADE)
     sumbitted_at = models.DateTimeField(auto_now_add=True)
+
+
+
+class Post(models.Model):
+    STATUS = ((0,"Draft"), (1,"Publish"))
+    LINEUP_NEWS_CHOICES = ((0, 'Lineups'), (1, 'Platform'))
+    title = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True)
+    author = models.ForeignKey(User, on_delete= models.CASCADE,related_name='blog_posts')
+    updated_at = models.DateTimeField(auto_now= True)
+    content = models.TextField()
+    posted_at = models.DateTimeField(auto_now_add=True)
+    week = models.PositiveIntegerField(blank=False)
+    status = models.IntegerField(choices=STATUS, default=0)
+    news_about = models.IntegerField(choices=LINEUP_NEWS_CHOICES, default=1)
+    doc_description = models.CharField(max_length=200, blank=True)
+    document = models.FileField(upload_to='static/documents/', blank=True)
+
+
+    class Meta:
+        ordering = ['-posted_at']
+
+    def __str__(self):
+        return self.title
