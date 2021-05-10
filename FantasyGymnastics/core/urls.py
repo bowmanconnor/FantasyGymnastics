@@ -36,4 +36,7 @@ urlpatterns = [
     path('news/', views.PostList.as_view(), name='news'),
     path('news/<slug:slug>/', views.PostDetail.as_view(), name='post_detail'),
     path('weekly_news/', views.weekly_news, name='weekly_news')
+    
+    path('drawbot/', views.drawbot, name='drawbot'),
+    path('drawbot/send', views.drawbot_send, name='drawbot_send'),
 ]

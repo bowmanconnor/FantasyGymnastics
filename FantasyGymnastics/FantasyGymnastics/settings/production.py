@@ -16,7 +16,7 @@ ALLOWED_HOSTS = ['104.248.122.140', 'myfgl.com', 'www.myfgl.com']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'django',
+        'NAME': 'django_new',
         'USER': 'django',
         'PASSWORD': env('POSTGRES_PASSWORD'),
         'HOST': 'localhost',

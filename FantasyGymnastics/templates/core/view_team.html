@@ -62,7 +62,7 @@
                                 </td>
                                 {% if user == team.user and team.league.draft_complete %}
                                     {% comment %} Allows removal of gymnast from roster if a gymnasts team hasnt competed. Also if a gymnasts team has competed but the gymnast isnt in any of your current lineups  {% endcomment %}
-                                    {% if gymnast|team_has_competed:current_week and gymnast|in_lineup_current_week:team %}
+                                    {% if meet_started|gymnasts_first_meet_passed:gymnast and gymnast|in_lineup_current_week:team %}
                                         <td></td>
                                     {% else %}
                                         <td>
@@ -159,7 +159,7 @@
                                     </td>
                                     <td>
                                         {% comment %} Remove gymnast from lineup bitton if team is users and gymnasts team has not competed {% endcomment %}
-                                        {% if user == team.user and not gymnast|team_has_competed:lineup.week %}
+                                        {% if user == team.user and not meet_started|gymnasts_first_meet_passed:gymnast %}
                                             <a href="{% url 'remove_gymnast_from_lineup' lineup.pk gymnast.pk %}"><i class="far fa-times-circle"></i></a>                                    
                                         {% endif %}
                                     </td>
@@ -182,7 +182,7 @@
                                                 <tr>
                                                     <td>
                                                         {% comment %} Gymn can be added if their team hasnt competed this week {% endcomment %}
-                                                        {% if gymnast|team_has_competed:lineup.week %}
+                                                        {% if meet_started|gymnasts_first_meet_passed:gymnast%}
                                                             {{gymnast.name}}
                                                         {% else %}
                                                             <a href="{% url 'add_gymnast_to_lineup' lineup.pk gymnast.pk %}">{{gymnast.name}}</a> 
