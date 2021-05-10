@@ -1,8 +1,8 @@
 dump.rdb
 
-# Migrations
-*/migrations/*
-!*/migrations/__init__.py
+# Migrations (We need to stop doing this)
+#*/migrations/*
+#!*/migrations/__init__.py
 
 # Django
 *.log
