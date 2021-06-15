@@ -8,7 +8,7 @@ from django.dispatch import receiver
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     picture_url = models.TextField(blank=True)
-    status = models.BooleanField (default = False)
+    status = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.user.username)
