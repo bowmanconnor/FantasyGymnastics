@@ -16,18 +16,10 @@
 
         userSocket.onmessage = function(e) {
             console.log("message", e)
-            // var userData = JSON.parse(e.data)
-            // $('# new_user').html(userData.html_users)
 
             const data = JSON.parse(e.data);
 
             switch(data['event']) {
-                case 'USER_CONNECT':
-                    user_connected(data);
-                    break;
-                case 'USER_DISCONNECT':
-                    user_disconnected(data);
-                    break;
                 case 'USER_UPDATED':
                     user_updated(data);
                     break;
@@ -64,36 +56,18 @@
             element.appendChild(icon);
         }
 
-        // Code that runs when a USER_CONNECT message is received
-        function user_connected(data) {
-            console.log("user_connect", data);
-            user_online_status_cell = document.getElementById('user_online_status_' + data['user_pk']);
-            console.log("element", user_online_status_cell);
-            console.log("connected", data['username']);
-            set_online_status(user_online_status_cell, true);
-            userSocket.send(JSON.stringify({
-                'user_pk': data['user_pk'],
-                'status': true
-            }))
-        }
-
-        // Code that runs when a USER_DISCONNECT message is received
-        function user_disconnected(data) {
-            console.log("user_disconnect", data);
-            user_online_status_cell = document.getElementById('user_online_status_' + data['user_pk']);
-            console.log("disconnected", data['username']);
-            set_online_status(user_online_status_cell, false);
-            userSocket.send(JSON.stringify({
-                'user_pk': data['user_pk'],
-                'status': false
-            }))
-        }
 
         // Code that runs when a USER_UPDATED message is received
         function user_updated(data) {
+            if (data['status'] == true){
+                console.log("connected", data['username'])
+            }
+            else {
+                console.log("disconnected", data['username'])
+            }
             console.log("user_updated", data);
             user_online_status_cell = document.getElementById('user_online_status_' + data['user_pk']);
-            // console.log("updated", data['user_pk']);
+            // console.log("updated", data['username']);
             set_online_status(user_online_status_cell, data['status']);
         }
 
