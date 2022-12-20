@@ -40,6 +40,12 @@ def create_league(request):
         form = NewLeagueForm()
     return render(request, 'core/create_league.html', {'form': form})
 
+@staff_member_required
+def user_list(request):
+    users = User.objects.all()
+    return render(request, 'core/user_list.html', {'users': users})
+
+# is now league standings
 @method_decorator(login_required, name='dispatch')
 class LeagueStandings(DetailView):
     model = League

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load custom_tags widget_tweaks %}
+
+{% block title %}Users{% endblock title %}
+
+{% block content %}
+
+    <script>
+        const userSocket = new WebSocket(
+            ((window.location.protocol == "https:") ? "wss" : "ws") + '://' + window.location.host + '/ws/users/'
+        );
+
+        userSocket.onopen = function(e) {
+            console.log("open", e); 
+        }
+
+        userSocket.onmessage = function(e) {
+            console.log("message", e)
+
+            const data = JSON.parse(e.data);
+
+            switch(data['event']) {
+                case 'USER_UPDATED':
+                    user_updated(data);
+                    break;
+                case 'SYNC':
+                    sync(data);
+                    break;
+                // case 'USER_ERROR':
+                //     console.log("User error", data['error']);
+                default:
+                    console.log("Unknown websocket message received", data);
+            }
+
+        }
+        userSocket.onerror = function(e) {
+            console.log("error", e)
+        }
+        userSocket.onclose = function(e) {
+            console.log("close", e)
+        }
+
+        function set_online_status(element, status) {
+            if(element.hasChildNodes()) {
+                element.removeChild(element.childNodes[0]);
+            }
+            icon = document.createElement('i');
+            icon.classList.add('fas');
+            icon.classList.add('fa-circle');
+                
+            if (status==true){
+                icon.style.color = "green";  
+            } else {
+                icon.style.color = "red";  
+            } 
+            element.appendChild(icon);
+        }
+
+
+        // Code that runs when a USER_UPDATED message is received
+        function user_updated(data) {
+            if (data['status'] == true){
+                console.log("connected", data['username'])
+            }
+            else {
+                console.log("disconnected", data['username'])
+            }
+            console.log("user_updated", data);
+            user_online_status_cell = document.getElementById('user_online_status_' + data['user_pk']);
+            // console.log("updated", data['username']);
+            set_online_status(user_online_status_cell, data['status']);
+        }
+
+        // Code that runs when a SYNC message is received
+        function sync(data) {
+            console.log("sync", data)
+            for (var j = 0; j < data['users'].length; j++){
+                user = data['users'][j]
+                user_pk = user['user_pk'];
+                user_online_status_cell = document.getElementById('user_online_status_' + user_pk);
+                set_online_status(user_online_status_cell, user['status']);
+            }
+        }
+
+    </script>
+
+    <h2> USERS </h2>
+    <p> Automatically update user online status when users are connected or disconnected from the site. </p>            
+    <table class = "table">
+    <thead>
+        <tr>
+        <th> Username </th>
+        <th> First name </th>
+        <th> Last name </th>
+        <th> Email </th>
+        <th> Online Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users%}
+        <tr>
+            <td> {{user.username}} </td>
+            <td> {{user.first_name}} </td>
+            <td> {{user.last_name}} </td>
+            <td> {{user.email}} </td>
+            <td id="user_online_status_{{user.pk}}"></td>
+        </tr>
+        {% endfor%}
+    </tbody>
+    </table>
+{% endblock content %}

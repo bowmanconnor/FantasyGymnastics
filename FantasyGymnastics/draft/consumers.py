@@ -33,7 +33,7 @@ class DraftConsumer(WebsocketConsumer):
             # Accept connection
             self.accept()
 
-            # Send TEAM_JOIN message to group
+            # Send TEAM_CONNECT message to group
             async_to_sync(self.channel_layer.group_send)(self.draft_group, {
                 'type': 'team_connect',
                 'team_pk': team.pk,
